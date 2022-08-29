@@ -2,9 +2,9 @@
 #include<winsock.h>
 
 WSADATA WinSockDataStorage = { 0 };
-SOCKET ConnectSocket;//‘Šè‚ÉÚ‘±—v‹‚ğo‚µA‚»‚Ì‚Ü‚ÜƒpƒPƒbƒg’ÊM‚ğ‚·‚éƒ\ƒPƒbƒg
+SOCKET ConnectSocket;//ç›¸æ‰‹ã«æ¥ç¶šè¦æ±‚ã‚’å‡ºã—ã€ãã®ã¾ã¾ãƒ‘ã‚±ãƒƒãƒˆé€šä¿¡ã‚’ã™ã‚‹ã‚½ã‚±ãƒƒãƒˆ
 
-SOCKADDR_IN ServerInfo = { 0 };//Iî•ñ‚ğŠi”[‚·‚é\‘¢‘Ì
+SOCKADDR_IN ServerInfo = { 0 };//é¯–æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹æ§‹é€ ä½“
 
 
 int main(void) {
@@ -15,16 +15,16 @@ int main(void) {
 	ServerInfo.sin_addr.s_addr = inet_addr("192.168.44.1");
 	ConnectSocket = socket(AF_INET, SOCK_STREAM, 0);
 
-	//ƒNƒ‰ƒCƒAƒ“ƒg‘¤‚Ì‚İ‚ÌŠÖ”
-	//I‚ÉSYN‚ğ‘—‚é
-	//¸”s‚µ‚½‚çƒvƒƒOƒ‰ƒ€‚ğI—¹‚·‚é
+	//ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã®ã¿ã®é–¢æ•°
+	//é¯–ã«SYNã‚’é€ã‚‹
+	//å¤±æ•—ã—ãŸã‚‰ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã™ã‚‹
 	int ret=connect(ConnectSocket, (SOCKADDR*)&ServerInfo, sizeof(ServerInfo));
 	//if (ret != 0)return 0;
 
-	//I‚ÉƒpƒPƒbƒg‚ğ‘—‚é
-	//‘æ“ñˆø”‚É‘—M‚·‚é•¶š—ñ
-	//‘æOˆø”‚É•¶š—ñ‚Ì’·‚³
-	//‘ælˆø”‚Í‚Ù‚Ú0‚Å‚¢‚¢
+	//é¯–ã«ãƒ‘ã‚±ãƒƒãƒˆã‚’é€ã‚‹
+	//ç¬¬äºŒå¼•æ•°ã«é€ä¿¡ã™ã‚‹æ–‡å­—åˆ—
+	//ç¬¬ä¸‰å¼•æ•°ã«æ–‡å­—åˆ—ã®é•·ã•
+	//ç¬¬å››å¼•æ•°ã¯ã»ã¼0ã§ã„ã„
 	send(ConnectSocket, "ButtonA|", 8, 0);
 	send(ConnectSocket, "ButtonB|", 8, 0);
 
