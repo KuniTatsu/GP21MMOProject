@@ -116,8 +116,30 @@ int main(void) {
 	ClientDataBuffer[recvReturn] = '\0';
 
 	*/
+
+	//-----ここからクライアントから送られてきた内容を読み出す部分。一回だけでいい
+	int recvSize = 0;
+
+	recvSize = recv(CommunicationSocket, ClientDataBuffer, sizeof(ClientDataBuffer) - 1, 0);
+	ClientDataBuffer[recvSize] = '\0';
+
+	//---------------------------------
+
+	//-----"|"が来るまでを一つの文字列として読み取るための処理-------------------------
+	//
 	string hoge=GetReceiveData();
 	receiveData.emplace_back(hoge);
+
+	bufTest = "";
+	trueNum += 1;
+
+	//-----ここまで一セット------------------------------------------------------------
+
+	string hoge2 = GetReceiveData();
+	receiveData.emplace_back(hoge2);
+
+	bufTest = "";
+	trueNum += 1;
 
 	
 
@@ -153,12 +175,6 @@ int main(void) {
 
 string GetReceiveData() {
 
-	int recvSize = 0;
-
-	recvSize = recv(CommunicationSocket, ClientDataBuffer, sizeof(ClientDataBuffer) - 1, 0);
-	ClientDataBuffer[recvSize] = '\0';
-
-	
 	for (; ClientDataBuffer[trueNum] != '|'; ++trueNum) {
 		//DataBuffer1[trueNum] = ClientDataBuffer[trueNum];
 		bufTest += ClientDataBuffer[trueNum];
