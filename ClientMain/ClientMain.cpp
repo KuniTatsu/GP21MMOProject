@@ -1,37 +1,127 @@
+#include <iostream>
+//#include <boost/version.hpp>
+#include <boost/asio.hpp>
+#include <boost/algorithm/string.hpp>
+#include <iomanip>
+//#include<boost/serialization/serialization.hpp>
+
+#include"json11.hpp"
+
+//ƒNƒ‰ƒCƒAƒ“ƒg‚Ídxlib‚Æboost‚Å‘g‚Ş
+//ƒNƒ‰ƒCƒAƒ“ƒg‚Ìî•ñ‚ğA•ÏX‚ª‹N‚±‚é‚½‚Ñ‚ÉƒT[ƒo[‚É·•ª‚¾‚¯‘—‚é
+//V‚µ‚¢ƒIƒuƒWƒFƒNƒg‚ª¶¬‚³‚ê‚½‚Æ‚«‚ÍƒIƒuƒWƒFƒNƒg‚Ìî•ñ‚ğƒVƒŠƒAƒ‰ƒCƒY‚µ‚Ä‘—‚èA‹¤—L‚·‚é
+
+//ƒT[ƒo[‚Ínode.js‚Åì‚é
+//’èŠú“I‚ÉƒT[ƒo[‚©‚çƒ^ƒCƒ}[ƒCƒxƒ“ƒg‚ÅÚ‘±’†‚Ì‘S‚Ä‚ÌƒNƒ‰ƒCƒAƒ“ƒg‚É‚·‚×‚Ä‚Ìî•ñ‚ğ“¯Šú‚·‚é
+
+//ƒNƒ‰ƒCƒAƒ“ƒg‚ÌboostŠÖ”‚ğ”ñ“¯Šú‚É‚·‚é‚©‚Ç‚¤‚©‚Í•×‹­‚·‚é
+
+
+
+/*
 #pragma comment(lib,"Ws2_32.lib")
 #include<winsock.h>
 
 WSADATA WinSockDataStorage = { 0 };
-SOCKET ConnectSocket;//ç›¸æ‰‹ã«æ¥ç¶šè¦æ±‚ã‚’å‡ºã—ã€ãã®ã¾ã¾ãƒ‘ã‚±ãƒƒãƒˆé€šä¿¡ã‚’ã™ã‚‹ã‚½ã‚±ãƒƒãƒˆ
+SOCKET ConnectSocket;//‘Šè‚ÉÚ‘±—v‹‚ğo‚µA‚»‚Ì‚Ü‚ÜƒpƒPƒbƒg’ÊM‚ğ‚·‚éƒ\ƒPƒbƒg
 
-SOCKADDR_IN ServerInfo = { 0 };//é¯–æƒ…å ±ã‚’æ ¼ç´ã™ã‚‹æ§‹é€ ä½“
+SOCKADDR_IN ServerInfo = { 0 };//Iî•ñ‚ğŠi”[‚·‚é\‘¢‘Ì
+*/
+using namespace std;
+using namespace json11;
+namespace asio = boost::asio;
+namespace ip = asio::ip;
+using asio::ip::tcp;
 
+//ƒeƒXƒg—p‚Ì”š
+int num1 = 10;
+int num2 = 3;
 
+/*
 int main(void) {
+	
+	//ƒŠƒNƒGƒXƒg‚É‘Î‚·‚éƒŒƒXƒ|ƒ“ƒX
+	string allRes = "";
 
-	WSAStartup(MAKEWORD(1, 1), &WinSockDataStorage);
-	ServerInfo.sin_family = AF_INET;
-	ServerInfo.sin_port = htons(54924);
-	ServerInfo.sin_addr.s_addr = inet_addr("192.168.44.1");
-	ConnectSocket = socket(AF_INET, SOCK_STREAM, 0);
+	try
+	{
+		//éŒ¾
+		asio::io_service io_service;
+		//tcpƒ\ƒPƒbƒg‚Ìì¬
+		ip::tcp::socket socket(io_service);
+		boost::system::error_code error;
 
-	//ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆå´ã®ã¿ã®é–¢æ•°
-	//é¯–ã«SYNã‚’é€ã‚‹
-	//å¤±æ•—ã—ãŸã‚‰ãƒ—ãƒ­ã‚°ãƒ©ãƒ ã‚’çµ‚äº†ã™ã‚‹
-	int ret=connect(ConnectSocket, (SOCKADDR*)&ServerInfo, sizeof(ServerInfo));
-	//if (ret != 0)return 0;
+		//–¼‘O‰ğŒˆ(ƒzƒXƒg–¼‚©‚çIPƒAƒhƒŒƒX‚É•ÏŠ·)
+		ip::tcp::resolver resolver(io_service);
+		ip::tcp::resolver::query query("127.0.0.1", "HTTP");
 
-	//é¯–ã«ãƒ‘ã‚±ãƒƒãƒˆã‚’é€ã‚‹
-	//ç¬¬äºŒå¼•æ•°ã«é€ä¿¡ã™ã‚‹æ–‡å­—åˆ—
-	//ç¬¬ä¸‰å¼•æ•°ã«æ–‡å­—åˆ—ã®é•·ã•
-	//ç¬¬å››å¼•æ•°ã¯ã»ã¼0ã§ã„ã„
-	send(ConnectSocket, "ButtonA|", 8, 0);
-	send(ConnectSocket, "ButtonB|", 8, 0);
+		//ƒzƒXƒgî•ñ‚Ìİ’è
+		ip::tcp::endpoint endpoint(*resolver.resolve(query));
+
+		//Ú‘±
+		socket.connect(endpoint, error);
+
+		if (error) {
+			std::cout << "cannot connect: " << error.message() << std::endl;
+		}
+		else {
+			std::cout << "connected\n " << std::endl;
+		}
 
 
-	shutdown(ConnectSocket, 2);
-	closesocket(ConnectSocket);
-	WSACleanup();
+		//ƒƒbƒZ[ƒW‚ğ‘—M
+	asio::streambuf request;
+	boost::system::error_code writeError;
+	ostream request_ostream(&request);
+
+	string getRequest = "GET /server.php?value1=" + to_string(10)
+		+ "&value2=" + to_string(20) + " HTTP/1.1\r\n"+" Host: 127.0.0.1\r\n\r\n";
+	request_ostream << getRequest;
+
+	asio::write(socket, request, writeError);
+
+
+	if (writeError) {
+		cout << "send failed:" << error.message() << endl;
+	}
+	else {
+		cout << "send correct!\n" << endl;
+	}
+
+		//ƒƒbƒZ[ƒW‚ğóM
+		asio::streambuf response;
+
+		while (asio::read(socket, response, asio::transfer_at_least(4), error)) {
+			//streambuf‚©‚çstring‚É•ÏŠ·
+			string tmp = asio::buffer_cast<const char*>(response.data());
+			allRes += tmp.substr(0, response.size());
+		}
+	}
+	catch (exception& e) {
+		cout << e.what() << '\n';
+		return 1;
+	}
+
+	//“ñd‰üs‚Å‹æØ‚é(ƒŒƒXƒ|ƒ“ƒXƒ{ƒfƒB‚ğæ“¾‚·‚é‚½‚ß)
+	vector<string> res;
+	res = boost::split(res, allRes, boost::is_any_of("\r\n\r\n"));
+
+	string err;
+	const Json jsonData = Json::parse(res[res.size() - 1], err);
+
+	cout << jsonData.dump() << "\n\n";
+
+	auto jsonArray = jsonData.array_items();
+	cout << "   id value1 value2     ans" << endl;
+
+	for (auto& item : jsonArray) {
+		cout << setw(6) << right << item["id"].string_value() << " ";
+		cout << setw(6) << right << item["value1"].string_value() << " ";
+		cout << setw(6) << right << item["value2"].string_value() << " ";
+		cout << setw(6) << right << item["ans"].string_value() << '\n';
+	}
 
 	return 0;
 }
+
+*/
