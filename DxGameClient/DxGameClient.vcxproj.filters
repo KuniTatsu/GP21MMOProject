@@ -123,7 +123,7 @@
     <ClInclude Include="program\tnl_build_switch.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\scene\scene_play.h">
+    <ClInclude Include="program\game\scene\scene_map.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
@@ -242,7 +242,7 @@
     <ClCompile Include="program\library\tnl_vector.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\scene\scene_play.cpp">
+    <ClCompile Include="program\game\scene\scene_map.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
