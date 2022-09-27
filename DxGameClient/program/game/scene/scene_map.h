@@ -7,6 +7,11 @@ public:
 
 	int img_mapchip_grass = 0;
 	int img_mapchip_sea = 0;
+	int img_mapchip_player = 0;
+
+	/*test*/
+	int test_arrow = 0;
+	
 	const int SCREEN_WIDTH = 1024;
 	const int SCREEN_HEIGHT = 768;
 
