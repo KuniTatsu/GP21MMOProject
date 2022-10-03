@@ -1,7 +1,13 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext.h"
 
-class SceneBase;
+#include <boost/beast/core.hpp>
+#include <boost/beast/websocket.hpp>
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
+#include <boost/asio.hpp>
+
+
 class SceneManager;
 class GameManager {
 private :
@@ -23,6 +29,10 @@ public :
 public :
 
 	// ゲーム全体で参照したい変数はここで用意
+
+	//サーバーとのハンドシェイク
+	void ConnectServer();
+	
 
 
 };

@@ -69,6 +69,8 @@ protected:
 		MAX
 	};
 
+	const std::function< void(Actor*) > MOVEFUNC[4] = { &Actor::MoveUp,&Actor::MoveRight,&Actor::MoveDown,&Actor::MoveLeft };
+
 private:
 
 
@@ -85,6 +87,5 @@ private:
 	void MoveDummy() {};
 
 
-	const std::function< void(Actor*) > MOVEFUNC[4] = { &Actor::MoveUp,&Actor::MoveRight,&Actor::MoveDown,&Actor::MoveLeft };
 };
 
