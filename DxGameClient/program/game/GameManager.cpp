@@ -9,7 +9,6 @@ GameManager* GameManager::instance = nullptr;
 // コンストラクタ
 GameManager::GameManager() {
 	SetBackgroundColor(32, 32, 32);
-	sManager = SceneManager::GetInstance();
 }
 
 //-----------------------------------------------------------------------------------------
@@ -37,8 +36,30 @@ void GameManager::Destroy() {
 	}
 }
 
+int GameManager::LoadGraphEx(std::string Gh)
+{
+	auto it = ghmap.find(Gh);
+	if (it != ghmap.end()) {
+		return ghmap[Gh];
+	}
+
+	else {
+		int loadgh = LoadGraph(Gh.c_str());
+		ghmap.insert(std::make_pair(Gh, loadgh));
+	}
+
+
+	return ghmap[Gh];
+}
+
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
+
+	if (!init) {
+		sManager = SceneManager::GetInstance();
+		init = true;
+	}
+
 	sManager->Update(delta_time);
 	sManager->Draw();
 }

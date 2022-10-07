@@ -84,7 +84,7 @@ private:
 
 	void MoveDummy() {};
 
-
+protected:
 	const std::function< void(Actor*) > MOVEFUNC[4] = { &Actor::MoveUp,&Actor::MoveRight,&Actor::MoveDown,&Actor::MoveLeft };
 };
 
