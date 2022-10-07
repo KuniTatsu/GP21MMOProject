@@ -35,20 +35,15 @@ private:
 	//“ü—Í’†‚Ì•¶Žš—ñ
 	std::string bufMessage;
 
-	char buffer[100] ;
-
-	/*
-	
-	tnl::Sequence<CustomizeScene>mainSeqence =
-		tnl::Sequence<CustomizeScene>(this, &CustomizeScene::SeqTop);
-	*/
-
+	char buffer[100] = {};
 
 	tnl::Sequence<ChatBase> sequence =
 		tnl::Sequence<ChatBase>(this, &ChatBase::SeqWait);
 
 	bool SeqDrawMessage(const float deltatime);
 	bool SeqWait(const float deltatime);
+
+	void CreateKeyInput();
 
 
 	GameManager* gManager = nullptr;

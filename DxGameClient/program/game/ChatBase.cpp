@@ -13,8 +13,10 @@ ChatBase::ChatBase()
 {
 	gManager = GameManager::GetInstance();
 
-	// キー入力ハンドルを作る(キャンセルなし全角文字有り数値入力じゃなし)
-	g_InputHandle = MakeKeyInput(30, true, false, false);
+	// キー入力ハンドルを作る(キャンセルあり全角文字有り数値入力なし)
+	CreateKeyInput();
+	// 作成したキー入力ハンドルをアクティブにする
+	SetActiveKeyInput(g_InputHandle);
 }
 
 ChatBase::~ChatBase()
@@ -63,13 +65,19 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 
 
 	//Write();
-	if (CheckKeyInput(g_InputHandle) != 0) {
+	int hoge = CheckKeyInput(g_InputHandle);
+
+	if (hoge != 0) {
 		GetKeyInputString(buffer,g_InputHandle);
 
 		std::string buf = buffer;
 		savedMessage.emplace_back(buf);
 
-		memset(buffer, '\0', sizeof(buffer));
+		// 入力文字列を初期化する
+		SetKeyInputString("", g_InputHandle);
+
+		// 再度インプットハンドルをアクティブにする
+		SetActiveKeyInput(g_InputHandle);
 
 		//シークエンスを移動する
 		sequence.change(&ChatBase::SeqWait);
@@ -91,14 +99,17 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 
 bool ChatBase::SeqWait(const float deltatime)
 {
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_TAB)) {
-
-		// 作成したキー入力ハンドルをアクティブにする
-		SetActiveKeyInput(g_InputHandle);
-		
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_TAB)) {		
 		//シークエンスを移動する
 		sequence.change(&ChatBase::SeqDrawMessage);
 	}
 
 	return true;
+}
+
+void ChatBase::CreateKeyInput()
+{
+	if (g_InputHandle != 0)return;
+	// キー入力ハンドルを作る(キャンセルあり全角文字有り数値入力なし)
+	g_InputHandle = MakeKeyInput(30, true, false, false);
 }
