@@ -3,15 +3,19 @@
 
 class SceneBase;
 class SceneManager;
+
+class ChatBase;
 class GameManager {
-private :
+private:
 	GameManager();
 	~GameManager();
 	static GameManager* instance;
 
 	SceneManager* sManager = nullptr;
 
-public :
+public:
+
+	ChatBase* chat = nullptr;
 
 	// インスタンスの取得
 	static GameManager* GetInstance();
@@ -20,7 +24,9 @@ public :
 
 	void Destroy();
 
-public :
+	float deltaTime = 0.0f;
+
+public:
 
 	// ゲーム全体で参照したい変数はここで用意
 

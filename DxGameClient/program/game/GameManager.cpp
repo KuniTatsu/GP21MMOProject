@@ -2,6 +2,7 @@
 #include "scene/scene_base.h"
 #include "scene/scene_title.h"
 #include"SceneManager.h"
+#include"ChatBase.h"
 
 GameManager* GameManager::instance = nullptr;
 
@@ -14,8 +15,9 @@ GameManager::GameManager() {
 
 //-----------------------------------------------------------------------------------------
 // デストラクタ
-GameManager::~GameManager() {
-
+GameManager::~GameManager()
+{
+	delete chat;
 }
 
 
@@ -39,8 +41,19 @@ void GameManager::Destroy() {
 
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
+
+	if (chat == nullptr) {
+		chat = new ChatBase();
+	}
+
+
+	deltaTime = delta_time;
 	sManager->Update(delta_time);
 	sManager->Draw();
+
+	chat->Update();
+	chat->Draw();
+
 }
 
 
