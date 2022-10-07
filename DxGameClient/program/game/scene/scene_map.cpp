@@ -1,17 +1,22 @@
 #include "scene_map.h"
 #include"../GameManager.h"
 
+
+
 void Scene_Map::initialzie()
 {
-	img_mapchip_grass = LoadGraph("graphics/mapchip_grass.png");
-	img_mapchip_sea = LoadGraph("graphics/mapchip_sea.png");
-	img_mapchip_player = LoadGraph("graphics/player_sample.png");
+	gManager = GameManager::GetInstance();
+	/*画像ロード*/
+	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
+	img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
+	img_mapchip_player = gManager->LoadGraphEx("graphics/player_sample.png");
 }
 
 
 void Scene_Map::update(float delta_time)
 {
 	///aaaaaaa
+	
 	if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_RIGHT)) {
 		playerX += MAPCHIP_SIZE;
 	}
@@ -56,7 +61,7 @@ void Scene_Map::mapChip()
 
 }
 
-/*チップの周り8マス生成*/
+/*Playerの周り8マス生成*/
 void Scene_Map::mapSearch(int x, int y,int n)
 {
 	/*playerの上のセル*/

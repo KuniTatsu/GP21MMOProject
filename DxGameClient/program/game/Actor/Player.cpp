@@ -1,5 +1,6 @@
 #include "Player.h"
 #include"../GameManager.h"
+#include"Camera.h"
 
 Player::Player(int startX, int startY)
 {
@@ -10,6 +11,7 @@ Player::Player(int startX, int startY)
 
 Player::~Player()
 {
+
 }
 
 void Player::Update()
@@ -17,9 +19,11 @@ void Player::Update()
 	Move();
 }
 
-void Player::Draw()
+void Player::Draw(Camera* camera)
 {
-	DrawRotaGraph(drawPos.x, drawPos.y, 1, 0, gh, false);
+	float x = drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH / 2);
+	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT / 2);
+	DrawRotaGraph(x, y, 1, 0, gh, false);
 }
 
 void Player::Init()

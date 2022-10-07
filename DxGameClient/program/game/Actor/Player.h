@@ -1,6 +1,8 @@
 #pragma once
 #include"Actor.h"
 
+class Camera;
+
 class Player :public Actor
 {
 public:
@@ -9,7 +11,7 @@ public:
 
 	void Update()override;
 
-	void Draw()override;
+	void Draw(Camera* camera)override;
 
 	void Init()override;
 
