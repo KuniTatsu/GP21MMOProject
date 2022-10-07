@@ -45,7 +45,7 @@ void SceneManager::chengeScene(SceneBase* next)
 
 SceneManager::SceneManager()
 {
-	imgBlack = LoadGraph("graphics/black.bmp");
+	//imgBlack = LoadGraph("graphics/black.bmp");
 	nowScene = new SceneTitle();
 	nowScene->initialzie();
 }
