@@ -154,6 +154,8 @@
     <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h" />
     <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
     <ClInclude Include="program\game\Actor\Actor.h" />
+    <ClInclude Include="program\game\Actor\Enemy.h" />
+    <ClInclude Include="program\game\Actor\enemy_list.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\GameManager.h" />
     <ClInclude Include="program\game\main.h" />
@@ -211,6 +213,8 @@
     <ClCompile Include="program\dxlib_ext\dxlib_ext_texture.cpp" />
     <ClCompile Include="program\dxlib_ext\OBJLoader.cpp" />
     <ClCompile Include="program\game\Actor\Actor.cpp" />
+    <ClCompile Include="program\game\Actor\Enemy.cpp" />
+    <ClCompile Include="program\game\Actor\enemy_list.cpp" />
     <ClCompile Include="program\game\Actor\Player.cpp" />
     <ClCompile Include="program\game\GameManager.cpp" />
     <ClCompile Include="program\game\main.cpp" />
