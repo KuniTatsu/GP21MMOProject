@@ -1,7 +1,9 @@
 #pragma once
 #include "../dxlib_ext/dxlib_ext.h"
+#include"Actor/Camera.h"
 
 class SceneBase;
+
 class SceneManager
 {
 public:
@@ -24,6 +26,7 @@ public:
 private:
 
 	static SceneManager* instance;
+	Camera camera;
 
 	int imgBlack = 0;
 

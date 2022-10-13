@@ -135,6 +135,9 @@
     <ClInclude Include="program\game\scene\scene_map.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="program\game\Actor\Camera.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

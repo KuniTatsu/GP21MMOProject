@@ -6,7 +6,7 @@ Player::Player(int startX, int startY)
 {
 	drawPos.x = startX;
 	drawPos.y = startY;
-	gh=gManager->LoadGraphEx("graphics/Player.png");
+	gh = gManager->LoadGraphEx("graphics/Player.png");
 }
 
 Player::~Player()
@@ -21,8 +21,8 @@ void Player::Update()
 
 void Player::Draw(Camera* camera)
 {
-	float x = drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH / 2);
-	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT / 2);
+	float x = drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
+	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
 	DrawRotaGraph(x, y, 1, 0, gh, false);
 }
 
@@ -57,7 +57,7 @@ void Player::Move()
 
 	//ˆÚ“®—Ê‚ª0‚Å‚È‚¯‚ê‚ÎƒxƒNƒgƒ‹‚ð³‹K‰»‚µ‚ÄˆÚ“®‚³‚¹‚é
 	if (moveX != 0 || moveY != 0) {
-		
+
 		tnl::Vector3 fixVec = gManager->GetFixVector(moveX, moveY);
 
 		float fixMoveX = fixVec.x * SPEED;

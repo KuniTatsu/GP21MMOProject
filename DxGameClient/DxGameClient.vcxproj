@@ -154,6 +154,7 @@
     <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h" />
     <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
     <ClInclude Include="program\game\Actor\Actor.h" />
+    <ClInclude Include="program\game\Actor\Camera.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\GameManager.h" />
     <ClInclude Include="program\game\main.h" />

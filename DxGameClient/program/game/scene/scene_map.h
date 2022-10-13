@@ -1,7 +1,12 @@
 #pragma once
 #include"scene_base.h"
+#include"../Actor/Camera.h"
+
 
 class GameManager;
+class Player;
+//class Camera;
+
 class Scene_Map : public SceneBase {
 public:
 	Scene_Map(){}
@@ -22,12 +27,13 @@ public:
 
 	void initialzie() override;
 	void update(float delta_time) override;
-	void render() override;
-
+	void render(Camera* camera) override;
 private:
 
 	GameManager* gManager = nullptr;
-
+    //std::shared_ptr<Player> player = nullptr;
+	Player* player = nullptr;
+	
 	/*マップチップの生成*/
 	void mapChip();
 	//近接のマップの生成

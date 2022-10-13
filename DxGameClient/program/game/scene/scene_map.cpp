@@ -1,11 +1,11 @@
 #include "scene_map.h"
 #include"../GameManager.h"
-
-
+#include"../Actor/Player.h"
 
 void Scene_Map::initialzie()
 {
 	gManager = GameManager::GetInstance();
+	player = new Player(200, 200);
 	/*画像ロード*/
 	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
 	img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
@@ -16,19 +16,21 @@ void Scene_Map::initialzie()
 void Scene_Map::update(float delta_time)
 {
 	///aaaaaaa
-	
+	player->Update();
 	if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_RIGHT)) {
 		playerX += MAPCHIP_SIZE;
 	}
 }
 
-void Scene_Map::render()
+void Scene_Map::render(Camera* camera)
 {
+	player->Draw(camera);
+
 	/*マップチップの生成*/
 	mapChip();
-	
+
 	SetFontSize(50);
-	DrawRotaGraph(playerX, playerY, 1.0f, 0, img_mapchip_player, true);
+	DrawRotaGraph(playerX , playerY, 1.0f, 0, img_mapchip_player, true);
 
 	/*どこのシーンであるか*/
 	DrawStringEx(50, 50, -1, "Scene_map");

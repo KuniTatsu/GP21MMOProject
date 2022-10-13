@@ -12,10 +12,10 @@ public:
 
 	void initialzie() override;
 	void update(float delta_time) override;
-	void render() override;
+	void render(Camera* camera) override;
 
 private:
-	std::shared_ptr<Player>player = nullptr;
+	//std::shared_ptr<Player>player = nullptr;
 	
 	bool init = false;
 	SceneManager* sManager = nullptr;
