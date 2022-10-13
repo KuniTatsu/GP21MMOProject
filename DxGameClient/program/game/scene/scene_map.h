@@ -27,15 +27,15 @@ public:
 
 	void initialzie() override;
 	void update(float delta_time) override;
-	void render(Camera* camera) override;
+	void render() override;
 private:
 
 	GameManager* gManager = nullptr;
-    //std::shared_ptr<Player> player = nullptr;
-	Player* player = nullptr;
+    Player* player = nullptr;
+	Camera cAmera;
 	
 	/*マップチップの生成*/
-	void mapChip();
+	void mapChip(Camera* camera);
 	//近接のマップの生成
-	void mapSearch(int x,int y,int n);
+	void mapSearch(Camera* camera,int x,int y,int n);
 };

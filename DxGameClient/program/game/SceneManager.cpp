@@ -24,7 +24,7 @@ void SceneManager::Destroy()
 void SceneManager::Update(float delta_time)
 {
 	sequence.update(delta_time);
-	nowScene->render(&camera);
+	nowScene->render();
 
 	//‚»‚Ì‚¤‚¿‚Ç‚Á‚©‚ÉˆÚ‚µ‚½‚¢
 	col = static_cast<int>(255.0f * sceneTransitionAlpha);

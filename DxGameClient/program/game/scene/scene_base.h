@@ -8,7 +8,7 @@ public :
 	virtual ~SceneBase(){}
 	virtual void initialzie() = 0;
 	virtual void update( float delta_time ) {}
-	virtual void render(Camera* camera){}
+	virtual void render(){}
 
 	bool isInIt = false;
 };

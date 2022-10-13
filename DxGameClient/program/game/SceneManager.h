@@ -26,8 +26,7 @@ public:
 private:
 
 	static SceneManager* instance;
-	Camera camera;
-
+	
 	int imgBlack = 0;
 
 	//フェード用変数

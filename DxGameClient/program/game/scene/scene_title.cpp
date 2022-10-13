@@ -32,7 +32,7 @@ void SceneTitle::update(float delta_time)
 	}
 }
 
-void SceneTitle::render(Camera* camera)
+void SceneTitle::render()
 {
 	DrawStringEx(50, 50, -1, "scene title");
 }

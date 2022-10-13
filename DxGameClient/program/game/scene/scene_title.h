@@ -12,7 +12,7 @@ public:
 
 	void initialzie() override;
 	void update(float delta_time) override;
-	void render(Camera* camera) override;
+	void render() override;
 
 private:
 	//std::shared_ptr<Player>player = nullptr;

@@ -17,17 +17,19 @@ void Scene_Map::update(float delta_time)
 {
 	///aaaaaaa
 	player->Update();
-	if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_RIGHT)) {
+
+	cAmera.pos += (player->GetPos() - cAmera.pos) * 0.1f;
+	/*if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_RIGHT)) {
 		playerX += MAPCHIP_SIZE;
-	}
+	}*/
 }
 
-void Scene_Map::render(Camera* camera)
+void Scene_Map::render()
 {
-	player->Draw(camera);
+	player->Draw(&cAmera);
 
 	/*マップチップの生成*/
-	mapChip();
+	mapChip(&cAmera);
 
 	SetFontSize(50);
 	DrawRotaGraph(playerX , playerY, 1.0f, 0, img_mapchip_player, true);
@@ -36,17 +38,16 @@ void Scene_Map::render(Camera* camera)
 	DrawStringEx(50, 50, -1, "Scene_map");
 }
 
-void Scene_Map::mapChip()
+void Scene_Map::mapChip(Camera* camera)
 {
 	std::vector<std::vector<std::string>>map_csv;
-	std::vector<std::vector<std::string>>::iterator itr = map_csv.begin();
 	map_csv = tnl::LoadCsv("csv/mapchip_island.csv");
 
 	int sx = 0;
 	int sy = 0;
 
-	int x = 0;
-	int y = sy;
+	int x = 0 + camera->pos.x;
+	int y = sy + camera->pos.y;
 
 	for (auto h : map_csv) {
 		x = sx;
@@ -54,7 +55,7 @@ void Scene_Map::mapChip()
 			int n = std::atoi(w.c_str());
 			//------------------------------------------------------------
 			/*画像の挿入＆描画範囲*/
-			mapSearch(x, y, n);
+			mapSearch(camera,x, y, n);
 
 			x += MAPCHIP_SIZE;
 		}
@@ -64,26 +65,29 @@ void Scene_Map::mapChip()
 }
 
 /*Playerの周り8マス生成*/
-void Scene_Map::mapSearch(int x, int y,int n)
+void Scene_Map::mapSearch(Camera* camera,int x, int y,int n)
 {
+
+	//playerX = 64 + camera->pos.x;
+	//playerY = 64 + camera->pos.y;
 	/*playerの上のセル*/
-	int ArrowX00 = playerX - MAPCHIP_SIZE;
-	int ArrowY00 = playerY - MAPCHIP_SIZE;
-	int ArrowX01 = playerX;
-	int ArrowY01 = playerY - MAPCHIP_SIZE;
-	int ArrowX02 = playerX + MAPCHIP_SIZE;
-	int ArrowY02 = playerY - MAPCHIP_SIZE;
+	int ArrowX00 = (playerX - MAPCHIP_SIZE) + camera->pos.x;
+	int ArrowY00 = (playerY - MAPCHIP_SIZE) + camera->pos.y;
+	int ArrowX01 = playerX + camera->pos.x;
+	int ArrowY01 = (playerY - MAPCHIP_SIZE) + camera->pos.y;
+	int ArrowX02 = (playerX + MAPCHIP_SIZE) + camera->pos.x;
+	int ArrowY02 = (playerY - MAPCHIP_SIZE) + camera->pos.y;
 	/*player中のセル*/
-	int ArrowY1 = playerY;
-	int ArrowX10 = playerX - MAPCHIP_SIZE;
-	int ArrowX12 = playerX + MAPCHIP_SIZE;
+	int ArrowY1 = playerY + camera->pos.y;
+	int ArrowX10 = (playerX - MAPCHIP_SIZE) + camera->pos.x;
+	int ArrowX12 = (playerX + MAPCHIP_SIZE) + camera->pos.x;
 	/*playerの下のセル*/
-	int ArrowX20 = playerX - MAPCHIP_SIZE;
-	int ArrowY20 = playerY + MAPCHIP_SIZE;
-	int ArrowX21 = playerX;
-	int ArrowY21 = playerY + MAPCHIP_SIZE;
-	int ArrowX22 = playerX + MAPCHIP_SIZE;
-	int ArrowY22 = playerY + MAPCHIP_SIZE;
+	int ArrowX20 = (playerX - MAPCHIP_SIZE) + camera->pos.x;
+	int ArrowY20 = (playerY + MAPCHIP_SIZE) + camera->pos.y;
+	int ArrowX21 = playerX + camera->pos.x;
+	int ArrowY21 = (playerY + MAPCHIP_SIZE) + camera->pos.y;
+	int ArrowX22 = (playerX + MAPCHIP_SIZE) + camera->pos.x;
+	int ArrowY22 = (playerY + MAPCHIP_SIZE) + camera->pos.y;
 
 	for (int i = 0; i < 8; i++) {
 		if (x == ArrowX00 && y == ArrowY00 ||
