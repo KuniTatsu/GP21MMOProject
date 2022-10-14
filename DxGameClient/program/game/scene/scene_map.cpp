@@ -16,25 +16,23 @@ void Scene_Map::initialzie()
 void Scene_Map::update(float delta_time)
 {
 	///aaaaaaa
+	/*Player操作*/
 	player->Update();
 
+	/*カメラ操作*/
 	cAmera.pos += (player->GetPos() - cAmera.pos) * 0.1f;
-	/*if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_RIGHT)) {
-		playerX += MAPCHIP_SIZE;
-	}*/
 }
 
 void Scene_Map::render()
 {
-	player->Draw(&cAmera);
-
 	/*マップチップの生成*/
 	mapChip(&cAmera);
 
-	SetFontSize(50);
-	DrawRotaGraph(playerX , playerY, 1.0f, 0, img_mapchip_player, true);
-
+	/*Playerの生成*/
+	player->Draw(&cAmera);
+	
 	/*どこのシーンであるか*/
+	SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");
 }
 
@@ -46,8 +44,8 @@ void Scene_Map::mapChip(Camera* camera)
 	int sx = 0;
 	int sy = 0;
 
-	int x = 0 + camera->pos.x;
-	int y = sy + camera->pos.y;
+	int x = 0 - camera->pos.x;
+	int y = sy - camera->pos.y;
 
 	for (auto h : map_csv) {
 		x = sx;
@@ -55,8 +53,10 @@ void Scene_Map::mapChip(Camera* camera)
 			int n = std::atoi(w.c_str());
 			//------------------------------------------------------------
 			/*画像の挿入＆描画範囲*/
-			mapSearch(camera,x, y, n);
-
+			//mapSearch(camera,x, y, n);
+			if (1 == n) {
+				DrawRotaGraph(x, y, 1.0f, 0, img_mapchip_grass, true);
+			}
 			x += MAPCHIP_SIZE;
 		}
 		y += MAPCHIP_SIZE;
