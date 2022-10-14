@@ -5,6 +5,7 @@
 #include"../../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
+class Camera;
 
 class Actor :public std::enable_shared_from_this<Actor>
 {
@@ -41,7 +42,7 @@ public:
 	//*******ƒˆ‰¼‘zŠÖ” Œp³æ‚ÅÀ‘•************//
 	virtual void Update() = 0;
 
-	virtual void Draw() = 0;
+	virtual void Draw(Camera* camera) = 0;
 
 	virtual void Init() = 0;
 

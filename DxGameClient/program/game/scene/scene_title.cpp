@@ -1,14 +1,24 @@
 #include "../GameManager.h"
 #include "scene_title.h"
 #include"../Actor/Player.h"
+#include"scene_map.h"
+#include"../SceneManager.h"
 
+
+SceneTitle::SceneTitle()
+{
+
+}
 
 void SceneTitle::initialzie() {
-	player = std::make_shared<Player>(512,384);
+
+	//sManager = SceneManager::GetInstance();
+
 }
 
 void SceneTitle::update(float delta_time)
 {
+
 	if (!init) {
 		initialzie();
 		init = true;
@@ -18,15 +28,11 @@ void SceneTitle::update(float delta_time)
 	GameManager* mgr = GameManager::GetInstance();
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
-	//	mgr->chengeScene( new ScenePlay() );
+		//sManager->chengeScene(new Scene_Map());
 	}
-
-	player->Update();
 }
 
 void SceneTitle::render()
 {
 	DrawStringEx(50, 50, -1, "scene title");
-
-	player->Draw();
 }
