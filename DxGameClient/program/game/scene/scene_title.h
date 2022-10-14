@@ -3,9 +3,11 @@
 
 class Player;
 
+class SceneManager;
+
 class SceneTitle : public SceneBase {
 public:
-	SceneTitle() {}
+	SceneTitle();
 	~SceneTitle() {}
 
 	void initialzie() override;
@@ -13,8 +15,9 @@ public:
 	void render() override;
 
 private:
-	std::shared_ptr<Player>player = nullptr;
+	//std::shared_ptr<Player>player = nullptr;
 	
 	bool init = false;
+	SceneManager* sManager = nullptr;
 
 };

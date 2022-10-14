@@ -22,6 +22,9 @@ public :
 	// インスタンスの取得
 	static GameManager* GetInstance();
 
+	static constexpr int SCREEN_WIDTH = 1024;
+	static constexpr int SCREEN_HEIGHT = 768;
+
 	void Update(float delta_time);
 
 	void Destroy();
