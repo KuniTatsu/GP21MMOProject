@@ -158,6 +158,7 @@
     <ClInclude Include="program\game\Actor\Actor.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\ChatBase.h" />
+    <ClInclude Include="program\game\Connect.h" />
     <ClInclude Include="program\game\GameManager.h" />
     <ClInclude Include="program\game\main.h" />
     <ClInclude Include="program\game\SceneManager.h" />
@@ -216,6 +217,7 @@
     <ClCompile Include="program\game\Actor\Actor.cpp" />
     <ClCompile Include="program\game\Actor\Player.cpp" />
     <ClCompile Include="program\game\ChatBase.cpp" />
+    <ClCompile Include="program\game\Connect.cpp" />
     <ClCompile Include="program\game\GameManager.cpp" />
     <ClCompile Include="program\game\main.cpp" />
     <ClCompile Include="program\game\SceneManager.cpp" />

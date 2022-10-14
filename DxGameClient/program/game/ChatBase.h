@@ -4,6 +4,7 @@
 #include"../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
+class Connect;
 
 class ChatBase
 {
@@ -47,5 +48,7 @@ private:
 
 
 	GameManager* gManager = nullptr;
+
+	Connect* connect = nullptr;
 
 };

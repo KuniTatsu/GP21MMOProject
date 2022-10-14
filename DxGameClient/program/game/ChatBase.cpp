@@ -1,5 +1,6 @@
 #include "ChatBase.h"
 #include"GameManager.h"
+#include"Connect.h"
 #include<stdio.h>
 /*
 	必要要件
@@ -12,6 +13,19 @@
 ChatBase::ChatBase()
 {
 	gManager = GameManager::GetInstance();
+	connect = new Connect();
+
+	//サーバーに接続
+	int result =  connect->ConnectServer();
+
+	if (result == 0) {
+		tnl::DebugTrace("成功");
+	}
+	else {
+		tnl::DebugTrace("失敗");
+	}
+	tnl::DebugTrace("\n");
+
 
 	// キー入力ハンドルを作る(キャンセルあり全角文字有り数値入力なし)
 	CreateKeyInput();
@@ -59,19 +73,22 @@ void ChatBase::Draw()
 
 bool ChatBase::SeqDrawMessage(const float deltatime)
 {
-	if (sequence.isStart()) {
-		ClearInputCharBuf();
-	}
-
 
 	//Write();
 	int hoge = CheckKeyInput(g_InputHandle);
 
 	if (hoge != 0) {
+
+		//正常終了時のみメッセージを保存、送信する
+		if(hoge==1){
+		//入力された文字列を保存する
 		GetKeyInputString(buffer,g_InputHandle);
 
 		std::string buf = buffer;
 		savedMessage.emplace_back(buf);
+		//サーバーにbufを送る
+		//connect->SendClientMessage(buf);
+		}
 
 		// 入力文字列を初期化する
 		SetKeyInputString("", g_InputHandle);
@@ -86,14 +103,7 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 		DrawWritingMessage();
 	}
 
-	//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
-
-	//	//文字列を登録
-	//	savedMessage.emplace_back(bufMessage);
-	//	bufMessage = "";
-	//	//シークエンスを移動する
-	//	sequence.change(&ChatBase::SeqWait);
-	//}
+	
 	return true;
 }
 
