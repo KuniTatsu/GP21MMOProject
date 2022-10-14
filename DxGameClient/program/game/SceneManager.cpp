@@ -1,6 +1,7 @@
 #include"SceneManager.h"
 #include "scene/scene_base.h"
 #include"scene/scene_title.h"
+#include"scene/scene_map.h"
 
 SceneManager* SceneManager::instance = nullptr;
 
@@ -46,7 +47,9 @@ void SceneManager::chengeScene(SceneBase* next)
 SceneManager::SceneManager()
 {
 	imgBlack = LoadGraph("graphics/black.bmp");
-	nowScene = new SceneTitle();
+	//nowScene = new SceneTitle();
+	nowScene = new Scene_Map();
+
 	nowScene->initialzie();
 }
 

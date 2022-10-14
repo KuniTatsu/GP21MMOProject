@@ -5,6 +5,7 @@
 #include"../../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
+class Camera;
 
 class Actor :public std::enable_shared_from_this<Actor>
 {
@@ -41,7 +42,7 @@ public:
 	//*******èÉêàâºëzä÷êî åpè≥êÊÇ≈é¿ëï************//
 	virtual void Update() = 0;
 
-	virtual void Draw() = 0;
+	virtual void Draw(Camera* camera) = 0;
 
 	virtual void Init() = 0;
 
@@ -84,7 +85,7 @@ private:
 
 	void MoveDummy() {};
 
-
+protected:
 	const std::function< void(Actor*) > MOVEFUNC[4] = { &Actor::MoveUp,&Actor::MoveRight,&Actor::MoveDown,&Actor::MoveLeft };
 };
 

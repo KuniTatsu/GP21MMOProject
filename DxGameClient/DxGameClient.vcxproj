@@ -154,11 +154,13 @@
     <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h" />
     <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
     <ClInclude Include="program\game\Actor\Actor.h" />
+    <ClInclude Include="program\game\Actor\Camera.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\GameManager.h" />
     <ClInclude Include="program\game\main.h" />
     <ClInclude Include="program\game\SceneManager.h" />
     <ClInclude Include="program\game\scene\scene_base.h" />
+    <ClInclude Include="program\game\scene\scene_map.h" />
     <ClInclude Include="program\game\scene\scene_title.h" />
     <ClInclude Include="program\library\json11.hpp" />
     <ClInclude Include="program\library\picojson.h" />
@@ -215,6 +217,7 @@
     <ClCompile Include="program\game\GameManager.cpp" />
     <ClCompile Include="program\game\main.cpp" />
     <ClCompile Include="program\game\SceneManager.cpp" />
+    <ClCompile Include="program\game\scene\scene_map.cpp" />
     <ClCompile Include="program\game\scene\scene_title.cpp" />
     <ClCompile Include="program\library\json11.cpp" />
     <ClCompile Include="program\library\tnl_font_texture.cpp" />

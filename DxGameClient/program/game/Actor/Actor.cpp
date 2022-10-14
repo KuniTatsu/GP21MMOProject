@@ -1,5 +1,6 @@
 #include "Actor.h"
 #include"../GameManager.h"
+#include"Camera.h"
 
 Actor::Actor()
 {
