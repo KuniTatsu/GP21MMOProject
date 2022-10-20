@@ -1,7 +1,7 @@
 #include "scene_map.h"
 #include"../GameManager.h"
 #include"../Actor/Player.h"
-#include"../Map.h"
+#include"Map.h"
 
 void Scene_Map::initialzie()
 {
@@ -22,13 +22,14 @@ void Scene_Map::update(float delta_time)
 
 void Scene_Map::render()
 {
-	/*マップチップの生成*/
-	//mapChip(&cAmera);
-	for (auto ma : map) {
-		ma->Draw(&camera);
-	}
 	/*Playerの生成*/
 	player->Draw(&camera);
+
+	/*マップチップの生成*/
+	/*for (auto ma : map) {
+		ma->Draw(&camera);
+	}*/
+	
 	
 	/*どこのシーンであるか*/
 	SetFontSize(50);

@@ -1,6 +1,8 @@
 #include "Map.h"
-#include"scene/scene_map.h"
-#include"GameManager.h"
+#include"scene_map.h"
+#include"../GameManager.h"
+
+static Scene_Map* sceneMap;
 
 Map::Map(tnl::Vector3 plapos)
 {
@@ -9,7 +11,7 @@ Map::Map(tnl::Vector3 plapos)
 	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
 	img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
 	img_mapchip_player = gManager->LoadGraphEx("graphics/player_sample.png");
-	scenemap->map.emplace_back(this);
+	sceneMap->map.emplace_back(this);
 }
 
 void Map::Update(float deltatime) {
@@ -73,8 +75,8 @@ void Map::mapSearch(Camera* camera, int x, int y, int n) {
 		if (x == ArrayX00 && y == ArrayY00 ||
 			x == ArrayX01 && y == ArrayY01 ||
 			x == ArrayX02 && y == ArrayY02 ||
-			x == ArrayX10 && y == ArrayY1  ||
-			x == ArrayX12 && y == ArrayY1  ||
+			x == ArrayX10 && y == ArrayY1 ||
+			x == ArrayX12 && y == ArrayY1 ||
 			x == ArrayX20 && y == ArrayY20 ||
 			x == ArrayX21 && y == ArrayY21 ||
 			x == ArrayX22 && y == ArrayY22) {

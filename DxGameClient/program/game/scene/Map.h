@@ -1,6 +1,6 @@
 #pragma once
-#include"../dxlib_ext/dxlib_ext.h"
-#include"Actor/Camera.h"
+#include"../../dxlib_ext/dxlib_ext.h"
+#include"../Actor/Camera.h"
 
 class Scene_Map;
 class GameManager;
@@ -25,12 +25,12 @@ public:
 	void Update(float deltatime);
 	void Draw(Camera* camera);
 private:
-	
+
 	int playerX = 0;
 	int playerY = 0;
 
-	Scene_Map* scenemap = nullptr;
+	//Scene_Map* scenemap = nullptr;
 	GameManager* gManager = nullptr;
-	
+
 	void mapSearch(Camera* camera, int x, int y, int n);
 };
