@@ -4,14 +4,14 @@
 
 class GameManager;
 class Player;
-class Map;
+//class Map;
 
 class Scene_Map : public SceneBase {
 public:
 	Scene_Map(){}
 	~Scene_Map() {}
 
-	std::list<Map*> map;
+	//std::list<Map*> map;
 
 	void initialzie() override;
 	void update(float delta_time) override;

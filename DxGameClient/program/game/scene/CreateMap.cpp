@@ -1,27 +1,28 @@
-#include "Map.h"
-#include"scene_map.h"
+#include"CreateMap.h"
 #include"../GameManager.h"
+#include"scene_map.h"
+#include"../Actor/Camera.h"
 
-static Scene_Map* sceneMap;
-
-Map::Map(tnl::Vector3 plapos)
+CreateMap::CreateMap(tnl::Vector3 start)
 {
-	PlayerPos = plapos;
+	PlayerPos = start;
 	/*‰æ‘œƒ[ƒh*/
 	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
 	img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
 	img_mapchip_player = gManager->LoadGraphEx("graphics/player_sample.png");
-	sceneMap->map.emplace_back(this);
+	//sceneMap->map.emplace_back(this);
 }
 
-void Map::Update(float deltatime) {
+void CreateMap::Update(float deltatime)
+{
 
 }
-void Map::Draw(Camera* camera) {
+void CreateMap::Draw(Camera* camera)
+{
 	CreateMapChip(camera);
 }
 
-void Map::CreateMapChip(Camera* camera)
+void CreateMap::CreateMapChip(Camera* camera)
 {
 	std::vector<std::vector<std::string>>map_csv;
 	map_csv = tnl::LoadCsv("csv/mapchip_island.csv");
@@ -48,7 +49,8 @@ void Map::CreateMapChip(Camera* camera)
 	}
 }
 
-void Map::mapSearch(Camera* camera, int x, int y, int n) {
+void CreateMap::mapSearch(Camera* camera, int x, int y, int n)
+{
 	playerX = static_cast<int>(PlayerPos.x) + static_cast<int>(camera->pos.x);
 	playerY = static_cast<int>(PlayerPos.y) + static_cast<int>(camera->pos.y);
 

@@ -1,17 +1,14 @@
 #pragma once
 #include"../../dxlib_ext/dxlib_ext.h"
-#include"../Actor/Camera.h"
 
 class Scene_Map;
+class Camera;
 class GameManager;
 
-class Map {
+class CreateMap {
 public:
-	/*マップの構成*/
-	//マップチップサイズ：32×32
-	//1チャンク個数:35×35
-	//マップサイズ:1120×1120
-	Map(tnl::Vector3 plapos);
+	CreateMap(tnl::Vector3 start);
+
 	tnl::Vector3 PlayerPos;
 
 	const int MAPCHIP_SIZE = 32;
@@ -29,7 +26,6 @@ private:
 	int playerX = 0;
 	int playerY = 0;
 
-	//Scene_Map* scenemap = nullptr;
 	GameManager* gManager = nullptr;
 
 	void mapSearch(Camera* camera, int x, int y, int n);

@@ -1,13 +1,13 @@
 #include "scene_map.h"
 #include"../GameManager.h"
 #include"../Actor/Player.h"
-#include"Map.h"
+//#include"Map.h"
 
 void Scene_Map::initialzie()
 {
 	gManager = GameManager::GetInstance();
 	player = new Player(200, 200);
-	new Map(player->GetPos());
+	//new Map(player->GetPos());
 }
 
 void Scene_Map::update(float delta_time)
