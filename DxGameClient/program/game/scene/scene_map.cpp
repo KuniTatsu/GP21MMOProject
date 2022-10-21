@@ -1,13 +1,12 @@
 #include "scene_map.h"
-#include"../GameManager.h"
 #include"../Actor/Player.h"
-//#include"Map.h"
+#include"CreateMap.h"
+#include"../GameManager.h"
 
 void Scene_Map::initialzie()
 {
-	gManager = GameManager::GetInstance();
 	player = new Player(200, 200);
-	//new Map(player->GetPos());
+	new CreateMap(player->GetPos());
 }
 
 void Scene_Map::update(float delta_time)
@@ -18,18 +17,26 @@ void Scene_Map::update(float delta_time)
 
 	/*カメラ操作*/
 	camera.pos += (player->GetPos() - camera.pos) * 0.1f;
-}
 
+	/*std::list<CreateMap*>::iterator it = map.begin();
+	while (it != map.end()) {
+		if (!(*it)->is_alive) {
+			delete(*it);
+			it = map.erase(it);
+			continue;
+		}
+		it++;
+	}*/
+}
 void Scene_Map::render()
 {
-	/*Playerの生成*/
-	player->Draw(&camera);
 
-	/*マップチップの生成*/
-	/*for (auto ma : map) {
+	for (auto ma : map) {
 		ma->Draw(&camera);
-	}*/
+	}
 	
+	/*Playerの描画*/
+	player->Draw(&camera);
 	
 	/*どこのシーンであるか*/
 	SetFontSize(50);

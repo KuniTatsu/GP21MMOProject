@@ -3,14 +3,22 @@
 #include"scene_map.h"
 #include"../Actor/Camera.h"
 
+static Scene_Map* sceneMap = nullptr;
+
 CreateMap::CreateMap(tnl::Vector3 start)
 {
+	/*Playerのポジション代入*/
 	PlayerPos = start;
+	
+	/*インスタンス生成*/
+	GameManager* gmgr = GameManager::GetInstance();
+	sceneMap = new Scene_Map();
+	
 	/*画像ロード*/
-	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
-	img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
-	img_mapchip_player = gManager->LoadGraphEx("graphics/player_sample.png");
-	//sceneMap->map.emplace_back(this);
+	img_mapchip_grass = gmgr->LoadGraphEx("graphics/mapchip_grass.png");
+	img_mapchip_sea = gmgr->LoadGraphEx("graphics/mapchip_sea.png");
+	img_mapchip_player = gmgr->LoadGraphEx("graphics/player_sample.png");
+	sceneMap->map.emplace_back(this);
 }
 
 void CreateMap::Update(float deltatime)
@@ -22,6 +30,7 @@ void CreateMap::Draw(Camera* camera)
 	CreateMapChip(camera);
 }
 
+/*ﾏｯﾌﾟチップの生成*/
 void CreateMap::CreateMapChip(Camera* camera)
 {
 	std::vector<std::vector<std::string>>map_csv;
@@ -49,6 +58,7 @@ void CreateMap::CreateMapChip(Camera* camera)
 	}
 }
 
+/*Playerの近接する9マスのチップ生成*/
 void CreateMap::mapSearch(Camera* camera, int x, int y, int n)
 {
 	playerX = static_cast<int>(PlayerPos.x) + static_cast<int>(camera->pos.x);

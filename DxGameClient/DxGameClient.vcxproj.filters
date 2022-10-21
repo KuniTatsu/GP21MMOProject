@@ -272,9 +272,6 @@
     <ClCompile Include="program\game\scene\scene_map.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="program\game\Map.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="program\game\scene\CreateMap.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
