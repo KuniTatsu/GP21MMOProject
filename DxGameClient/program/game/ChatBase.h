@@ -36,6 +36,12 @@ private:
 	//入力中の文字列
 	std::string bufMessage;
 
+	//テスト用
+	std::vector<std::string>hoge;
+
+	//チャット欄
+	int chatArea = 0;;
+
 	char buffer[100] = {};
 
 	tnl::Sequence<ChatBase> sequence =

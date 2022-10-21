@@ -13,6 +13,7 @@
 ChatBase::ChatBase()
 {
 	gManager = GameManager::GetInstance();
+	
 	connect = new Connect();
 
 	//サーバーに接続
@@ -25,6 +26,13 @@ ChatBase::ChatBase()
 		tnl::DebugTrace("失敗");
 	}
 	tnl::DebugTrace("\n");
+
+	
+	connect->GetServerMessage(hoge);
+
+	//チャット欄のスクリーンを生成
+	chatArea = MakeScreen(340, 400, TRUE);
+
 
 
 	// キー入力ハンドルを作る(キャンセルあり全角文字有り数値入力なし)
@@ -55,9 +63,50 @@ void ChatBase::Write()
 
 void ChatBase::DrawAllMessage()
 {
-	for (int i = 0; i < savedMessage.size(); ++i) {
-		DrawStringEx(100, 100 + i * 20, -1, savedMessage[i].c_str());
+	//チャットを描画するエリアを限定する
+	SetDrawScreen(chatArea);
+	SetBackgroundColor(32, 32, 32, 180);
+	ClearDrawScreen();
+
+	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 180);
+
+	//保存されたメッセージから最新の10個のみを描画する
+	//空じゃなかったら
+	if (!savedMessage.empty()) {
+		//auto hoge = savedMessage.end();
+
+		int arrayNum = savedMessage.size();
+		for (int i = 0; i < 10; ++i) {
+
+			if (i + 1 > arrayNum)break;
+
+			auto hoge = std::to_string(i) + "番目のメッセージを描画したよ";
+			tnl::DebugTrace(hoge.c_str());
+			tnl::DebugTrace("\n");
+
+			if (arrayNum < 10) {
+				DrawStringEx(20, 10 + (i * 20), -1, savedMessage[i].c_str());
+			}
+			else {
+				int messageNum = i + (arrayNum - 10);
+
+				DrawStringEx(20, 10 + (i * 20), -1, savedMessage[messageNum].c_str());
+			}
+		}
 	}
+
+	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+
+
+	/*for (int i = 0; i < savedMessage.size(); ++i) {
+		DrawStringEx(20, 10 + i * 20, -1, savedMessage[i].c_str());
+	}*/
+
+	//元の画面への出力に切り替え
+	SetDrawScreen(DX_SCREEN_BACK);
+	//チャットを描画するエリアを一枚絵として描画する
+	DrawGraph(10, 300, chatArea, true);
+
 }
 
 void ChatBase::Update()
@@ -73,6 +122,10 @@ void ChatBase::Draw()
 
 bool ChatBase::SeqDrawMessage(const float deltatime)
 {
+	if (sequence.isStart()) {
+		// 入力文字列を初期化する
+		SetKeyInputString("", g_InputHandle);
+	}
 
 	//Write();
 	int hoge = CheckKeyInput(g_InputHandle);
@@ -80,14 +133,22 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 	if (hoge != 0) {
 
 		//正常終了時のみメッセージを保存、送信する
-		if(hoge==1){
-		//入力された文字列を保存する
-		GetKeyInputString(buffer,g_InputHandle);
+		if (hoge == 1) {
+			//入力された文字列を保存する
+			GetKeyInputString(buffer, g_InputHandle);
 
-		std::string buf = buffer;
-		savedMessage.emplace_back(buf);
-		//サーバーにbufを送る
-		//connect->SendClientMessage(buf);
+			std::string buf = buffer;
+
+			tnl::DebugTrace("-------------------");
+			tnl::DebugTrace("\n");
+
+			//空白文字なら登録しない
+			if (buf != "") {
+				savedMessage.emplace_back(buf);
+				//サーバーにbufを送る
+				//connect->SendClientMessage(buf);
+			}
+
 		}
 
 		// 入力文字列を初期化する
@@ -103,13 +164,13 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 		DrawWritingMessage();
 	}
 
-	
+
 	return true;
 }
 
 bool ChatBase::SeqWait(const float deltatime)
 {
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_TAB)) {		
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_TAB)) {
 		//シークエンスを移動する
 		sequence.change(&ChatBase::SeqDrawMessage);
 	}

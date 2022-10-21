@@ -34,6 +34,7 @@ void Scene_Map::render()
 	/*Ç«Ç±ÇÃÉVÅ[ÉìÇ≈Ç†ÇÈÇ©*/
 	SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");
+	SetFontSize(16);
 }
 
 void Scene_Map::mapChip(Camera* camera)

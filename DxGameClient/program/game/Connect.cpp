@@ -7,11 +7,17 @@
 #include <cstdlib>
 #include <iostream>
 
+#include"../json11.hpp"
+
+#include<boost/version.hpp>
+
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
 namespace websocket = beast::websocket; // from <boost/beast/websocket.hpp>
 namespace net = boost::asio;            // from <boost/asio.hpp>
 using tcp = boost::asio::ip::tcp;       // from <boost/asio/ip/tcp.hpp>
+
+using namespace json11;
 
 // The io_context is required for all I/O
 net::io_context ioc;
@@ -22,6 +28,15 @@ websocket::stream<tcp::socket> ws{ ioc };
 
 Connect::Connect()
 {
+	//std::cout << BOOST_VERSION << std::endl;
+	/*int major = BOOST_VERSION / 100000;
+	int minor = BOOST_VERSION / 100 % 1000;
+	int patch = BOOST_VERSION % 100;
+
+	auto hoge = "boost.version" + std::to_string(major) + "." + std::to_string(minor);
+	std::cout << "boost version " << major << "." << minor << "." << patch
+		<< " or " << BOOST_LIB_VERSION << std::endl;*/
+
 }
 
 Connect::~Connect()
@@ -30,11 +45,9 @@ Connect::~Connect()
 
 int Connect::ConnectServer()
 {
+	
 	try
 	{
-		/* std::string host = "127.0.0.1";
-		 const std::string  port = "9001";*/
-
 		 // Look up the domain name
 
 		auto const results = resolver.resolve(host, port);
@@ -58,8 +71,6 @@ int Connect::ConnectServer()
 
 		// Perform the websocket handshake
 		ws.handshake(host, "/");
-
-
 	}
 	catch (std::exception const& e)
 	{
@@ -67,7 +78,9 @@ int Connect::ConnectServer()
 		return EXIT_FAILURE;
 	}
 	return 0;
+	
 }
+
 
 void Connect::SendClientMessage(std::string sendMessage)
 {
@@ -75,8 +88,15 @@ void Connect::SendClientMessage(std::string sendMessage)
 
 	myLastMessage = sendMessage;
 
+
+	Json obj = Json::object({
+		{ "sendMessage", text },
+		});
+
 	// Send the message
-	ws.write(net::buffer(text));
+	//ws.write(net::buffer(text));
+
+	ws.write(obj);
 
 }
 
@@ -85,9 +105,13 @@ void Connect::GetServerMessage(std::vector<std::string>& Save)
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
 
+
 	// Read a message into our buffer
 	ws.read(buffer);
 
+	ws.text(true);
+
+	const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
 	
 	std::string getMessage = beast::buffers_to_string(buffer.data());
 
