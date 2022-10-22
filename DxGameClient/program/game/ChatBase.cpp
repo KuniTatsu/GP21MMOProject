@@ -9,6 +9,42 @@
 	・Enterキーを押した時点で表示されている文字列が配列に入り、保管される
 */
 
+using namespace std;
+
+std::string SjistoUTF8(std::string srcSjis)
+{
+	//Unicodeへ変換後の文字列長を得る
+	int lenghtUnicode = MultiByteToWideChar(CP_THREAD_ACP, 0, srcSjis.c_str(), srcSjis.size() + 1, NULL, 0);
+
+	//必要な分だけUnicode文字列のバッファを確保
+	wchar_t* bufUnicode = new wchar_t[lenghtUnicode];
+
+	memset(bufUnicode, 0, sizeof(char) * lenghtUnicode);
+
+	//ShiftJISからUnicodeへ変換
+	MultiByteToWideChar(CP_THREAD_ACP, 0, srcSjis.c_str(), srcSjis.size() + 1, bufUnicode, lenghtUnicode);
+
+
+	//UTF8へ変換後の文字列長を得る
+	int lengthUTF8 = WideCharToMultiByte(CP_UTF8, 0, bufUnicode, -1, NULL, 0, NULL, NULL);
+
+	//必要な分だけUTF8文字列のバッファを確保
+	char* bufUTF8 = new char[lengthUTF8];
+
+	memset(bufUTF8, 0, sizeof(char) * lengthUTF8);
+
+	//UnicodeからUTF8へ変換
+	WideCharToMultiByte(CP_UTF8, 0, bufUnicode, lenghtUnicode - 1, bufUTF8, lengthUTF8, NULL, NULL);
+
+
+	std::string strUTF8(bufUTF8);
+
+	delete[] bufUnicode;
+	delete[] bufUTF8;
+
+	return strUTF8;
+}
+
 
 ChatBase::ChatBase()
 {
@@ -27,13 +63,19 @@ ChatBase::ChatBase()
 	}
 	tnl::DebugTrace("\n");
 
+	string test = "こんにちは";
+	
+	string utf = SjistoUTF8(test);
+
+	//メッセージを送信
+	connect->SendClientMessage(utf);
 	
 	connect->GetServerMessage(hoge);
 
+
+
 	//チャット欄のスクリーンを生成
 	chatArea = MakeScreen(340, 400, TRUE);
-
-
 
 	// キー入力ハンドルを作る(キャンセルあり全角文字有り数値入力なし)
 	CreateKeyInput();

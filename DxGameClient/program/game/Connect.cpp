@@ -26,6 +26,41 @@ net::io_context ioc;
 tcp::resolver resolver{ ioc };
 websocket::stream<tcp::socket> ws{ ioc };
 
+std::string UTF8toSjis(std::string srcUTF8)
+{
+	//Unicodeへ変換後の文字列長を得る
+	int lenghtUnicode = MultiByteToWideChar(CP_UTF8, 0, srcUTF8.c_str(), srcUTF8.size() + 1, NULL, 0);
+
+	//必要な分だけUnicode文字列のバッファを確保
+	wchar_t* bufUnicode = new wchar_t[lenghtUnicode];
+
+	memset(bufUnicode, 0, sizeof(char) * lenghtUnicode);
+
+	//UTF8からUnicodeへ変換
+	MultiByteToWideChar(CP_UTF8, 0, srcUTF8.c_str(), srcUTF8.size() + 1, bufUnicode, lenghtUnicode);
+
+	//ShiftJISへ変換後の文字列長を得る
+	int lengthSJis = WideCharToMultiByte(CP_THREAD_ACP, 0, bufUnicode, -1, NULL, 0, NULL, NULL);
+
+	//必要な分だけShiftJIS文字列のバッファを確保
+	char* bufShiftJis = new char[lengthSJis];
+
+	memset(bufShiftJis, 0, sizeof(char) * lengthSJis);
+
+	//UnicodeからShiftJISへ変換
+	WideCharToMultiByte(CP_THREAD_ACP, 0, bufUnicode, lenghtUnicode + 1, bufShiftJis, lengthSJis, NULL, NULL);
+
+	std::string strSJis(bufShiftJis);
+
+	delete[] bufUnicode;
+	delete[] bufShiftJis;
+
+	return strSJis;
+}
+
+
+
+
 Connect::Connect()
 {
 	//std::cout << BOOST_VERSION << std::endl;
@@ -45,10 +80,10 @@ Connect::~Connect()
 
 int Connect::ConnectServer()
 {
-	
+
 	try
 	{
-		 // Look up the domain name
+		// Look up the domain name
 
 		auto const results = resolver.resolve(host, port);
 
@@ -78,7 +113,7 @@ int Connect::ConnectServer()
 		return EXIT_FAILURE;
 	}
 	return 0;
-	
+
 }
 
 
@@ -89,14 +124,15 @@ void Connect::SendClientMessage(std::string sendMessage)
 	myLastMessage = sendMessage;
 
 
-	Json obj = Json::object({
-		{ "sendMessage", text },
-		});
+	/*Json obj = Json::object({
+		{ "message", text },
+		});*/
+		//obj.string_value();
 
-	// Send the message
-	//ws.write(net::buffer(text));
+		// Send the message
+	ws.write(net::buffer(text));
 
-	ws.write(obj);
+	//ws.write(net::buffer(obj.string_value()));
 
 }
 
@@ -112,12 +148,19 @@ void Connect::GetServerMessage(std::vector<std::string>& Save)
 	ws.text(true);
 
 	const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
-	
-	std::string getMessage = beast::buffers_to_string(buffer.data());
+
+	const std::string getMessage = beast::buffers_to_string(buffer.data());
+
+	std::string err;
+	auto hoge = json11::Json::parse(getMessage,err);
+	//Json::parse()
+
+	auto message = UTF8toSjis(hoge["info"].string_value());
+	auto count = hoge["count"].int_value();
 
 	//自分が送ったメッセージだった場合は登録しない
 	if (getMessage == myLastMessage)return;
 	//引数のvectorに登録
-	Save.emplace_back(getMessage);
+	Save.emplace_back(message);
 
 }
