@@ -362,3 +362,5 @@ MigrationBackup/
 FodyWeavers.xsd
 Log.txt
 DxGameClient/DxGameClient.vcxproj.filters
+
+*.txt
