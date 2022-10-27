@@ -1,10 +1,9 @@
+#include"scene_map.h"
 #include"CreateMap.h"
 #include"../GameManager.h"
-#include"scene_map.h"
 #include"../Actor/Camera.h"
-//#include"../../../"
 
-//static Scene_Map* sceneMap = nullptr;
+static Scene_Map* sceneMap;
 
 CreateMap::CreateMap(tnl::Vector3 start)
 {
@@ -12,21 +11,23 @@ CreateMap::CreateMap(tnl::Vector3 start)
 	PlayerPos = start;
 	
 	/*インスタンス生成*/
-	//sceneMap = new Scene_Map();
 	gManager = GameManager::GetInstance();
+	//sceneMap = new Scene_Map();
+	tnl::DebugTrace("CreateMapがnewされた\n");
 	
 	/*画像ロード*/
 	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
-	//img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
-	//sceneMap->map.emplace_back(this);
+	img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
+	sceneMap->map.emplace_back(this);
 }
 
 void CreateMap::Update(float deltatime)
 {
 
 }
-void CreateMap::Draw(Camera* camera)
+void CreateMap::DrawM(Camera* camera)
 {
+	tnl::DebugTrace("CreateMapのDrawが動いている\n");
 	CreateMapChip(camera);
 }
 

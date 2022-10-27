@@ -4,6 +4,7 @@
 
 class Camera;
 class GameManager;
+class Scene_Map;
 
 class CreateMap  : public CreateMapBase {
 public:
@@ -22,7 +23,7 @@ public:
 	void CreateMapChip(Camera* camera);
 
 	void Update(float deltatime);
-	void Draw(Camera* camera);
+	void DrawM(Camera* camera);
 
 	void UpdateMap(float deltatime) override;
 	void DrawMap(Camera* camera) override;
@@ -32,6 +33,7 @@ private:
 	int playerY = 0;
 
 	GameManager* gManager = nullptr;
+	//static Scene_Map* sceneMap;
 
 	void mapSearch(Camera* camera, int x, int y, int n);
 };

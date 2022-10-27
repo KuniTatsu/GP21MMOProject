@@ -1,11 +1,12 @@
 #pragma once
 #include"scene_base.h"
+#include"CreateMap.h"
 #include"../Actor/Camera.h"
-//#include<list>
+#include<list>
 
 class Player;
 class CreateMapBase;
-class CreateMap;
+//class CreateMap;
 
 class Scene_Map : public SceneBase {
 public:
@@ -13,8 +14,8 @@ public:
 	~Scene_Map() {}
 
 	std::list<CreateMapBase*> mapBase;
-	//std::list<CreateMap*>	map;
-	CreateMap* map = nullptr;
+	std::list<CreateMap*>	map;
+	//CreateMap* map = nullptr;
 
 	void initialzie() override;
 	void update(float delta_time) override;
