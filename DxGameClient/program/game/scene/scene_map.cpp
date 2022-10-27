@@ -1,11 +1,13 @@
 #include "scene_map.h"
 #include"../Actor/Player.h"
 #include"CreateMap.h"
+#include"CreateMapBase.h"
 #include"../GameManager.h"
 
 void Scene_Map::initialzie()
 {
 	player = new Player(200, 200);
+	//new CreateMapBase();
 	new CreateMap(player->GetPos());
 }
 
@@ -31,10 +33,16 @@ void Scene_Map::update(float delta_time)
 void Scene_Map::render()
 {
 
-	for (auto ma : map) {
-		ma->Draw(&camera);
-	}
+	//for (auto ma : map) {
+	//	ma->Draw(&camera);
+	//}
 	
+	/*for (auto mab : mapBase) {
+		mab->DrawMap(&camera);
+	}*/
+
+	map->Draw(&camera);
+
 	/*Player‚Ì•`‰æ*/
 	player->Draw(&camera);
 	
