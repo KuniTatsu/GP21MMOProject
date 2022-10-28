@@ -144,9 +144,6 @@
     <ClInclude Include="program\game\scene\CreateMap.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="program\game\scene\CreateMapBase.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">
@@ -276,9 +273,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="program\game\scene\CreateMap.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\scene\CreateMapBase.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,15 +1,13 @@
 #pragma once
 #include"../../dxlib_ext/dxlib_ext.h"
-#include"CreateMapBase.h"
 
 class Camera;
 class GameManager;
-class Scene_Map;
+class SceneManager;
 
-class CreateMap  : public CreateMapBase {
+class CreateMap  {
 public:
 	CreateMap(tnl::Vector3 start);
-	
 	
 	tnl::Vector3 PlayerPos;
 
@@ -23,17 +21,14 @@ public:
 	void CreateMapChip(Camera* camera);
 
 	void Update(float deltatime);
-	void DrawM(Camera* camera);
+	void Draw(Camera* camera);
 
-	void UpdateMap(float deltatime) override;
-	void DrawMap(Camera* camera) override;
 private:
 
 	int playerX = 0;
 	int playerY = 0;
 
 	GameManager* gManager = nullptr;
-	//static Scene_Map* sceneMap;
-
+	
 	void mapSearch(Camera* camera, int x, int y, int n);
 };
