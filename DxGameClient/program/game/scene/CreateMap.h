@@ -3,7 +3,6 @@
 
 class Camera;
 class GameManager;
-class SceneManager;
 
 class CreateMap  {
 public:

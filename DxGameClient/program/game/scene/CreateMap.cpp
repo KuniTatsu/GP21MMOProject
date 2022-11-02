@@ -1,25 +1,18 @@
-#include"scene_map.h"
 #include"CreateMap.h"
-#include"../SceneManager.h"
 #include"../GameManager.h"
 #include"../Actor/Camera.h"
-
-Scene_Map* sceneMap;
 
 CreateMap::CreateMap(tnl::Vector3 start)
 {
 	/*インスタンス生成*/
 	gManager = GameManager::GetInstance();
-	//sceneMap = new Scene_Map();
+	//sMap = new Scene_Map();
 	/*Playerのポジション代入*/
 	PlayerPos = start;
 
 	/*画像ロード*/
 	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
 	img_mapchip_sea = gManager->LoadGraphEx("graphics/mapchip_sea.png");
-	if (sceneMap) {
-		sceneMap->map.emplace_back(this);
-	}
 }
 
 void CreateMap::Update(float deltatime)
