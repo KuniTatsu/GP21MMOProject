@@ -23,6 +23,15 @@ public:
 	inline const std::vector<std::shared_ptr<Map>>& GetNearMaps() {
 		return nearMaps;
 	}
+
+	inline tnl::Vector3& GetMapLeftTopPos() {
+		return mapLeftTopPos;
+	}
+	inline tnl::Vector3& GetMapRightBottomPos() {
+		return mapRightBottomPos;
+	}
+
+	void SetNearMap(int dirNum,std::shared_ptr<Map>map);
 private:
 	tnl::Vector3 PlayerPos;
 	GameManager* gManager = nullptr;
@@ -32,6 +41,11 @@ private:
 	std::vector<std::vector<int>> mapChips;
 	//マップの中心座標
 	tnl::Vector3 mapCenterPos;
+	//マップの左上の座標
+	tnl::Vector3 mapLeftTopPos;
+	//マップの右下の座標
+	tnl::Vector3 mapRightBottomPos;
+
 	//周囲の8マップ
 	std::vector<std::shared_ptr<Map>>nearMaps;
 

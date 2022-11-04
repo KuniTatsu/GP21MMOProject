@@ -61,22 +61,43 @@ std::shared_ptr<Player> GameManager::CreatePlayer()
 
 bool GameManager::CreateMap()
 {
+	int hoge = 0;
 	if (Maps.empty()) {
-		auto newMap = std::make_shared<Map>(tnl::Vector3(0,0,0));
-		Maps.emplace_back(newMap);
+		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0));
+		firstMap->test = hoge;
+		hoge++;
+		Maps.emplace_back(firstMap);
 
-		std::vector<std::shared_ptr<Map>>nearMap = newMap->GetNearMaps();
+		std::vector<std::shared_ptr<Map>>nearMap = firstMap->GetNearMaps();
 		for (int i = 0; i < 8; ++i) {
 			if (nearMap[i] != nullptr)continue;
 
 			//nullだった場合の処理
 			//Mapを新しく生成する
-			tnl::Vector3 createMapCenter = newMap->GetMapCenterPos() + MAPPOSOFFSET[i];
+			tnl::Vector3 createMapCenter = firstMap->GetMapCenterPos() + MAPPOSOFFSET[i];
 			auto newMap = std::make_shared<Map>(createMapCenter);
+			newMap->test = hoge;
+			hoge++;
 
 			Maps.emplace_back(newMap);
-			nearMap[i] = newMap;
+			firstMap->SetNearMap(i, newMap);
 		}
+		//各マップの周囲のマップを登録する
+		for (auto map : Maps) {
+			auto nearMap = map->GetNearMaps();
+			for (int i = 0; i < 8; ++i) {
+				
+				if (nearMap[i] == nullptr) {
+					tnl::Vector3 mapCenter = map->GetMapCenterPos() + MAPPOSOFFSET[i];
+
+					auto selectMap = GetMapOnPoint(mapCenter);
+					if (selectMap != nullptr) {
+						map->SetNearMap(i, selectMap);
+					}
+				}
+			}
+		}
+
 		return true;
 	}
 
@@ -92,9 +113,28 @@ bool GameManager::CreateMap()
 		//Mapを新しく生成する
 		tnl::Vector3 createMapCenter = nowMap->GetMapCenterPos() + MAPPOSOFFSET[i];
 		auto newMap = std::make_shared<Map>(createMapCenter);
+		newMap->test = hoge;
+		hoge++;
 
 		Maps.emplace_back(newMap);
-		nearMap[i] = newMap;
+		nowMap->SetNearMap(i, newMap);
+
+		//各マップの周囲のマップを登録する
+		for (auto map : Maps) {
+			auto nearMap = map->GetNearMaps();
+			for (int i = 0; i < 8; ++i) {
+
+				if (nearMap[i] == nullptr) {
+					tnl::Vector3 mapCenter = map->GetMapCenterPos() + MAPPOSOFFSET[i];
+
+					auto selectMap = GetMapOnPoint(mapCenter);
+					if (selectMap != nullptr) {
+						map->SetNearMap(i, selectMap);
+					}
+				}
+			}
+		}
+		
 		isSuccess = true;
 	}
 	return isSuccess;
@@ -103,6 +143,11 @@ bool GameManager::CreateMap()
 bool GameManager::IsOnMap()
 {
 	return false;
+}
+
+void GameManager::SetStayMap()
+{
+	lastStayMap = GetPlayerOnMap();
 }
 
 std::shared_ptr<Map> GameManager::GetPlayerOnMap()
@@ -135,6 +180,26 @@ std::shared_ptr<Map> GameManager::GetPlayerOnMap()
 	return Maps.front();
 }
 
+std::shared_ptr<Map> GameManager::GetMapOnPoint(tnl::Vector3& Point)
+{
+	for (auto map : Maps) {
+
+		auto leftTop = map->GetMapLeftTopPos();
+		auto rightBottom = map->GetMapRightBottomPos();
+
+		if (Point.x<leftTop.x || Point.x>rightBottom.x || Point.y<leftTop.y || Point.y>rightBottom.y)continue;
+		return map;
+	}
+	return nullptr;
+}
+
+bool GameManager::IsOverChunk()
+{
+	auto stayMap = GetPlayerOnMap();
+	if (stayMap == lastStayMap)return false;
+	return true;
+}
+
 float GameManager::GetMapToPlayerDistance(std::shared_ptr<Map> map)
 {
 	tnl::Vector3 playerPos = player->GetPos();
@@ -144,6 +209,22 @@ float GameManager::GetMapToPlayerDistance(std::shared_ptr<Map> map)
 		(mapPos.y - playerPos.y) * (mapPos.y - playerPos.y));
 
 	return distance;
+}
+
+std::list<std::shared_ptr<Map>> GameManager::GetMapList()
+{
+	//プレイヤーに近い順でソート
+	GetPlayerOnMap();
+	std::list<std::shared_ptr<Map>>nearMap;
+
+	auto itr = Maps.begin();
+
+	for (int i = 0; i < 9; ++i) {
+		nearMap.emplace_back((*itr));
+		itr++;
+	}
+
+	return nearMap;
 }
 
 

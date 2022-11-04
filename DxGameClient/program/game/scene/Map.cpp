@@ -12,6 +12,14 @@ Map::Map(tnl::Vector3 centerPos)
 
 	mapCenterPos = centerPos;
 
+	float dis = (gManager->MAPSIZE - 1) / 2;
+	mapLeftTopPos = mapCenterPos
+		- (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
+			tnl::Vector3(dis, dis, 0)) - tnl::Vector3(gManager->CHIPWIDTH / 2, gManager->CHIPHEIGHT / 2, 0);
+	mapRightBottomPos = mapCenterPos
+		+ (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
+			tnl::Vector3(dis, dis, 0)) + tnl::Vector3(gManager->CHIPWIDTH / 2, gManager->CHIPHEIGHT / 2, 0);
+
 	//中心座標を元にマップチップを読み込んでvectorにしまう
 	LoadMap();
 
@@ -30,10 +38,12 @@ void Map::Update(const float deltatime)
 
 void Map::Draw(Camera* camera)
 {
-	/*for (int i = 1; i < 10; ++i) {
-		MapChipCreate(camera, i);
-	}*/
 	DrawMap(camera);
+}
+
+void Map::SetNearMap(int dirNum, std::shared_ptr<Map> map)
+{
+	nearMaps[dirNum] = map;
 }
 
 void Map::LoadMap()

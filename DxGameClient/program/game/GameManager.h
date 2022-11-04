@@ -25,6 +25,9 @@ private:
 	//各チャンクのマップポインタを持つ配列
 	std::list<std::shared_ptr<Map>>Maps;
 
+	//playerがいるマップのポインタ
+	std::shared_ptr<Map>lastStayMap = nullptr;
+
 	// ゲーム全体で参照したい変数はここで用意
 public:
 	static constexpr int SCREEN_WIDTH = 1024;
@@ -51,7 +54,7 @@ public:
 
 public:
 	// インスタンスの取得
-	static GameManager * GetInstance();
+	static GameManager* GetInstance();
 
 	void Update(float delta_time);
 
@@ -80,8 +83,16 @@ public:
 	//そのマップにこのクライアントのPlayerがいるかどうか
 	bool IsOnMap();
 
+	//Playerのいるマップの登録
+	void SetStayMap();
 	//Player(このクライアントの)がいるマップポインタを取得する関数
 	std::shared_ptr<Map>GetPlayerOnMap();
+
+	//指定座標からマップを取得する関数
+	std::shared_ptr<Map>GetMapOnPoint(tnl::Vector3& Point);
+
+	//Playerが越境したかどうか確かめる関数
+	bool IsOverChunk();
 
 	//Mapポインタの中心座標からPlayerの中心座標への距離を求める関数
 	float GetMapToPlayerDistance(std::shared_ptr<Map> map);
@@ -92,11 +103,9 @@ public:
 	}
 
 	//マップリストの取得
-	inline std::list<std::shared_ptr<Map>>& GetMapList() {
-		return Maps;
-	}
+	std::list<std::shared_ptr<Map>> GetMapList();
 
-	};
+};
 
 
 

@@ -16,8 +16,14 @@ Scene_Map::~Scene_Map()
 
 void Scene_Map::initialzie()
 {
+	//プレイヤーの生成
 	player=gManager->CreatePlayer();
+	//マップの生成
 	gManager->CreateMap();
+	//playerの初期マップを登録
+	gManager->SetStayMap();
+
+
 	//player = new Player(0, 0);
 	//createMap = new CreateMap(player->GetPos());
 	/*for (int i = 1; i < 10; ++i) {
@@ -54,19 +60,6 @@ void Scene_Map::update(float delta_time)
 }
 void Scene_Map::render()
 {
-
-	//DrawStringEx(100, 100, -1, "%1.0f", player->GetPos().x);
-
-	/*if (createChipRight) {
-		map.emplace_back(new Map(player->GetPos(), 6));
-		createChipRight = false;
-	}*/
-
-	/*Map描画*/
-	//createMap->Draw(&camera);
-	/*for (auto ma : map) {
-		ma->Draw(&camera);
-	}*/
 	for (auto map : gManager->GetMapList()) {
 		map->Draw(&camera);
 	}
