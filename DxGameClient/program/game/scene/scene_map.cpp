@@ -5,19 +5,34 @@
 #include"Map.h"
 
 
+Scene_Map::Scene_Map()
+{
+	gManager = GameManager::GetInstance();
+}
+
+Scene_Map::~Scene_Map()
+{
+}
+
 void Scene_Map::initialzie()
 {
-	player = new Player(0, 0);
+	player=gManager->CreatePlayer();
+	gManager->CreateMap();
+	//player = new Player(0, 0);
 	//createMap = new CreateMap(player->GetPos());
-	for (int i = 1; i < 10; ++i) {
+	/*for (int i = 1; i < 10; ++i) {
 		map.emplace_back(new Map(player->GetPos(), i));
-	}
+	}*/
 }
 
 void Scene_Map::update(float delta_time)
 {
 	/*PlayerëÄçÏ*/
 	player->Update();
+
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
+		gManager->CreateMap();
+	}
 
 	/*ÉJÉÅÉâëÄçÏ*/
 	camera.pos += (player->GetPos() - camera.pos) * 0.1f;
@@ -40,23 +55,25 @@ void Scene_Map::update(float delta_time)
 void Scene_Map::render()
 {
 
-	DrawStringEx(100, 100, -1, "%1.0f", player->GetPos().x);
+	//DrawStringEx(100, 100, -1, "%1.0f", player->GetPos().x);
 
-
-	if (createChipRight) {
+	/*if (createChipRight) {
 		map.emplace_back(new Map(player->GetPos(), 6));
 		createChipRight = false;
-	}
+	}*/
 
 	/*Mapï`âÊ*/
 	//createMap->Draw(&camera);
-	for (auto ma : map) {
+	/*for (auto ma : map) {
 		ma->Draw(&camera);
+	}*/
+	for (auto map : gManager->GetMapList()) {
+		map->Draw(&camera);
 	}
 
 	/*PlayerÇÃï`âÊ*/
 	player->Draw(&camera);
-	
+
 	/*Ç«Ç±ÇÃÉVÅ[ÉìÇ≈Ç†ÇÈÇ©*/
 	SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");

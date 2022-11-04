@@ -2,15 +2,21 @@
 #include"../Actor/Camera.h"
 #include"../GameManager.h"
 
-Map::Map(tnl::Vector3 start, int Chanknum)
+Map::Map(tnl::Vector3 centerPos)
 {
 	/*インスタンス生成*/
 	gManager = GameManager::GetInstance();
 
-	/*Playerのポジション代入*/
-	PlayerPos = start;
+	nearMaps.resize(8);
+	mapChips.resize(gManager->CHIPHEIGHT);
 
-	chanknum = Chanknum;
+	mapCenterPos = centerPos;
+
+	//中心座標を元にマップチップを読み込んでvectorにしまう
+	LoadMap();
+
+	///*Playerのポジション代入*/
+	//PlayerPos = start;
 
 	/*画像ロード*/
 	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
@@ -27,62 +33,46 @@ void Map::Draw(Camera* camera)
 	/*for (int i = 1; i < 10; ++i) {
 		MapChipCreate(camera, i);
 	}*/
-	MapChipCreate(camera, chanknum);
+	DrawMap(camera);
 }
 
-/*マップチップの生成、iはマスの場所番号*/
-void Map::MapChipCreate(Camera* camera, int i)
+void Map::LoadMap()
 {
 	std::vector<std::vector<std::string>>map_csv;
 	//map_csv = tnl::LoadCsv("csv/mapchip_island.csv");
 	map_csv = tnl::LoadCsv("csv/test.csv");
 
-	/*PosX*/
-	if (1 == i || 4 == i || 7 == i) {
-		ChipStartX = static_cast<int>(PlayerPos.x) + (gManager->SCREEN_WIDTH >> 1)
-			- (MAPCHIP_SIZE * (ChipMax + Margin));
-	}
-	if (2 == i || 5 == i || 8 == i) {
-		ChipStartX = static_cast<int>(PlayerPos.x) + (gManager->SCREEN_WIDTH >> 1)
-			- (MAPCHIP_SIZE * (ChipMax >> 1));
-	}
-	if (3 == i || 6 == i || 9 == i) {
-		ChipStartX = static_cast<int>(PlayerPos.x) + (gManager->SCREEN_WIDTH >> 1)
-			+ (MAPCHIP_SIZE * (Margin + 1));
-	}
-	/*PosY*/
-	if (1 == i || 2 == i || 3 == i) {
-		ChipStartY = static_cast<int>(PlayerPos.y) + (gManager->SCREEN_HEIGHT >> 1)
-			- (MAPCHIP_SIZE * (ChipMax + Margin));
-	}
-	if (4 == i || 5 == i || 6 == i) {
-		ChipStartY = static_cast<int>(PlayerPos.y) + (gManager->SCREEN_HEIGHT >> 1)
-			- (MAPCHIP_SIZE * (ChipMax >> 1));
-	}
-	if (7 == i || 8 == i || 9 == i) {
-		ChipStartY = static_cast<int>(PlayerPos.y) + (gManager->SCREEN_HEIGHT >> 1)
-			- (MAPCHIP_SIZE * (ChipMax - (ChipMax + Margin + 1)));
-	}
-
-
-	int x = 0;
-	int y = ChipStartY - static_cast<int>(camera->pos.y);
-
-	for (auto h : map_csv) {
-		x = ChipStartX - static_cast<int>(camera->pos.x);
-		for (auto w : h) {
-			int n = std::atoi(w.c_str());
-			//------------------------------------------------------------
-			/*画像の挿入＆描画範囲*/
-			//mapSearch(camera,x, y, n);
-			if (1 == n) {
-				DrawRotaGraph(x, y, 1.0f, 0, img_mapchip_grass, true);
-			}
-			if (2 == n) {
-				DrawRotaGraph(x, y, 1.0, 0, img_mapchip_grass_line, true);
-			}
-			x += MAPCHIP_SIZE;
+	for (int i = 0; i < map_csv.size(); ++i) {
+		for (int k = 0; k < map_csv.size(); ++k) {
+			mapChips[i].emplace_back(std::stoi(map_csv[i][k]));
 		}
-		y += MAPCHIP_SIZE;
+	}
+}
+
+/*マップチップの生成、iはマスの場所番号*/
+void Map::DrawMap(Camera* camera)
+{
+	float dis = (gManager->MAPSIZE - 1) / 2;
+	tnl::Vector3 leftTopChipPos = mapCenterPos
+		- (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
+			tnl::Vector3(dis, dis, 0));
+
+	int x = leftTopChipPos.x;
+	int y = leftTopChipPos.y;
+
+	for (auto h : mapChips) {
+		for (auto w : h) {
+			if (1 == w) {
+				DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+					y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_grass, true);
+			}
+			if (2 == w) {
+				DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+					y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0, 0, img_mapchip_grass_line, true);
+			}
+			x += gManager->CHIPWIDTH;
+		}
+		x = leftTopChipPos.x;
+		y += gManager->CHIPHEIGHT;
 	}
 }

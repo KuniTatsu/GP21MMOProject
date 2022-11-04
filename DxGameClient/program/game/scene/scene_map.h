@@ -2,15 +2,17 @@
 #include"scene_base.h"
 #include"CreateMap.h"
 #include"../Actor/Camera.h"
+#include<memory>
 
 class Player;
 class CreateMap;
 class Map;
+class GameManager;
 
 class Scene_Map : public SceneBase {
 public:
-	Scene_Map(){}
-	~Scene_Map() {}
+	Scene_Map();
+	~Scene_Map();
 
 	//std::list<CreateMap*>	map;
 	std::list<Map*> map;
@@ -20,9 +22,11 @@ public:
 	void render() override;
 private:
 
-	Player* player = nullptr;
+	std::shared_ptr<Player> player = nullptr;
 	CreateMap* createMap = nullptr;
 	Camera camera;
+
+	GameManager* gManager = nullptr;
 
 	bool createChipRight = false;
 
