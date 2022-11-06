@@ -1,6 +1,5 @@
 #pragma once
 #include"scene_base.h"
-#include"CreateMap.h"
 #include"../Actor/Camera.h"
 #include<memory>
 
@@ -23,7 +22,6 @@ public:
 private:
 
 	std::shared_ptr<Player> player = nullptr;
-	CreateMap* createMap = nullptr;
 	Camera camera;
 
 	GameManager* gManager = nullptr;

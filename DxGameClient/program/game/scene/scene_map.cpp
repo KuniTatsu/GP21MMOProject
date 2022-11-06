@@ -1,7 +1,6 @@
 #include "scene_map.h"
 #include"../Actor/Player.h"
 #include"../GameManager.h"
-#include"CreateMap.h"
 #include"Map.h"
 
 
@@ -24,11 +23,6 @@ void Scene_Map::initialzie()
 	gManager->SetStayMap();
 
 
-	//player = new Player(0, 0);
-	//createMap = new CreateMap(player->GetPos());
-	/*for (int i = 1; i < 10; ++i) {
-		map.emplace_back(new Map(player->GetPos(), i));
-	}*/
 }
 
 void Scene_Map::update(float delta_time)
