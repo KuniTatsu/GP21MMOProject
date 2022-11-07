@@ -51,6 +51,13 @@ public :
 	//すでにあるghならそれを返す
 	int LoadGraphEx(std::string Gh);
 
+	//string型の文字コード変換
+	std::string SjistoUTF8(std::string srcSjis);
+	std::string UTF8toSjis(std::string srcUTF8);
+
+	//当たり判定 短形同士
+	bool isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, tnl::Vector3& leftTop2, tnl::Vector3& rightBottom2);
+
 };
 
 

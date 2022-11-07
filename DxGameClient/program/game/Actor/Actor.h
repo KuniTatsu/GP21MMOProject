@@ -2,13 +2,16 @@
 
 #include<functional>
 #include<vector>
+#include<memory>
 #include"../../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
 class Camera;
+class ActorData;
 
 class Actor :public std::enable_shared_from_this<Actor>
 {
+	//getterなどはここに書く
 public:
 	Actor();
 	virtual~Actor() {}
@@ -46,6 +49,7 @@ public:
 
 	virtual void Init() = 0;
 
+	//継承先で使うかつprivateな変数はここに書く
 protected:
 	//描画座標
 	tnl::Vector3 drawPos;
@@ -53,6 +57,11 @@ protected:
 	//ローカル座標
 	tnl::Vector3 localPos;
 
+	//キャラクター画像の幅 初期値はプレイヤーの基本の大きさ
+	//横幅
+	float width = 32.0f;
+	//縦幅
+	float height = 32.0f;
 
 	//画像ハンドル
 	int gh = 0;
@@ -69,10 +78,27 @@ protected:
 		LEFT,
 		MAX
 	};
+	//攻撃タイプ
+	enum class ATTACKTYPE {
+		MELEE,
+		RANGE,
+		MAX
+	};
+	//自分の向いている方向
+	DIR myDir = DIR::DOWN;
 
+	//攻撃タイプ->持っている武器の種別 初期値は近接
+	ATTACKTYPE myType = ATTACKTYPE::MELEE;
+
+	//各種Actorのデータ
+	std::shared_ptr<ActorData> myData = nullptr;
+
+	//向いている方向の距離のオフセット 上,右,下,左
+	const tnl::Vector3 VECOFFSET[4] = {tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0)};
+
+
+	//このクラス内でしか使わない関数はここに書く
 private:
-
-
 	//移動関数 上下左右
 
 	void MoveUp();
@@ -85,7 +111,17 @@ private:
 
 	void MoveDummy() {};
 
+	//向いている方向の任意座標を取得する関数
+	tnl::Vector3 GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& distance);
+
+	//継承先で使う関数かつprivateなものはここに書く
 protected:
+	//移動関数のポインタ配列
 	const std::function< void(Actor*) > MOVEFUNC[4] = { &Actor::MoveUp,&Actor::MoveRight,&Actor::MoveDown,&Actor::MoveLeft };
+
+	//基本攻撃関数	
+	void DefaultAttack();
+	
+
 };
 
