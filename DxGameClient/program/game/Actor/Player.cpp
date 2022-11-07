@@ -54,6 +54,7 @@ void Player::Move()
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::LEFT)];
 		DrawStringEx(200, 400, -1, "LEFT");
 	}
+	if (moveX == 0 && moveY == 0)return;
 
 	//ˆÚ“®—Ê‚ª0‚Å‚È‚¯‚ê‚ÎƒxƒNƒgƒ‹‚ð³‹K‰»‚µ‚ÄˆÚ“®‚³‚¹‚é
 	if (moveX != 0 || moveY != 0) {
@@ -66,5 +67,11 @@ void Player::Move()
 		drawPos.x += fixMoveX;
 		drawPos.y += fixMoveY;
 
+	}
+
+	//gManager->SetStayMap();
+	if (gManager->IsOverChunk()) {
+		gManager->CreateMap();
+		gManager->SetStayMap();
 	}
 }

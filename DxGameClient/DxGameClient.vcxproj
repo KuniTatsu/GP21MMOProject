@@ -121,10 +121,12 @@
       <PreprocessorDefinitions>_DEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpp20</LanguageStandard>
+      <AdditionalIncludeDirectories>C:\boost_1_80_0\include\boost-1_80</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\boost_1_80_0\stage\lib\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -158,7 +160,9 @@
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\GameManager.h" />
     <ClInclude Include="program\game\main.h" />
+    <ClInclude Include="program\game\Map.h" />
     <ClInclude Include="program\game\SceneManager.h" />
+    <ClInclude Include="program\game\scene\Map.h" />
     <ClInclude Include="program\game\scene\scene_base.h" />
     <ClInclude Include="program\game\scene\scene_map.h" />
     <ClInclude Include="program\game\scene\scene_title.h" />
@@ -217,6 +221,7 @@
     <ClCompile Include="program\game\GameManager.cpp" />
     <ClCompile Include="program\game\main.cpp" />
     <ClCompile Include="program\game\SceneManager.cpp" />
+    <ClCompile Include="program\game\scene\Map.cpp" />
     <ClCompile Include="program\game\scene\scene_map.cpp" />
     <ClCompile Include="program\game\scene\scene_title.cpp" />
     <ClCompile Include="program\library\json11.cpp" />
