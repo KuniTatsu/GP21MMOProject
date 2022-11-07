@@ -23,6 +23,15 @@ void Scene_Map::initialzie()
 	gManager->SetStayMap();
 
 
+
+	/*PlayerÇÃê∂ê¨*/
+	player->Draw(&camera);
+	
+	/*Ç«Ç±ÇÃÉVÅ[ÉìÇ≈Ç†ÇÈÇ©*/
+	SetFontSize(50);
+	DrawStringEx(50, 50, -1, "Scene_map");
+	SetFontSize(16);
+
 }
 
 void Scene_Map::update(float delta_time)

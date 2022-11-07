@@ -6,6 +6,7 @@
 
 class SceneBase;
 class SceneManager;
+class ChatBase;
 class Map;
 class Player;
 
@@ -19,11 +20,13 @@ private:
 
 	SceneManager* sManager = nullptr;
 	std::shared_ptr<Player> player = nullptr;
+ChatBase* chat = nullptr;
 
 	//一度読み込んだghを保存するmap
 	std::unordered_map<std::string, int> ghmap;
 	//各チャンクのマップポインタを持つ配列
 	std::list<std::shared_ptr<Map>>Maps;
+
 
 	//playerがいるマップのポインタ
 	std::shared_ptr<Map>lastStayMap = nullptr;
@@ -39,6 +42,8 @@ public:
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
 
+	float deltaTime = 0.0f;
+
 	const tnl::Vector3 MAPPOSOFFSET[8] = { tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
 	tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
 	tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
@@ -48,9 +53,6 @@ public:
 	tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
 	tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
 	};
-
-
-
 
 public:
 	// インスタンスの取得

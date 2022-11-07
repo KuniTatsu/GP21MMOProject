@@ -5,6 +5,8 @@
 #include"Actor/Player.h"
 #include"scene/Map.h"
 #include<algorithm>
+#include"ChatBase.h"
+
 
 GameManager* GameManager::instance = nullptr;
 
@@ -16,8 +18,9 @@ GameManager::GameManager() {
 
 //-----------------------------------------------------------------------------------------
 // デストラクタ
-GameManager::~GameManager() {
-
+GameManager::~GameManager()
+{
+	delete chat;
 }
 
 
@@ -232,13 +235,24 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
 
+
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 		init = true;
 	}
+if (chat == nullptr) {
+	chat = new ChatBase();
+}
+
+
+deltaTime = delta_time;
 
 	sManager->Update(delta_time);
 	sManager->Draw();
+
+	chat->Update();
+	chat->Draw();
+
 }
 
 
