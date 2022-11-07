@@ -10,7 +10,7 @@
 */
 
 using namespace std;
-
+/*
 std::string SjistoUTF8(std::string srcSjis)
 {
 	//Unicodeへ変換後の文字列長を得る
@@ -44,32 +44,45 @@ std::string SjistoUTF8(std::string srcSjis)
 
 	return strUTF8;
 }
-
+*/
 
 ChatBase::ChatBase()
 {
 	gManager = GameManager::GetInstance();
-	
+
 	connect = new Connect();
 
-	//サーバーに接続
-	int result =  connect->ConnectServer();
+	////サーバーに接続
+	//int result = connect->ConnectServer();
 
-	if (result == 0) {
-		tnl::DebugTrace("成功");
+	//if (result == 0) {
+	//	tnl::DebugTrace("成功");
+	//}
+	//else {
+	//	tnl::DebugTrace("失敗");
+	//}
+	//tnl::DebugTrace("\n");
+
+
+	if (!init) {
+
+		//string name = SjistoUTF8("プレイヤー1");
+
+		connect->EntryServer("プレイヤー1");
+
+		connect->GetEntryUserId();
+
+		init = true;
 	}
-	else {
-		tnl::DebugTrace("失敗");
-	}
-	tnl::DebugTrace("\n");
+
 
 	string test = "こんにちは";
-	
-	string utf = SjistoUTF8(test);
+
+	string utf = gManager->SjistoUTF8(test);
 
 	//メッセージを送信
 	connect->SendClientMessage(utf);
-	
+
 	connect->GetServerMessage(hoge);
 
 

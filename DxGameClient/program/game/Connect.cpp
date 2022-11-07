@@ -4,6 +4,7 @@
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#include"GameManager.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -26,6 +27,7 @@ net::io_context ioc;
 tcp::resolver resolver{ ioc };
 websocket::stream<tcp::socket> ws{ ioc };
 
+/*
 std::string UTF8toSjis(std::string srcUTF8)
 {
 	//Unicodeへ変換後の文字列長を得る
@@ -57,7 +59,7 @@ std::string UTF8toSjis(std::string srcUTF8)
 
 	return strSJis;
 }
-
+*/
 
 
 
@@ -72,6 +74,7 @@ Connect::Connect()
 	std::cout << "boost version " << major << "." << minor << "." << patch
 		<< " or " << BOOST_LIB_VERSION << std::endl;*/
 
+	gManager = GameManager::GetInstance();
 }
 
 Connect::~Connect()
@@ -115,8 +118,7 @@ int Connect::ConnectServer()
 	return 0;
 
 }
-
-
+//チャット送信
 void Connect::SendClientMessage(std::string sendMessage)
 {
 	const std::string  text = sendMessage;
@@ -135,13 +137,11 @@ void Connect::SendClientMessage(std::string sendMessage)
 	//ws.write(net::buffer(obj.string_value()));
 
 }
-
+//チャット受信
 void Connect::GetServerMessage(std::vector<std::string>& Save)
 {
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
-
-
 	// Read a message into our buffer
 	ws.read(buffer);
 
@@ -152,15 +152,63 @@ void Connect::GetServerMessage(std::vector<std::string>& Save)
 	const std::string getMessage = beast::buffers_to_string(buffer.data());
 
 	std::string err;
-	auto hoge = json11::Json::parse(getMessage,err);
+	auto hoge = json11::Json::parse(getMessage, err);
 	//Json::parse()
 
-	auto message = UTF8toSjis(hoge["info"].string_value());
-	auto count = hoge["count"].int_value();
+	auto message = gManager->UTF8toSjis(hoge["chat"].string_value());
+	//chatキーでメッセージが送られて来ていれば
+	if (message != "") {
+		auto count = hoge["count"].int_value();
+	}
+
+	/*auto message = gManager->UTF8toSjis(hoge["info"].string_value());
+	auto count = hoge["count"].int_value();*/
 
 	//自分が送ったメッセージだった場合は登録しない
 	if (getMessage == myLastMessage)return;
 	//引数のvectorに登録
 	Save.emplace_back(message);
 
+}
+
+void Connect::EntryServer(std::string playerName)
+{
+	const std::string  text = playerName;
+	Json obj = Json::object({
+		{ "playerName", text },
+		});
+	//obj.string_value();
+
+	// Send the message
+//ws.write(net::buffer(text));
+
+	std::string hogehoge = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(hogehoge);
+	ws.write(net::buffer(fix));
+}
+//UUIDを取得してiniファイルで出力
+void Connect::GetEntryUserId()
+{
+	// This buffer will hold the incoming message
+	beast::flat_buffer buffer;
+	// Read a message into our buffer
+	ws.read(buffer);
+
+	ws.text(true);
+
+	const std::string getMessage = beast::buffers_to_string(buffer.data());
+
+	std::string err;
+	auto hoge = json11::Json::parse(getMessage, err);
+	//Json::parse()
+	std::string message = "";
+
+	message = gManager->UTF8toSjis(hoge["UUID"].string_value());
+
+	if (message == "") {
+		return;
+	}
+
+	WritePrivateProfileString("UUID", "data", message.data(), "clientUUID.ini");
 }

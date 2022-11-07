@@ -2,6 +2,8 @@
 #include<string>
 #include<vector>
 
+
+class GameManager;
 class Connect
 {
 public:
@@ -10,9 +12,16 @@ public:
 
 
 	int ConnectServer();
+	//チャットメッセージの送信
 	void SendClientMessage(std::string sendMessage);
-
+	//チャットメッセージの受信
 	void GetServerMessage(std::vector<std::string>& Save);
+
+	//ユーザー登録関数
+	void EntryServer(std::string playerName);
+
+	//ユーザー登録情報取得関数
+	void GetEntryUserId();
 
 private:
 
@@ -25,6 +34,9 @@ private:
 
 
 	std::string	myLastMessage = "";
+
+
+	GameManager* gManager = nullptr;
 
 };
 

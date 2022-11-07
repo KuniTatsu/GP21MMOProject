@@ -20,7 +20,7 @@ private:
 
 	SceneManager* sManager = nullptr;
 	std::shared_ptr<Player> player = nullptr;
-ChatBase* chat = nullptr;
+	ChatBase* chat = nullptr;
 
 	//一度読み込んだghを保存するmap
 	std::unordered_map<std::string, int> ghmap;
@@ -76,6 +76,12 @@ public:
 	//すでにあるghならそれを返す
 	int LoadGraphEx(std::string Gh);
 
+	//string型の文字コード変換
+	std::string SjistoUTF8(std::string srcSjis);
+	std::string UTF8toSjis(std::string srcUTF8);
+
+	//当たり判定 短形同士
+	bool isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, tnl::Vector3& leftTop2, tnl::Vector3& rightBottom2);
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
 
