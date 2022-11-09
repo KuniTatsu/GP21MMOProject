@@ -327,9 +327,9 @@ void GameManager::Update(float delta_time) {
 		sManager = SceneManager::GetInstance();
 		init = true;
 	}
-	if (chat == nullptr) {
+	/*if (chat == nullptr) {
 		chat = new ChatBase();
-	}
+	}*/
 
 
 	deltaTime = delta_time;
