@@ -4,6 +4,7 @@
 #include"SceneManager.h"
 #include"Actor/Player.h"
 #include"scene/Map.h"
+#include"Actor/Enemy.h"
 #include<algorithm>
 #include"ChatBase.h"
 

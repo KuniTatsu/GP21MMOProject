@@ -8,6 +8,7 @@ class SceneBase;
 class SceneManager;
 class ChatBase;
 class Map;
+class Enemy;
 class Player;
 
 class GameManager {
@@ -112,6 +113,8 @@ public:
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	//エネミーリストの取得
+	std::list<std::shared_ptr<Enemy>> GetEnemyList();
 
 };
 

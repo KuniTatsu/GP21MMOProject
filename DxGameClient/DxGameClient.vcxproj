@@ -159,6 +159,7 @@
     <ClInclude Include="program\game\Actor\Actor.h" />
     <ClInclude Include="program\game\Actor\ActorData.h" />
     <ClInclude Include="program\game\Actor\Camera.h" />
+    <ClInclude Include="program\game\Actor\Enemy.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\ChatBase.h" />
     <ClInclude Include="program\game\Connect.h" />
@@ -225,6 +226,7 @@
     <ClCompile Include="program\dxlib_ext\OBJLoader.cpp" />
     <ClCompile Include="program\game\Actor\Actor.cpp" />
     <ClCompile Include="program\game\Actor\ActorData.cpp" />
+    <ClCompile Include="program\game\Actor\Enemy.cpp" />
     <ClCompile Include="program\game\Actor\Player.cpp" />
     <ClCompile Include="program\game\ChatBase.cpp" />
     <ClCompile Include="program\game\Connect.cpp" />

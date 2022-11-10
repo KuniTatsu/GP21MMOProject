@@ -49,146 +49,63 @@
     <ClCompile Include="program\game\Actor\ActorData.cpp" />
     <ClCompile Include="program\game\Item\Item.cpp" />
     <ClCompile Include="program\game\Item\EquipItem.cpp" />
+    <ClCompile Include="program\game\scene\Map.cpp" />
+    <ClCompile Include="program\game\Actor\Enemy.cpp" />
   </ItemGroup>
-
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
- </ItemGroup>
-
+  </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="framework.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="targetver.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="Resource.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="DxGameClient.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\dxlib_ext\dxlib_ext.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\dxlib_ext\dxlib_ext_camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\dxlib_ext\dxlib_ext_data.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\dxlib_ext\dxlib_ext_mesh.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\dxlib_ext\OBJLoader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\GameManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\main.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\scene\scene_base.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\scene\scene_title.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\json11.hpp">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\picojson.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\stb_image.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_flyweight_map.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_font_texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_hierarchy_tree.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_input.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_intersect.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_json.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_link_linear.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_math.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_matrix.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_quaternion.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_seek_unit.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_sequence.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_shared_factory.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_timer_callback.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_timer_fluct.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_using.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_util.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\library\tnl_vector.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\tnl_build_switch.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\Actor\Player.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\Actor\Actor.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\SceneManager.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\scene\scene_map.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\Actor\Camera.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\Map.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="program\game\scene\Map.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="program\json11.hpp" />
     <ClInclude Include="program\game\Actor\ActorData.h" />
     <ClInclude Include="program\game\Item\Item.h" />
     <ClInclude Include="program\game\Item\EquipItem.h" />
+    <ClInclude Include="DxGameClient.h" />
+    <ClInclude Include="framework.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_camera.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_data.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_mesh.h" />
+    <ClInclude Include="program\dxlib_ext\dxlib_ext_texture.h" />
+    <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
+    <ClInclude Include="program\game\Actor\Actor.h" />
+    <ClInclude Include="program\game\Actor\Camera.h" />
+    <ClInclude Include="program\game\Actor\Player.h" />
+    <ClInclude Include="program\game\ChatBase.h" />
+    <ClInclude Include="program\game\Connect.h" />
+    <ClInclude Include="program\game\GameManager.h" />
+    <ClInclude Include="program\game\main.h" />
+    <ClInclude Include="program\game\Map.h" />
+    <ClInclude Include="program\game\SceneManager.h" />
+    <ClInclude Include="program\game\scene\Map.h" />
+    <ClInclude Include="program\game\scene\scene_base.h" />
+    <ClInclude Include="program\game\scene\scene_map.h" />
+    <ClInclude Include="program\game\scene\scene_title.h" />
+    <ClInclude Include="program\library\json11.hpp" />
+    <ClInclude Include="program\library\picojson.h" />
+    <ClInclude Include="program\library\stb_image.h" />
+    <ClInclude Include="program\library\tnl_flyweight_map.h" />
+    <ClInclude Include="program\library\tnl_font_texture.h" />
+    <ClInclude Include="program\library\tnl_hierarchy_tree.h" />
+    <ClInclude Include="program\library\tnl_input.h" />
+    <ClInclude Include="program\library\tnl_intersect.h" />
+    <ClInclude Include="program\library\tnl_json.h" />
+    <ClInclude Include="program\library\tnl_link_linear.h" />
+    <ClInclude Include="program\library\tnl_math.h" />
+    <ClInclude Include="program\library\tnl_matrix.h" />
+    <ClInclude Include="program\library\tnl_quaternion.h" />
+    <ClInclude Include="program\library\tnl_seek_unit.h" />
+    <ClInclude Include="program\library\tnl_sequence.h" />
+    <ClInclude Include="program\library\tnl_shared_factory.h" />
+    <ClInclude Include="program\library\tnl_timer_callback.h" />
+    <ClInclude Include="program\library\tnl_timer_fluct.h" />
+    <ClInclude Include="program\library\tnl_using.h" />
+    <ClInclude Include="program\library\tnl_util.h" />
+    <ClInclude Include="program\library\tnl_vector.h" />
+    <ClInclude Include="program\tnl_build_switch.h" />
+    <ClInclude Include="Resource.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="program\game\Actor\Enemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">
@@ -315,9 +232,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="program\game\scene\scene_map.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="program\game\scene\Map.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
