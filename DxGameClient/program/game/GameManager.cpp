@@ -318,8 +318,6 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 
-
-
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
 

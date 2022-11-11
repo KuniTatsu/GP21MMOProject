@@ -27,8 +27,7 @@ private:
 	std::unordered_map<std::string, int> ghmap;
 	//各チャンクのマップポインタを持つ配列
 	std::list<std::shared_ptr<Map>>Maps;
-
-
+	
 	//playerがいるマップのポインタ
 	std::shared_ptr<Map>lastStayMap = nullptr;
 
@@ -38,21 +37,22 @@ public:
 	static constexpr int SCREEN_HEIGHT = 768;
 
 	//一チャンクの一辺のチップ数
-	const int MAPSIZE = 5;
+	const int MAPSIZE = 5.0;
 	//一チップの大きさ
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
 
 	float deltaTime = 0.0f;
 
-	const tnl::Vector3 MAPPOSOFFSET[8] = { tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
-	tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
-	tnl::Vector3(-MAPSIZE * CHIPWIDTH,0,0),//左
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,0,0),//右
-	tnl::Vector3(-MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0),//左下
-	tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
+	const tnl::Vector3 MAPPOSOFFSET[8] = { 
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
+		tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,0,0),//左
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,0,0),//右
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0),//左下
+		tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
 	};
 
 public:
@@ -110,14 +110,13 @@ public:
 	inline float GetChunkDistance() {
 		return static_cast<float>(MAPSIZE * CHIPHEIGHT);
 	}
+	
+	void CrateEnemy(tnl::Vector3 Pos);
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
 	//エネミーリストの取得
-	std::list<std::shared_ptr<Enemy>> GetEnemyList();
+	std::list<std::shared_ptr<Enemy>> Enemy();
+	//std::list<std::shared_ptr<Enemy>> GetEnemyList();
 
 };
-
-
-
-

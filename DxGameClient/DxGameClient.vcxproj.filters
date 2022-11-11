@@ -51,6 +51,7 @@
     <ClCompile Include="program\game\Item\EquipItem.cpp" />
     <ClCompile Include="program\game\scene\Map.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
+    <ClCompile Include="program\game\EnemyManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -106,6 +107,7 @@
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
+    <ClInclude Include="program\game\EnemyManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

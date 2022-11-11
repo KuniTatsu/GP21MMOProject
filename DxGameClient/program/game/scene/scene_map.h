@@ -6,6 +6,7 @@
 class Player;
 class CreateMap;
 class GameManager;
+class EnemyManager;
 
 class Scene_Map : public SceneBase {
 public:
@@ -23,6 +24,7 @@ private:
 	Camera camera;
 
 	GameManager* gManager = nullptr;
+	EnemyManager* eManager = nullptr;
 
 	bool createChipRight = false;
 

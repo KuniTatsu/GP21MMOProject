@@ -2,11 +2,14 @@
 #include"../Actor/Player.h"
 #include"../GameManager.h"
 #include"Map.h"
+#include"../EnemyManager.h"
+#include"../Actor/Enemy.h"
 
 
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
+	eManager = EnemyManager::GetInstance();
 }
 
 Scene_Map::~Scene_Map()
@@ -19,10 +22,11 @@ void Scene_Map::initialzie()
 	player=gManager->CreatePlayer();
 	//マップの生成
 	gManager->CreateMap();
+	//エネミーの生成
+	//gManager->GetEnemyList();
+	
 	//playerの初期マップを登録
 	gManager->SetStayMap();
-
-
 
 	/*Playerの生成*/
 	player->Draw(&camera);
@@ -51,21 +55,14 @@ void Scene_Map::update(float delta_time)
 		createChipRight = true;
 	}
 
-	/*std::list<CreateMap*>::iterator it = map.begin();
-	while (it != map.end()) {
-		if (!(*it)->is_alive) {
-			delete(*it);
-			it = map.erase(it);
-			continue;
-		}
-		it++;
-	}*/
 }
 void Scene_Map::render()
 {
 	for (auto map : gManager->GetMapList()) {
 		map->Draw(&camera);
 	}
+
+	eManager->Draw(&camera);
 
 	/*Playerの描画*/
 	player->Draw(&camera);

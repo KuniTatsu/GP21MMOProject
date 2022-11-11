@@ -163,6 +163,7 @@
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\ChatBase.h" />
     <ClInclude Include="program\game\Connect.h" />
+    <ClInclude Include="program\game\EnemyManager.h" />
     <ClInclude Include="program\game\GameManager.h" />
     <ClInclude Include="program\game\Item\EquipItem.h" />
     <ClInclude Include="program\game\Item\Item.h" />
@@ -230,6 +231,7 @@
     <ClCompile Include="program\game\Actor\Player.cpp" />
     <ClCompile Include="program\game\ChatBase.cpp" />
     <ClCompile Include="program\game\Connect.cpp" />
+    <ClCompile Include="program\game\EnemyManager.cpp" />
     <ClCompile Include="program\game\GameManager.cpp" />
     <ClCompile Include="program\game\Item\EquipItem.cpp" />
     <ClCompile Include="program\game\Item\Item.cpp" />
