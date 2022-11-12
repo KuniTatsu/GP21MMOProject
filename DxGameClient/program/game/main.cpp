@@ -8,4 +8,6 @@ void gameMain(float delta_time) {
 }
 
 void gameEnd() {
+	GameManager* mgr = GameManager::GetInstance();
+	mgr->Destroy();
 }

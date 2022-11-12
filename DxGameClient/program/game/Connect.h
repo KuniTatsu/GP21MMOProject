@@ -14,6 +14,8 @@ public:
 
 	void GetServerMessage(std::vector<std::string>& Save);
 
+	const std::string GetServerMessage();
+
 private:
 
 	//サーバーのIPアドレス

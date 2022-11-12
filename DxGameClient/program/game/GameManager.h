@@ -9,6 +9,7 @@ class SceneManager;
 class ChatBase;
 class Map;
 class Player;
+class Connect;
 
 class GameManager {
 private:
@@ -20,13 +21,17 @@ private:
 
 	SceneManager* sManager = nullptr;
 	std::shared_ptr<Player> player = nullptr;
+	std::shared_ptr<Connect> connect = nullptr;
+
+	//マルチスレッドで動かす受信用関数
+	void Accept();
+
 ChatBase* chat = nullptr;
 
 	//一度読み込んだghを保存するmap
 	std::unordered_map<std::string, int> ghmap;
 	//各チャンクのマップポインタを持つ配列
 	std::list<std::shared_ptr<Map>>Maps;
-
 
 	//playerがいるマップのポインタ
 	std::shared_ptr<Map>lastStayMap = nullptr;
@@ -59,10 +64,9 @@ public:
 	static GameManager* GetInstance();
 
 	void Update(float delta_time);
-
-	void Destroy();
-
-	// 
+	// 破棄
+	static void Destroy();
+	 
 	//単位ベクトル取得関数
 	inline tnl::Vector3 GetFixVector(float X, float Y) {
 

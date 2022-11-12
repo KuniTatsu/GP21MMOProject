@@ -36,6 +36,9 @@ private:
 	//入力中の文字列
 	std::string bufMessage;
 
+
+	std::string	myLastMessage = "";
+
 	//テスト用
 	std::vector<std::string>hoge;
 

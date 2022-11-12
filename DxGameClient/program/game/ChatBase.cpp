@@ -2,6 +2,7 @@
 #include"GameManager.h"
 #include"Connect.h"
 #include<stdio.h>
+#include"../json11.hpp"
 /*
 	必要要件
 	・文字の入力ができる
@@ -49,11 +50,11 @@ std::string SjistoUTF8(std::string srcSjis)
 ChatBase::ChatBase()
 {
 	gManager = GameManager::GetInstance();
-	
+
 	connect = new Connect();
 
 	//サーバーに接続
-	int result =  connect->ConnectServer();
+	int result = connect->ConnectServer();
 
 	if (result == 0) {
 		tnl::DebugTrace("成功");
@@ -64,14 +65,24 @@ ChatBase::ChatBase()
 	tnl::DebugTrace("\n");
 
 	string test = "こんにちは";
-	
+
 	string utf = SjistoUTF8(test);
 
 	//メッセージを送信
 	connect->SendClientMessage(utf);
-	
-	connect->GetServerMessage(hoge);
 
+	//connect->GetServerMessage(hoge);
+	const std::string getMessage = connect->GetServerMessage();
+	std::string err;
+	auto hoge = json11::Json::parse(getMessage, err);
+
+	auto message = UTF8toSjis(hoge["info"].string_value());
+	auto count = hoge["count"].int_value();
+
+	//自分が送ったメッセージだった場合は登録しない
+	if (getMessage == myLastMessage)return;
+	//引数のvectorに登録
+	Save.emplace_back(message);
 
 
 	//チャット欄のスクリーンを生成

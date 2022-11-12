@@ -6,6 +6,7 @@
 #include"scene/Map.h"
 #include<algorithm>
 #include"ChatBase.h"
+#include"Connect.h"
 
 
 GameManager* GameManager::instance = nullptr;
@@ -21,6 +22,16 @@ GameManager::GameManager() {
 GameManager::~GameManager()
 {
 	delete chat;
+}
+
+void GameManager::Accept()
+{
+	while (1)
+	{
+		connect->GetServerMessage();
+
+
+	}
 }
 
 
@@ -40,6 +51,7 @@ void GameManager::Destroy() {
 		delete instance;
 		instance = nullptr;
 	}
+
 }
 
 int GameManager::LoadGraphEx(std::string Gh)
@@ -238,6 +250,7 @@ void GameManager::Update(float delta_time) {
 
 	if (!init) {
 		sManager = SceneManager::GetInstance();
+		connect = std::make_shared<Connect>();
 		init = true;
 	}
 if (chat == nullptr) {

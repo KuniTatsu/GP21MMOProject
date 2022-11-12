@@ -121,7 +121,7 @@ void Connect::SendClientMessage(std::string sendMessage)
 {
 	const std::string  text = sendMessage;
 
-	myLastMessage = sendMessage;
+	//myLastMessage = sendMessage;
 
 
 	/*Json obj = Json::object({
@@ -136,7 +136,34 @@ void Connect::SendClientMessage(std::string sendMessage)
 
 }
 
-void Connect::GetServerMessage(std::vector<std::string>& Save)
+//void Connect::GetServerMessage(std::vector<std::string>& Save)
+//{
+//	// This buffer will hold the incoming message
+//	beast::flat_buffer buffer;
+//
+//
+//	// Read a message into our buffer
+//	ws.read(buffer);
+//
+//	ws.text(true);
+//
+//	//const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
+//
+//	const std::string getMessage = beast::buffers_to_string(buffer.data());
+//
+//	std::string err;
+//	auto hoge = json11::Json::parse(getMessage,err);
+//
+//	auto message = UTF8toSjis(hoge["info"].string_value());
+//	auto count = hoge["count"].int_value();
+//
+//	//©•ª‚ª‘—‚Á‚½ƒƒbƒZ[ƒW‚¾‚Á‚½ê‡‚Í“o˜^‚µ‚È‚¢
+//	if (getMessage == myLastMessage)return;
+//	//ˆø”‚Ìvector‚É“o˜^
+//	Save.emplace_back(message);
+//
+//}
+const std::string Connect::GetServerMessage()
 {
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
@@ -147,20 +174,8 @@ void Connect::GetServerMessage(std::vector<std::string>& Save)
 
 	ws.text(true);
 
-	const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
+	//const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
 
 	const std::string getMessage = beast::buffers_to_string(buffer.data());
-
-	std::string err;
-	auto hoge = json11::Json::parse(getMessage,err);
-	//Json::parse()
-
-	auto message = UTF8toSjis(hoge["info"].string_value());
-	auto count = hoge["count"].int_value();
-
-	//©•ª‚ª‘—‚Á‚½ƒƒbƒZ[ƒW‚¾‚Á‚½ê‡‚Í“o˜^‚µ‚È‚¢
-	if (getMessage == myLastMessage)return;
-	//ˆø”‚Ìvector‚É“o˜^
-	Save.emplace_back(message);
-
+	return getMessage;
 }
