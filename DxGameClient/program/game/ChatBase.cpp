@@ -11,7 +11,7 @@
 */
 
 using namespace std;
-
+/*
 std::string SjistoUTF8(std::string srcSjis)
 {
 	//Unicodeへ変換後の文字列長を得る
@@ -45,44 +45,51 @@ std::string SjistoUTF8(std::string srcSjis)
 
 	return strUTF8;
 }
-
+*/
 
 ChatBase::ChatBase()
 {
 	gManager = GameManager::GetInstance();
 
 	connect = new Connect();
-
 	//サーバーに接続
 	int result = connect->ConnectServer();
 
-	if (result == 0) {
-		tnl::DebugTrace("成功");
+
+	if (!init) {
+
+		//string name = SjistoUTF8("プレイヤー1");
+
+		connect->EntryServer("プレイヤー1");
+
+		connect->GetEntryUserId();
+
+		init = true;
 	}
-	else {
-		tnl::DebugTrace("失敗");
-	}
-	tnl::DebugTrace("\n");
+
 
 	string test = "こんにちは";
 
-	string utf = SjistoUTF8(test);
+
+	string utf = gManager->SjistoUTF8(test);
 
 	//メッセージを送信
 	connect->SendClientMessage(utf);
 
+	connect->GetServerMessage(hoge);
+
 	//connect->GetServerMessage(hoge);
 	const std::string getMessage = connect->GetServerMessage();
 	std::string err;
-	auto hoge = json11::Json::parse(getMessage, err);
+	auto json = json11::Json::parse(getMessage, err);
 
-	auto message = UTF8toSjis(hoge["info"].string_value());
-	auto count = hoge["count"].int_value();
+	auto message = gManager->UTF8toSjis(json["info"].string_value());
+	auto count = json["count"].int_value();
 
 	//自分が送ったメッセージだった場合は登録しない
 	if (getMessage == myLastMessage)return;
 	//引数のvectorに登録
-	Save.emplace_back(message);
+	hoge.emplace_back(message);
 
 
 	//チャット欄のスクリーンを生成

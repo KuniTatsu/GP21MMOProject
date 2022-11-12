@@ -47,6 +47,9 @@ private:
 
 	char buffer[100] = {};
 
+	bool init = false;
+
+
 	tnl::Sequence<ChatBase> sequence =
 		tnl::Sequence<ChatBase>(this, &ChatBase::SeqWait);
 

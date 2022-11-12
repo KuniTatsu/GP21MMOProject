@@ -360,5 +360,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-DxGameClient/Log.txt
+Log.txt
 DxGameClient/DxGameClient.vcxproj.filters
+
+*.txt
