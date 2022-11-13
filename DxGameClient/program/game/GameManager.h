@@ -116,7 +116,9 @@ public:
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
 	//エネミーリストの取得
-	std::list<std::shared_ptr<Enemy>> Enemy();
+	std::list<std::shared_ptr<Enemy>> Enemys;
+	//std::list<std::shared_ptr<Enemy>>GetEnemyList();
+	bool CreateEnemy();
 	//std::list<std::shared_ptr<Enemy>> GetEnemyList();
-
+	
 };

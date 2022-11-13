@@ -318,6 +318,15 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 
+
+bool GameManager::CreateEnemy()
+{
+	auto enemys = std::make_shared<Enemy>();
+	
+
+	return false;
+}
+
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
 

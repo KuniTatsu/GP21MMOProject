@@ -24,12 +24,13 @@ void Scene_Map::initialzie()
 	gManager->CreateMap();
 	//エネミーの生成
 	//gManager->GetEnemyList();
+	eManager->GetInstance();
 	
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
-	/*Playerの生成*/
-	player->Draw(&camera);
+	///*Playerの生成*/
+	//player->Draw(&camera);
 	
 	/*どこのシーンであるか*/
 	SetFontSize(50);

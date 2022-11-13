@@ -9,6 +9,8 @@ public:
 	Enemy();
 	~Enemy();
 
+	int createEnemy = 0;
+
 	void Update()override;
 
 	void Draw(Camera* camera)override;

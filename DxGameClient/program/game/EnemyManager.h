@@ -2,7 +2,7 @@
 #include"../library/tnl_vector.h"
 
 class Camera;
-
+class GameManager;
 
 class EnemyManager {
 private:
@@ -10,6 +10,8 @@ private:
 	~EnemyManager();
 
 	static EnemyManager* instance;
+
+	GameManager* gManager = nullptr;
 
 	enum class DIR {
 		UP,
@@ -38,10 +40,11 @@ private:
 public:
 	//インスタンスの取得
 	static EnemyManager* GetInstance();
+
 	void Destory();
 
 	void CreateEnemy(tnl::Vector3 posEnemy);
-
+	
 	void Update();
 	void Draw(Camera* camera);
 };

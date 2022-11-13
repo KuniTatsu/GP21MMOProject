@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include"Actor/Camera.h"
+#include"GameManager.h"
 #include<time.h>
 #include<random>
 
@@ -9,7 +10,8 @@ EnemyManager* EnemyManager::instance = nullptr;
 // コンストラクタ
 EnemyManager::EnemyManager()
 {
-
+	gManager = GameManager::GetInstance();
+	
 }
 
 //-----------------------------------------------------------------------------------------
@@ -87,7 +89,7 @@ void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	y = randomRange(static_cast<int>(minPos.y), static_cast<int>(maxPos.y));
 
 	/*エネミー生成*/
-	CreateEnemy(tnl::Vector3(x, y, 0));
+	CreateEnemy(tnl::Vector3(static_cast<float>(x), static_cast<float>(y), 0));
 	
 }
 
@@ -95,6 +97,7 @@ void EnemyManager::CreateEnemy(tnl::Vector3 posEnemy)
 {
 	srand(static_cast<unsigned int>(time(NULL)));
 	random = static_cast<uint32_t>(rand()) % 2;
+
 
 	switch (random)
 	{
@@ -114,5 +117,5 @@ void EnemyManager::Update()
 
 void EnemyManager::Draw(Camera* camera)
 {
-
+	
 }

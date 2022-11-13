@@ -14,6 +14,11 @@ Enemy::~Enemy()
 
 }
 
+void Enemy::Init()
+{
+
+}
+
 void Enemy::Update()
 {
 
@@ -21,10 +26,6 @@ void Enemy::Update()
 
 void Enemy::Draw(Camera* camera)
 {
-	
+	tnl::DebugTrace("Enemyê∂ê¨");
 }
 
-void Enemy::Init()
-{
-
-}
