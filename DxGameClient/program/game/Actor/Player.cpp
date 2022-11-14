@@ -40,32 +40,41 @@ void Player::Move()
 	//上下キー感知
 	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::UP)])) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::UP)];
+		//myDir = DIR::UP;
 		DrawStringEx(200, 300, -1, "UP");
 	}
 	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::DOWN)])) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::DOWN)];
+		//myDir = DIR::DOWN;
 	}
 
 	//左右キー感知
 	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::RIGHT)])) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::RIGHT)];
+		//myDir = DIR::RIGHT;
 	}
 	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::LEFT)])) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::LEFT)];
+		//myDir = DIR::LEFT;
 		DrawStringEx(200, 400, -1, "LEFT");
 	}
 	if (moveX == 0 && moveY == 0)return;
 
 	//移動量が0でなければベクトルを正規化して移動させる
 	if (moveX != 0 || moveY != 0) {
-
+		//単位ベクトル取得
 		tnl::Vector3 fixVec = gManager->GetFixVector(moveX, moveY);
 
+		//速度倍
 		float fixMoveX = fixVec.x * SPEED;
 		float fixMoveY = fixVec.y * SPEED;
 
+		//座標移動
 		drawPos.x += fixMoveX;
 		drawPos.y += fixMoveY;
+
+		//向き変更
+		SetExDir(fixMoveX, fixMoveY);
 
 	}
 
