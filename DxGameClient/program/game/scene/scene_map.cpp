@@ -23,8 +23,8 @@ void Scene_Map::initialzie()
 	//マップの生成
 	gManager->CreateMap();
 	//エネミーの生成
-	//gManager->GetEnemyList();
 	eManager->GetInstance();
+	//eManager->SpawnEnemy(player->GetPos());
 	
 	//playerの初期マップを登録
 	gManager->SetStayMap();
@@ -44,8 +44,9 @@ void Scene_Map::update(float delta_time)
 	/*Player操作*/
 	player->Update();
 
+
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
-		gManager->CreateMap();
+		eManager->SpawnEnemy(player->GetPos());
 	}
 
 	/*カメラ操作*/
@@ -59,12 +60,16 @@ void Scene_Map::update(float delta_time)
 }
 void Scene_Map::render()
 {
+	/*マップの描画*/
 	for (auto map : gManager->GetMapList()) {
 		map->Draw(&camera);
 	}
 
-	eManager->Draw(&camera);
-
+	/*エネミーの描画*/
+	if (eManager != nullptr) {
+		eManager->Draw(&camera);
+	}
+	
 	/*Playerの描画*/
 	player->Draw(&camera);
 

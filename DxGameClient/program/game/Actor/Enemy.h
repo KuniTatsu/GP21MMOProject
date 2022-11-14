@@ -2,11 +2,12 @@
 #include"Actor.h"
 
 class Camera;
+class GameManager;
 
 class Enemy : public Actor {
 public:
 
-	Enemy();
+	Enemy(tnl::Vector3 SpawnPos);
 	~Enemy();
 
 	int createEnemy = 0;
@@ -18,5 +19,6 @@ public:
 	void Init()override;
 
 private:
-	
+	int img_Ghost = 0;
+	GameManager* gManager = nullptr;
 };

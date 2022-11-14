@@ -1,5 +1,6 @@
 #include "EnemyManager.h"
 #include"Actor/Camera.h"
+#include"Actor/Enemy.h"
 #include"GameManager.h"
 #include<time.h>
 #include<random>
@@ -11,7 +12,6 @@ EnemyManager* EnemyManager::instance = nullptr;
 EnemyManager::EnemyManager()
 {
 	gManager = GameManager::GetInstance();
-	
 }
 
 //-----------------------------------------------------------------------------------------
@@ -93,14 +93,18 @@ void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	
 }
 
+/*エネミー種類ごとの生成*/
 void EnemyManager::CreateEnemy(tnl::Vector3 posEnemy)
 {
 	srand(static_cast<unsigned int>(time(NULL)));
-	random = static_cast<uint32_t>(rand()) % 2;
-
+	//random = static_cast<uint32_t>(rand()) % 2;
+	random = 0;
 
 	switch (random)
 	{
+	case static_cast<uint32_t>(EnemyType::GHOST):
+		gManager->CreateEnemy(posEnemy);
+		break;
 	case static_cast<uint32_t>(EnemyType::SLIME):
 		//スライムの生成
 		break;
@@ -110,12 +114,17 @@ void EnemyManager::CreateEnemy(tnl::Vector3 posEnemy)
 	}
 }
 
-void EnemyManager::Update()
+void EnemyManager::Update(float deltatime)
 {
 
 }
 
 void EnemyManager::Draw(Camera* camera)
 {
+	if (!gManager->Enemys.empty()) {
+		for (auto enemy : gManager->GetEnemyList()) {
+			enemy->Draw(camera);
+		}
+	}
 	
 }

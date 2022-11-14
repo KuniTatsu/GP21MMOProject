@@ -69,6 +69,7 @@ bool GameManager::CreateMap()
 	if (Maps.empty()) {
 		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0));
 		firstMap->test = hoge;
+		
 		hoge++;
 		Maps.emplace_back(firstMap);
 
@@ -319,12 +320,28 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 }
 
 
-bool GameManager::CreateEnemy()
+std::list<std::shared_ptr<Enemy>> GameManager::GetEnemyList()
 {
-	auto enemys = std::make_shared<Enemy>();
-	
+	std::list<std::shared_ptr<Enemy>>enemy;
+	auto itr = Enemys.begin();
 
-	return false;
+	enemy.emplace_back((*itr));
+	itr++;
+
+	return enemy;
+}
+
+void GameManager::CreateEnemy(tnl::Vector3 Pos) {
+
+	auto enemy = std::make_shared<Enemy>(Pos);
+	Enemys.emplace_back(enemy);
+	//int hoge = 0;
+	//if (Enemys.empty()) {
+	//	auto enemy = std::make_shared<Enemy>(Pos);
+	//	//enemy->createEnemy = hoge;
+	//	//hoge++;
+	//	Enemys.emplace_back(enemy);
+	//}
 }
 
 //-----------------------------------------------------------------------------------------

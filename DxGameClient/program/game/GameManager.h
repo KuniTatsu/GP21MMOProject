@@ -111,14 +111,13 @@ public:
 		return static_cast<float>(MAPSIZE * CHIPHEIGHT);
 	}
 	
-	void CrateEnemy(tnl::Vector3 Pos);
+	void CreateEnemy(tnl::Vector3 Pos);
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
 	//エネミーリストの取得
 	std::list<std::shared_ptr<Enemy>> Enemys;
-	//std::list<std::shared_ptr<Enemy>>GetEnemyList();
-	bool CreateEnemy();
-	//std::list<std::shared_ptr<Enemy>> GetEnemyList();
+	std::list<std::shared_ptr<Enemy>>GetEnemyList();
+	//void CreateEnemy();
 	
 };
