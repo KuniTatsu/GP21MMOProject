@@ -44,6 +44,7 @@ public:
 
 	float deltaTime = 0.0f;
 
+	//マップ生成に使用する中心座標へのオフセット
 	const tnl::Vector3 MAPPOSOFFSET[8] = { tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
 	tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
 	tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
@@ -53,6 +54,32 @@ public:
 	tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
 	tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
 	};
+	//回転角の方向
+	enum class ROTATEDIR :uint32_t {
+		LEFTTOP,
+		LEFT,
+		LEFTBOTTOM,
+		BOTTOM,
+		RIGHTBOTTOM,
+		RIGHT,
+		RIGHTTOP,
+		TOP,
+		MAX
+	};
+
+	//座標回転時に使用する回転角の配列(角度) 上方向を0度とする。(左は+90度とする)
+	const float ROTATEDEGREE[static_cast<uint32_t>(ROTATEDIR::MAX)] = {
+		45.0f,//左上
+		90.0f,//左
+		135.0f,//左下
+		180.0f,//下
+		225.0f,//右下
+		270.0f,//右
+		315.0f,//右上
+		360.0f//上
+	};
+
+
 
 public:
 	// インスタンスの取得
@@ -65,12 +92,11 @@ public:
 	// 
 	//単位ベクトル取得関数
 	inline tnl::Vector3 GetFixVector(float X, float Y) {
-
 		float vecLength = std::sqrt(X * X + Y * Y);
 
 		return tnl::Vector3(X / vecLength, Y / vecLength, 0);
-
 	}
+
 
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
@@ -82,6 +108,10 @@ public:
 
 	//当たり判定 短形同士
 	bool isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, tnl::Vector3& leftTop2, tnl::Vector3& rightBottom2);
+	//座標の回転
+	tnl::Vector3 RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos);
+
+
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
 
