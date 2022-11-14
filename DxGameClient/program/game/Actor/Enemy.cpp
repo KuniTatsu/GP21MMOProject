@@ -6,7 +6,6 @@
 
 Enemy::Enemy(tnl::Vector3 SpawnPos)
 {
-
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
@@ -29,6 +28,8 @@ void Enemy::Update()
 
 void Enemy::Draw(Camera* camera)
 {
-	DrawRotaGraph(static_cast<int>(drawPos.x), static_cast<int>(drawPos.y), 0, 1.0f, img_Ghost, true);
+	int x = static_cast<int>(drawPos.x) - camera->pos.x + (gManager->SCREEN_WIDTH >> 1);
+	int y = static_cast<int>(drawPos.y) - camera->pos.y + (gManager->SCREEN_HEIGHT >> 1);
+	DrawRotaGraph(x, y, 1.0f, 0, img_Ghost, true);
 }
 

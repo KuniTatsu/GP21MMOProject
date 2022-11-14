@@ -8,6 +8,7 @@ class Enemy : public Actor {
 public:
 
 	Enemy(tnl::Vector3 SpawnPos);
+	Enemy(tnl::Vector3 SpawnPos, float attack, float deffence, float speed);
 	~Enemy();
 
 	int createEnemy = 0;

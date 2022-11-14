@@ -320,28 +320,22 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 }
 
 
-std::list<std::shared_ptr<Enemy>> GameManager::GetEnemyList()
-{
-	std::list<std::shared_ptr<Enemy>>enemy;
-	auto itr = Enemys.begin();
+void GameManager::CreateEnemy(tnl::Vector3& Pos,std::shared_ptr<Enemy>& enemyData) {
 
-	enemy.emplace_back((*itr));
-	itr++;
-
-	return enemy;
-}
-
-void GameManager::CreateEnemy(tnl::Vector3 Pos) {
+	bool canSpawn = true;
+	//既存の敵のポジションとかぶっていないかチェック
+	for (auto &enemy : Enemys) {
+		auto listEnemyPos = enemy->GetPos();
+		if (GetLength(Pos, listEnemyPos) < 32) {
+			canSpawn = false;
+			break;
+		}
+	}
+	//かぶっていたら生成しない
+	if (!canSpawn)return;
 
 	auto enemy = std::make_shared<Enemy>(Pos);
 	Enemys.emplace_back(enemy);
-	//int hoge = 0;
-	//if (Enemys.empty()) {
-	//	auto enemy = std::make_shared<Enemy>(Pos);
-	//	//enemy->createEnemy = hoge;
-	//	//hoge++;
-	//	Enemys.emplace_back(enemy);
-	//}
 }
 
 //-----------------------------------------------------------------------------------------

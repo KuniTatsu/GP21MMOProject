@@ -31,6 +31,8 @@ private:
 	//playerがいるマップのポインタ
 	std::shared_ptr<Map>lastStayMap = nullptr;
 
+	std::list<std::shared_ptr<Enemy>> Enemys;
+
 	// ゲーム全体で参照したい変数はここで用意
 public:
 	static constexpr int SCREEN_WIDTH = 1024;
@@ -111,13 +113,22 @@ public:
 		return static_cast<float>(MAPSIZE * CHIPHEIGHT);
 	}
 	
-	void CreateEnemy(tnl::Vector3 Pos);
+	//二つのPos同士の距離を取得する関数
+	inline float GetLength(tnl::Vector3& PosA, tnl::Vector3& PosB) {
+		return std::sqrt(((PosA.x - PosB.x) * (PosA.x - PosB.x)) + ((PosA.y - PosB.y) * (PosA.y - PosB.y)));
+	}
+
+	//void CreateEnemy(tnl::Vector3& Pos,int type);
+	void CreateEnemy(tnl::Vector3& Pos,std::shared_ptr<Enemy>& enemyData);
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
 	//エネミーリストの取得
-	std::list<std::shared_ptr<Enemy>> Enemys;
-	std::list<std::shared_ptr<Enemy>>GetEnemyList();
+	/*std::list<std::shared_ptr<Enemy>> Enemys;*/
+	//std::list<std::shared_ptr<Enemy>>&GetEnemyList();
+	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
+		return Enemys;
+	}
 	//void CreateEnemy();
 	
 };
