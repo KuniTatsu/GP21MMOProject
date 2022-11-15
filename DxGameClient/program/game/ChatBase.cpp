@@ -2,6 +2,9 @@
 #include"GameManager.h"
 #include"Connect.h"
 #include<stdio.h>
+#include"../json11.hpp"
+
+using namespace json11;
 /*
 	必要要件
 	・文字の入力ができる
@@ -51,19 +54,10 @@ ChatBase::ChatBase()
 	gManager = GameManager::GetInstance();
 
 	connect = new Connect();
+	//サーバーに接続
+	int result = connect->ConnectServer();
 
-	////サーバーに接続
-	//int result = connect->ConnectServer();
-
-	//if (result == 0) {
-	//	tnl::DebugTrace("成功");
-	//}
-	//else {
-	//	tnl::DebugTrace("失敗");
-	//}
-	//tnl::DebugTrace("\n");
-
-
+	
 	if (!init) {
 
 		//string name = SjistoUTF8("プレイヤー1");
@@ -76,16 +70,18 @@ ChatBase::ChatBase()
 	}
 
 
-	string test = "こんにちは";
+	const string test = "こんにちは";
 
-	string utf = gManager->SjistoUTF8(test);
+	Json obj = Json::object({
+		{ "chat", test },
+		});
+
+	std::string hogehoge = obj.dump();
+
+	string utf = gManager->SjistoUTF8(hogehoge);
 
 	//メッセージを送信
 	connect->SendClientMessage(utf);
-
-	connect->GetServerMessage(hoge);
-
-
 
 	//チャット欄のスクリーンを生成
 	chatArea = MakeScreen(340, 400, TRUE);
@@ -163,10 +159,46 @@ void ChatBase::DrawAllMessage()
 	DrawGraph(10, 300, chatArea, true);
 
 }
+//引数で受け取った文字列をパースして登録する関数 チャット用
+void ChatBase::ParseMessage(const std::string message)
+{
+	if (message == "")return;
+
+	//メッセージを受信
+	//const std::string getMessage = connect->GetServerMessage();
+
+
+	auto fixMessage = gManager->UTF8toSjis(message);
+
+	std::string err;
+	auto json = json11::Json::parse(fixMessage, err);
+
+	std::string chat = "";
+
+	//chat = gManager->UTF8toSjis(json["info"].string_value());
+	chat = json["chat"].string_value();
+	auto count = json["count"].int_value();
+
+	if (chat != "") {
+		InsertStringToChatVector(chat);
+	}
+	
+}
+
+void ChatBase::InsertStringToChatVector(const std::string chat)
+{
+	//自分が送ったメッセージだった場合は登録しない
+	if (chat == myLastMessage)return;
+	//vectorに登録
+	//hoge.emplace_back(chat);
+	savedMessage.emplace_back(chat);
+}
 
 void ChatBase::Update()
 {
 	sequence.update(gManager->deltaTime);
+	ParseMessage(getMessage);
+	SetGetMessage("");
 }
 
 void ChatBase::Draw()
@@ -202,6 +234,7 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 				savedMessage.emplace_back(buf);
 				//サーバーにbufを送る
 				//connect->SendClientMessage(buf);
+				gManager->CreateSendThread(buf);
 			}
 
 		}
