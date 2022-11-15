@@ -124,7 +124,7 @@ void Connect::SendClientMessage(std::string sendMessage)
 	const std::string  text = sendMessage;
 
 	Json obj = Json::object({
-		{ "Message", text },
+		{ "chat", text },
 		});
 
 	std::string hogehoge = obj.dump();

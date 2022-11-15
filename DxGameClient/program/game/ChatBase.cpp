@@ -72,16 +72,16 @@ ChatBase::ChatBase()
 
 	const string test = "こんにちは";
 
-	Json obj = Json::object({
+	/*Json obj = Json::object({
 		{ "chat", test },
 		});
 
-	std::string hogehoge = obj.dump();
+	std::string hogehoge = obj.dump();*/
 
-	string utf = gManager->SjistoUTF8(hogehoge);
+	//string utf = gManager->SjistoUTF8(test);
 
 	//メッセージを送信
-	connect->SendClientMessage(utf);
+	connect->SendClientMessage(test);
 
 	//チャット欄のスクリーンを生成
 	chatArea = MakeScreen(340, 400, TRUE);
@@ -136,12 +136,12 @@ void ChatBase::DrawAllMessage()
 			tnl::DebugTrace("\n");
 
 			if (arrayNum < 10) {
-				DrawStringEx(20, 10 + (i * 20), -1, savedMessage[i].c_str());
+				DrawStringEx(20, 10 + (i * 50), -1, savedMessage[i].c_str());
 			}
 			else {
 				int messageNum = i + (arrayNum - 10);
 
-				DrawStringEx(20, 10 + (i * 20), -1, savedMessage[messageNum].c_str());
+				DrawStringEx(20, 10 + (i * 50), -1, savedMessage[messageNum].c_str());
 			}
 		}
 	}
