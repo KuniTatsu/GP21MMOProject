@@ -6,10 +6,13 @@
 #include<thread>
 
 
+
+
 class SceneBase;
 class SceneManager;
 class ChatBase;
 class Map;
+class Enemy;
 class Player;
 class Connect;
 
@@ -45,28 +48,31 @@ private:
 	//playerがいるマップのポインタ
 	std::shared_ptr<Map>lastStayMap = nullptr;
 
+	std::list<std::shared_ptr<Enemy>> Enemys;
+
 	// ゲーム全体で参照したい変数はここで用意
 public:
 	static constexpr int SCREEN_WIDTH = 1024;
 	static constexpr int SCREEN_HEIGHT = 768;
 
 	//一チャンクの一辺のチップ数
-	const int MAPSIZE = 5;
+	const int MAPSIZE = 5.0;
 	//一チップの大きさ
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
 
 	float deltaTime = 0.0f;
 
-	//マップ生成に使用する中心座標へのオフセット
-	const tnl::Vector3 MAPPOSOFFSET[8] = { tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
-	tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
-	tnl::Vector3(-MAPSIZE * CHIPWIDTH,0,0),//左
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,0,0),//右
-	tnl::Vector3(-MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0),//左下
-	tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
+	const tnl::Vector3 MAPPOSOFFSET[8] = { 
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
+		tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,0,0),//左
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,0,0),//右
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0),//左下
+		tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
+
 	};
 	//回転角の方向
 	enum class ROTATEDIR :uint32_t {
@@ -152,15 +158,34 @@ public:
 	inline float GetChunkDistance() {
 		return static_cast<float>(MAPSIZE * CHIPHEIGHT);
 	}
+	
+	//二つのPos同士の距離を取得する関数
+	inline float GetLength(tnl::Vector3& PosA, tnl::Vector3& PosB) {
+		return std::sqrt(((PosA.x - PosB.x) * (PosA.x - PosB.x)) + ((PosA.y - PosB.y) * (PosA.y - PosB.y)));
+	}
+
+	//void CreateEnemy(tnl::Vector3& Pos,int type);
+	bool CheckCanCreateEnemy(tnl::Vector3& Pos);
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	//エネミーリストの取得
+	/*std::list<std::shared_ptr<Enemy>> Enemys;*/
+	//std::list<std::shared_ptr<Enemy>>&GetEnemyList();
+	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
+		return Enemys;
+	}
+
 
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
+inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
+	Enemys.emplace_back(enemy);
+}
+//void CreateEnemy();
+
+
+	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+	
 };
-
-
-
-

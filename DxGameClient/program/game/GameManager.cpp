@@ -4,6 +4,7 @@
 #include"SceneManager.h"
 #include"Actor/Player.h"
 #include"scene/Map.h"
+#include"Actor/Enemy.h"
 #include<algorithm>
 #include"ChatBase.h"
 #include"Connect.h"
@@ -116,6 +117,7 @@ bool GameManager::CreateMap()
 	if (Maps.empty()) {
 		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0));
 		firstMap->test = hoge;
+
 		hoge++;
 		Maps.emplace_back(firstMap);
 
@@ -285,7 +287,7 @@ bool GameManager::isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, t
 
 tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos)
 {
-	/* 
+	/*
 	//左回転
 	float fixX = vec.x * radianX - vec.y * radianY;
 	float fixY = vec.x * radianY + vec.y * radianX;
@@ -366,7 +368,32 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 
+tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
+{
+	auto vectorToPlayer = player->GetPos() - enemyPos;
 
+	return GetFixVector(vectorToPlayer.x, vectorToPlayer.y);
+}
+
+
+bool GameManager::CheckCanCreateEnemy(tnl::Vector3& Pos) {
+
+	bool canSpawn = true;
+	//既存の敵のポジションとかぶっていないかチェック
+	for (auto& enemy : Enemys) {
+		auto listEnemyPos = enemy->GetPos();
+		if (GetLength(Pos, listEnemyPos) < 32) {
+			canSpawn = false;
+			break;
+		}
+	}
+	return canSpawn;
+	////かぶっていたら生成しない
+	//if (!canSpawn)return;
+
+	//auto enemy = std::make_shared<Enemy>(Pos);
+	//Enemys.emplace_back(enemy);
+}
 
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
@@ -397,9 +424,13 @@ void GameManager::Update(float delta_time) {
 
 		init = true;
 	}
+
 	tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");
 
+	/*if (chat == nullptr) {
+		chat = new ChatBase();
+	}*/
 
 	deltaTime = delta_time;
 
