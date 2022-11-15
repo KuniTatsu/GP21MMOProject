@@ -34,9 +34,6 @@ private:
 	//マルチスレッドで動かす送信用関数
 	void Send(const std::string sendMessage);
 
-	//送信用スレッドを作成する関数
-	void CreateSendThread(const std::string sendMessage);
-
 
 	ChatBase* chat = nullptr;
 
@@ -128,6 +125,9 @@ public:
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+
+	//送信用スレッドを作成する関数
+	void CreateSendThread(const std::string sendMessage);
 
 };
 

@@ -234,6 +234,7 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 				savedMessage.emplace_back(buf);
 				//サーバーにbufを送る
 				//connect->SendClientMessage(buf);
+				gManager->CreateSendThread(buf);
 			}
 
 		}
