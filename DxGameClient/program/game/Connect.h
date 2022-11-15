@@ -15,13 +15,16 @@ public:
 	//チャットメッセージの送信
 	void SendClientMessage(std::string sendMessage);
 	//チャットメッセージの受信
-	void GetServerMessage(std::vector<std::string>& Save);
+	const std::string GetServerMessage();
 
 	//ユーザー登録関数
 	void EntryServer(std::string playerName);
 
 	//ユーザー登録情報取得関数
 	void GetEntryUserId();
+
+	
+
 
 private:
 

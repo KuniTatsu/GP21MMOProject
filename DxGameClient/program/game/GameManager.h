@@ -3,6 +3,8 @@
 #include<unordered_map>
 #include<memory>
 #include<list>
+#include<thread>
+
 
 
 
@@ -12,6 +14,7 @@ class ChatBase;
 class Map;
 class Enemy;
 class Player;
+class Connect;
 
 class GameManager {
 private:
@@ -23,13 +26,25 @@ private:
 
 	SceneManager* sManager = nullptr;
 	std::shared_ptr<Player> player = nullptr;
+
+	std::shared_ptr<Connect> connect = nullptr;
+
+	std::thread acceptThread ;
+
+	//マルチスレッドで動かす受信用関数
+	void Accept();
+
+	//マルチスレッドで動かす送信用関数
+	void Send(const std::string sendMessage);
+
+
 	ChatBase* chat = nullptr;
 
 	//一度読み込んだghを保存するmap
 	std::unordered_map<std::string, int> ghmap;
 	//各チャンクのマップポインタを持つ配列
 	std::list<std::shared_ptr<Map>>Maps;
-	
+
 	//playerがいるマップのポインタ
 	std::shared_ptr<Map>lastStayMap = nullptr;
 
@@ -91,10 +106,9 @@ public:
 	static GameManager* GetInstance();
 
 	void Update(float delta_time);
-
+	// 破棄
 	void Destroy();
 
-	// 
 	//単位ベクトル取得関数
 	inline tnl::Vector3 GetFixVector(float X, float Y) {
 		float vecLength = std::sqrt(X * X + Y * Y);
@@ -162,10 +176,15 @@ public:
 		return Enemys;
 	}
 
-	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
-		Enemys.emplace_back(enemy);
-	}
-	//void CreateEnemy();
+
+	//送信用スレッドを作成する関数
+	void CreateSendThread(const std::string sendMessage);
+
+inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
+	Enemys.emplace_back(enemy);
+}
+//void CreateEnemy();
+
 
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 	
