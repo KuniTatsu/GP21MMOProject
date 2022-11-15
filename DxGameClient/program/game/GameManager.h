@@ -4,6 +4,8 @@
 #include<memory>
 #include<list>
 
+
+
 class SceneBase;
 class SceneManager;
 class ChatBase;
@@ -149,7 +151,7 @@ public:
 	}
 
 	//void CreateEnemy(tnl::Vector3& Pos,int type);
-	void CreateEnemy(tnl::Vector3& Pos,std::shared_ptr<Enemy>& enemyData);
+	bool CheckCanCreateEnemy(tnl::Vector3& Pos);
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
@@ -159,6 +161,12 @@ public:
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
+
+	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
+		Enemys.emplace_back(enemy);
+	}
 	//void CreateEnemy();
+
+	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 	
 };

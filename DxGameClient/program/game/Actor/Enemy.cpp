@@ -1,6 +1,7 @@
 #include "Enemy.h"
 #include"Camera.h"
 #include"../GameManager.h"
+#include"ActorData.h"
 #include<time.h>
 #include<random>
 
@@ -9,6 +10,17 @@ Enemy::Enemy(tnl::Vector3 SpawnPos)
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
+}
+
+Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed)
+{
+	drawPos = SpawnPos;
+	gManager = GameManager::GetInstance();
+	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
+
+	myData = std::make_shared<ActorData>();
+	myData->SetAllStatus(attackRange, attack, defence, speed);
+
 }
 
 Enemy::~Enemy()

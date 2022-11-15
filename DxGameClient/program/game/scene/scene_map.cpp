@@ -44,6 +44,8 @@ void Scene_Map::update(float delta_time)
 	/*Player‘€ì*/
 	player->Update();
 
+	//list‚Ì’†‚Ìenemy‚·‚×‚Ä‚É‘Î‚µ‚ÄAplayer‚Æ‚Ì‹——£‚ªˆê’èˆÈ‰º‚È‚çplayer‚Ì•û‚ÉˆÚ“®‚³‚¹‚é
+	gManager->enemyMove();
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 		eManager->SpawnEnemy(player->GetPos());

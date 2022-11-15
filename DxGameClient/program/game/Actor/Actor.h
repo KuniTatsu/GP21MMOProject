@@ -41,6 +41,11 @@ public:
 	inline void	SetLocalPos(tnl::Vector3 Pos) {
 		localPos = Pos;
 	}
+	//actorData‚Ìæ“¾
+	inline std::shared_ptr<ActorData>GetActorData() {
+		return myData;
+	}
+	 void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
 
 	//*******ƒˆ‰¼‘zŠÖ” Œp³æ‚ÅÀ‘•************//
 	virtual void Update() = 0;

@@ -1,6 +1,7 @@
 #include "EnemyManager.h"
 #include"Actor/Camera.h"
 #include"Actor/Enemy.h"
+#include"Actor/ActorData.h"
 #include"GameManager.h"
 #include<time.h>
 #include<random>
@@ -24,10 +25,12 @@ EnemyManager::~EnemyManager()
 
 void EnemyManager::LoadEnemyMaster()
 {
-	//enemyCsvを読み込む処理を書く
+	//enemyCsvを読み込む処理を書く //必要なカラム attackRange,attack,defence,moveSpeed
 
 
-
+	//debug用 -本来はcsvから読み取って入れる値
+	auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{0,0,0}, 3.0, 5.0f, 3.0f,2.0f);
+	enemyMaster.emplace_back(newEnemy);
 
 }
 
@@ -131,13 +134,16 @@ void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 
 
 	/*エネミー生成*/
-	CreateEnemy(tnl::Vector3(static_cast<float>(x), static_cast<float>(y), 0));
+	SelectEnemy(tnl::Vector3(static_cast<float>(x), static_cast<float>(y), 0));
 
 }
 
 /*エネミー種類ごとの生成*/
-void EnemyManager::CreateEnemy(tnl::Vector3 posEnemy)
+void EnemyManager::SelectEnemy(tnl::Vector3 posEnemy)
 {
+	//敵を生成できるかチェック
+	if (!gManager->CheckCanCreateEnemy(posEnemy))return;
+
 	srand(static_cast<unsigned int>(time(NULL)));
 	//random = static_cast<uint32_t>(rand()) % 2;
 	random = 0;
@@ -145,7 +151,7 @@ void EnemyManager::CreateEnemy(tnl::Vector3 posEnemy)
 	switch (random)
 	{
 	case static_cast<uint32_t>(EnemyType::GHOST):
-		gManager->CreateEnemy(posEnemy,0);
+		CreateEnemy(static_cast<uint32_t>(EnemyType::GHOST),posEnemy);
 		break;
 	case static_cast<uint32_t>(EnemyType::SLIME):
 		//スライムの生成
@@ -156,9 +162,20 @@ void EnemyManager::CreateEnemy(tnl::Vector3 posEnemy)
 	}
 }
 
-std::shared_ptr<Enemy>& EnemyManager::GetEnemyData(int type)
+std::shared_ptr<ActorData> EnemyManager::GetEnemyData(int type)
 {
-	return enemyMaster[type];
+	auto data = enemyMaster[type]->GetActorData();
+
+	return data;
+}
+
+void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
+{
+	auto data = GetEnemyData(type);
+	auto newEnemy = std::make_shared<Enemy>(posEnemy,data->GetAttackRange(),data->GetAttack(),data->GetDefence(),data->GetMoveSpeed());
+
+	gManager->SetEnemyList(newEnemy);
+
 }
 
 void EnemyManager::Update(float deltatime)

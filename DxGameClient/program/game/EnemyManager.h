@@ -2,10 +2,12 @@
 
 #include<vector>
 #include<memory>
+#include "../dxlib_ext/dxlib_ext.h"
 
 class Camera;
 class GameManager;
 class Enemy;
+class ActorData;
 
 class EnemyManager {
 private:
@@ -48,6 +50,8 @@ private:
 private:
 	void LoadEnemyMaster();
 
+	std::shared_ptr<ActorData> GetEnemyData(int type);
+
 
 public:
 	//インスタンスの取得
@@ -55,13 +59,12 @@ public:
 
 	void Destory();
 
-	void CreateEnemy(tnl::Vector3 posEnemy);
+	void SelectEnemy(tnl::Vector3 posEnemy);
 
 	/*Enemyスポーン*/
 	void SpawnEnemy(tnl::Vector3& PlayerPos);
 
-
-	std::shared_ptr<Enemy>& GetEnemyData(int type);
+	void CreateEnemy(int type, tnl::Vector3& posEnemy);
 
 	void Update(float deltatime);
 	void Draw(Camera* camera);
