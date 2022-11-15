@@ -9,7 +9,9 @@
 #include"Connect.h"
 
 
+
 GameManager* GameManager::instance = nullptr;
+volatile bool isEnd = false;
 
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
@@ -24,14 +26,44 @@ GameManager::~GameManager()
 	delete chat;
 }
 
+volatile int num1 = 0;
+
 void GameManager::Accept()
 {
-	while (1)
+	while (isEnd == false)
 	{
-		connect->GetServerMessage();
+		auto get = connect->GetServerMessage();
+		chat->SetGetMessage(get);
+		num1++;
 
+		tnl::DebugTrace("呼ばれたよ%d回目", num1);
+		tnl::DebugTrace("\n");
+		std::string hoge = std::to_string(isEnd);
+		tnl::DebugTrace(hoge.c_str());
+		tnl::DebugTrace("\n");
 
+		if (num1 > 10000)num1 = 0;
 	}
+	tnl::DebugTrace("抜けたよ");
+	int hoge = 0;
+	hoge++;
+}
+
+void GameManager::Send(const std::string sendMessage)
+{
+	//引数のメッセージをconnect->SendServerMessageで送る
+	connect->SendClientMessage(sendMessage);
+
+}
+//送る文章を引数に入れる。SJISでいい
+void GameManager::CreateSendThread(const std::string sendMessage)
+{
+	
+	std::thread sendThread = std::thread([&] {GameManager::Send(sendMessage); });
+	
+	//送り終えたらスレッドを閉じる
+	sendThread.join();
+	
 }
 
 
@@ -47,11 +79,15 @@ GameManager* GameManager::GetInstance() {
 //-----------------------------------------------------------------------------------------
 // 破棄
 void GameManager::Destroy() {
+
+	isEnd = true;
+	//acceptThread->join();
+	acceptThread.join();
+
 	if (instance) {
 		delete instance;
 		instance = nullptr;
 	}
-
 }
 
 int GameManager::LoadGraphEx(std::string Gh)
@@ -265,20 +301,6 @@ std::shared_ptr<Map> GameManager::GetPlayerOnMap()
 			return false;
 		}
 		});
-	//std::sort(Maps.begin(), Maps.end(), []( auto const& mapA,auto const& mapB) {
-
-	//	return mapA->test < mapB->test;
-	//	/*float distanceMapA = GetMapToPlayerDistance(mapA);
-	//	float distanceMapB = GetMapToPlayerDistance(mapB);
-
-	//	if (distanceMapA < distanceMapB) {
-	//		return true;
-	//	}
-	//	else {
-	//		return false;
-	//	}*/
-
-	//	});
 	return Maps.front();
 }
 
@@ -338,11 +360,30 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 		connect = std::make_shared<Connect>();
+
+		if (chat == nullptr) {
+			chat = new ChatBase();
+		}
+		//チャット受け取り用スレッド作成
+		//std::thread hoge(&GameManager::Accept, &instance);
+		//acceptThread = std::thread(& GameManager::Accept, & instance);
+
+		//std::thread hoge(&GameManager::Accept,this);
+
+
+		//std::thread hoge([this] {GameManager::Accept(); });
+		//acceptThread = std::move(hoge);
+		acceptThread = std::thread([this] {GameManager::Accept(); });
+
+		//auto id = acceptThread.get_id();
+
+		// std::thread t([this] { do_(); });
+		// thread_ = std::move(t);
+
 		init = true;
 	}
-	if (chat == nullptr) {
-		chat = new ChatBase();
-	}
+	tnl::DebugTrace("%d", num1);
+	tnl::DebugTrace("\n");
 
 
 	deltaTime = delta_time;
@@ -350,8 +391,8 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	/*chat->Update();
-	chat->Draw();*/
+	chat->Update();
+	chat->Draw();
 
 }
 

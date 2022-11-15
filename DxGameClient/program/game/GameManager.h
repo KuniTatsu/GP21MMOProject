@@ -3,6 +3,8 @@
 #include<unordered_map>
 #include<memory>
 #include<list>
+#include<thread>
+
 
 class SceneBase;
 class SceneManager;
@@ -24,8 +26,17 @@ private:
 
 	std::shared_ptr<Connect> connect = nullptr;
 
+	std::thread acceptThread ;
+
 	//マルチスレッドで動かす受信用関数
 	void Accept();
+
+	//マルチスレッドで動かす送信用関数
+	void Send(const std::string sendMessage);
+
+	//送信用スレッドを作成する関数
+	void CreateSendThread(const std::string sendMessage);
+
 
 	ChatBase* chat = nullptr;
 
@@ -66,7 +77,7 @@ public:
 
 	void Update(float delta_time);
 	// 破棄
-	static void Destroy();
+	void Destroy();
 
 	//単位ベクトル取得関数
 	inline tnl::Vector3 GetFixVector(float X, float Y) {

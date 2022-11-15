@@ -123,53 +123,26 @@ void Connect::SendClientMessage(std::string sendMessage)
 {
 	const std::string  text = sendMessage;
 
-	//myLastMessage = sendMessage;
+	Json obj = Json::object({
+		{ "Message", text },
+		});
 
+	std::string hogehoge = obj.dump();
 
-	/*Json obj = Json::object({
-		{ "message", text },
-		});*/
-		//obj.string_value();
+	auto fix = gManager->SjistoUTF8(hogehoge);
 
-		// Send the message
-	ws.write(net::buffer(text));
-
-	//ws.write(net::buffer(obj.string_value()));
+	ws.write(net::buffer(fix));
 
 }
 
-//void Connect::GetServerMessage(std::vector<std::string>& Save)
-//{
-//	// This buffer will hold the incoming message
-//	beast::flat_buffer buffer;
-//
-//
-//	// Read a message into our buffer
-//	ws.read(buffer);
-//
-//	ws.text(true);
-//
-//	//const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
-//
-//	const std::string getMessage = beast::buffers_to_string(buffer.data());
-//
-//	std::string err;
-//	auto hoge = json11::Json::parse(getMessage,err);
-//
-//	auto message = UTF8toSjis(hoge["info"].string_value());
-//	auto count = hoge["count"].int_value();
-//
-//	//©•ª‚ª‘—‚Á‚½ƒƒbƒZ[ƒW‚¾‚Á‚½ê‡‚Í“o˜^‚µ‚È‚¢
-//	if (getMessage == myLastMessage)return;
-//	//ˆø”‚Ìvector‚É“o˜^
-//	Save.emplace_back(message);
-//
-//}
 const std::string Connect::GetServerMessage()
 
 {
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
+
+	tnl::DebugTrace("“Ç‚İæ‚èŠJn");
+	tnl::DebugTrace("\n");
 	// Read a message into our buffer
 	ws.read(buffer);
 
@@ -178,6 +151,10 @@ const std::string Connect::GetServerMessage()
 	//const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
 
 	const std::string getMessage = beast::buffers_to_string(buffer.data());
+
+	tnl::DebugTrace("“Ç‚İæ‚è¬Œ÷");
+	tnl::DebugTrace(getMessage.c_str());
+	tnl::DebugTrace("\n");
 
 	return getMessage;
 }
@@ -189,10 +166,6 @@ void Connect::EntryServer(std::string playerName)
 	Json obj = Json::object({
 		{ "playerName", text },
 		});
-	//obj.string_value();
-
-	// Send the message
-//ws.write(net::buffer(text));
 
 	std::string hogehoge = obj.dump();
 
@@ -222,6 +195,10 @@ void Connect::GetEntryUserId()
 		return;
 	}
 
-	WritePrivateProfileString("UUID", "data", message.data(), "clientUUID.ini");
+	bool check = WritePrivateProfileString("UUID", "data", message.data(), "clientUUID.ini");
+	if (!check) {
+		tnl::DebugTrace("‘‚«‚İ¸”s");
+		tnl::DebugTrace("\n");
+	}
 }
 
