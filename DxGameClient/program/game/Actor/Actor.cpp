@@ -41,6 +41,63 @@ tnl::Vector3 Actor::GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& dista
 
 	return myPos + fixDistance;
 }
+uint32_t Actor::GetExDir(float x, float y)
+{
+	//上下左右の場合
+	//上下
+	if (x == 0.0f) {
+		if (y > 0)return static_cast<uint32_t>(EXDIR::BOTTOM);
+		else if (y < 0)return static_cast<uint32_t>(EXDIR::TOP);
+	}
+	//左右
+	if (y == 0.0f) {
+		if (x > 0)return static_cast<uint32_t>(EXDIR::RIGHT);
+		else if (x < 0)return static_cast<uint32_t>(EXDIR::LEFT);
+	}
+
+	//斜め方向の移動
+	//右方向
+	if (x > 0) {
+		if(y>0)return static_cast<uint32_t>(EXDIR::RIGHTBOTTOM);
+		else return static_cast<uint32_t>(EXDIR::RIGHTTOP);
+	}
+	//左方向
+	else {
+		if (y > 0)return static_cast<uint32_t>(EXDIR::LEFTBOTTOM);
+		else return static_cast<uint32_t>(EXDIR::LEFTTOP);
+	}
+	return 0;
+}
+void Actor::SetExDir(float x, float y)
+{
+	//上下左右の場合
+	//上下
+	if (x == 0.0f) {
+		if (y > 0)myExDir=EXDIR::BOTTOM;
+		else if (y < 0)myExDir = EXDIR::TOP;
+		return;
+	}
+	//左右
+	if (y == 0.0f) {
+		if (x > 0)myExDir = EXDIR::RIGHT;
+		else if (x < 0)myExDir = EXDIR::LEFT;
+		return;
+	}
+
+	//斜め方向の移動
+	//右方向
+	if (x > 0) {
+		if (y > 0)myExDir = EXDIR::RIGHTBOTTOM;
+		else myExDir = EXDIR::RIGHTTOP;
+		return;
+	}
+	//左方向
+	else {
+		if (y > 0)myExDir = EXDIR::LEFTBOTTOM;
+		else myExDir = EXDIR::LEFTTOP;
+		return;
+	}
+}
 //通常攻撃関数
 void Actor::DefaultAttack()
 {

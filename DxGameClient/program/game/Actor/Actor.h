@@ -78,6 +78,20 @@ protected:
 		LEFT,
 		MAX
 	};
+
+	//方向 8方向バージョン 回転を前提
+	enum class EXDIR:uint32_t {
+		LEFTTOP,
+		LEFT,
+		LEFTBOTTOM,
+		BOTTOM,
+		RIGHTBOTTOM,
+		RIGHT,
+		RIGHTTOP,
+		TOP,
+		MAX
+	};
+
 	//攻撃タイプ
 	enum class ATTACKTYPE {
 		MELEE,
@@ -86,6 +100,9 @@ protected:
 	};
 	//自分の向いている方向
 	DIR myDir = DIR::DOWN;
+
+	//自分の向いている方向(8方向Ver) こっちで今後動かしたい
+	EXDIR myExDir = EXDIR::TOP;
 
 	//攻撃タイプ->持っている武器の種別 初期値は近接
 	ATTACKTYPE myType = ATTACKTYPE::MELEE;
@@ -118,6 +135,12 @@ private:
 protected:
 	//移動関数のポインタ配列
 	const std::function< void(Actor*) > MOVEFUNC[4] = { &Actor::MoveUp,&Actor::MoveRight,&Actor::MoveDown,&Actor::MoveLeft };
+
+	//XとYから方向を返す関数
+	uint32_t GetExDir(float x, float y);
+
+	//XとYから自分の向いている方向を変更する関数
+	void SetExDir(float x, float y);
 
 	//基本攻撃関数	
 	void DefaultAttack();

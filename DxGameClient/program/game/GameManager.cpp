@@ -283,6 +283,21 @@ bool GameManager::isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, t
 	return true;
 }
 
+tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos)
+{
+	/* 
+	//¶‰ñ“]
+	float fixX = vec.x * radianX - vec.y * radianY;
+	float fixY = vec.x * radianY + vec.y * radianX;
+
+	//‰E‰ñ“]
+	float fixX = vec.x * radianX + vec.y * radianY;
+	float fixY = vec.x * radianY*(-1) + vec.y * radianX;
+	*/
+
+	return tnl::Vector3();
+}
+
 void GameManager::SetStayMap()
 {
 	lastStayMap = GetPlayerOnMap();
