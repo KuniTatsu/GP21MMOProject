@@ -72,16 +72,16 @@ ChatBase::ChatBase()
 
 	const string test = "こんにちは";
 
-	Json obj = Json::object({
+	/*Json obj = Json::object({
 		{ "chat", test },
 		});
 
 	std::string hogehoge = obj.dump();
 
-	string utf = gManager->SjistoUTF8(hogehoge);
+	string utf = gManager->SjistoUTF8(hogehoge);*/
 
 	//メッセージを送信
-	connect->SendClientMessage(utf);
+	connect->SendClientMessage(test);
 
 	//チャット欄のスクリーンを生成
 	chatArea = MakeScreen(340, 400, TRUE);
@@ -136,12 +136,12 @@ void ChatBase::DrawAllMessage()
 			tnl::DebugTrace("\n");
 
 			if (arrayNum < 10) {
-				DrawStringEx(20, 10 + (i * 20), -1, savedMessage[i].c_str());
+				DrawStringEx(20, 10 + (i * 50), -1, savedMessage[i].c_str());
 			}
 			else {
 				int messageNum = i + (arrayNum - 10);
 
-				DrawStringEx(20, 10 + (i * 20), -1, savedMessage[messageNum].c_str());
+				DrawStringEx(20, 10 + (i * 50), -1, savedMessage[messageNum].c_str());
 			}
 		}
 	}
@@ -188,7 +188,7 @@ void ChatBase::ParseMessage(const std::string message)
 void ChatBase::InsertStringToChatVector(const std::string chat)
 {
 	//自分が送ったメッセージだった場合は登録しない
-	if (chat == myLastMessage)return;
+	//if (chat == myLastMessage)return;
 	//vectorに登録
 	//hoge.emplace_back(chat);
 	savedMessage.emplace_back(chat);
@@ -231,7 +231,7 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 
 			//空白文字なら登録しない
 			if (buf != "") {
-				savedMessage.emplace_back(buf);
+				//savedMessage.emplace_back(buf);
 				//サーバーにbufを送る
 				//connect->SendClientMessage(buf);
 				gManager->CreateSendThread(buf);
