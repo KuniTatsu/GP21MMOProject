@@ -91,6 +91,12 @@ void GameManager::Destroy() {
 	}
 }
 
+int GameManager::ContSpawn(int count, FUNCCOUNT f)
+{
+
+	return f(count);
+}
+
 int GameManager::LoadGraphEx(std::string Gh)
 {
 	auto it = ghmap.find(Gh);
@@ -368,6 +374,7 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 
+//プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
 	auto vectorToPlayer = player->GetPos() - enemyPos;

@@ -13,6 +13,7 @@ EnemyManager* EnemyManager::instance = nullptr;
 EnemyManager::EnemyManager()
 {
 	gManager = GameManager::GetInstance();
+	createCount = 0;
 	LoadEnemyMaster();
 }
 
@@ -97,42 +98,6 @@ void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	x *= coefficient[0];
 	y *= coefficient[1];
 
-	/*switch (random)
-	{
-	case static_cast<uint32_t>(DIR::UP):
-		fix = { 0,static_cast<float>(FIXDIS[random]),0 };
-		minPos = PlayerPos + fix;
-		maxPos = PlayerPos + fix * 2;
-		break;
-	case static_cast<uint32_t>(DIR::RIGHT):
-		fix = { static_cast<float>(FIXDIS[random]),0,0 };
-		minPos = PlayerPos + fix;
-		maxPos = PlayerPos + fix * 2;
-		break;
-	case static_cast<uint32_t>(DIR::DOWN):
-		fix = { 0,static_cast<float>(FIXDIS[random]),0 };
-		minPos = PlayerPos + fix;
-		maxPos = PlayerPos + fix * 2;
-		break;
-	case static_cast<uint32_t>(DIR::LEFT):
-		fix = { static_cast<float>(FIXDIS[random]),0,0 };
-		minPos = PlayerPos + fix;
-		maxPos = PlayerPos + fix * 2;
-		break;
-	}
-	bool isAboveZero = false;
-
-	if (minPos.x < 0 || maxPos.x < 0 || minPos.y < 0 || maxPos.y < 0) {
-		isAboveZero = true;
-	}
-	x = randomRange(std::abs(static_cast<int>(minPos.x)), std::abs(static_cast<int>(maxPos.x)));
-	y = randomRange(std::abs(static_cast<int>(minPos.y)), std::abs(static_cast<int>(maxPos.y)));
-	if (isAboveZero) {
-		x *= -1;
-		y *= -1;
-	}*/
-
-
 	/*エネミー生成*/
 	SelectEnemy(tnl::Vector3(static_cast<float>(x), static_cast<float>(y), 0));
 
@@ -173,6 +138,10 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 	auto newEnemy = std::make_shared<Enemy>(posEnemy,data->GetAttackRange(),data->GetAttack(),data->GetDefence(),data->GetMoveSpeed());
+	createCount++;
+
+	FUNCCOUNT p;
+	
 
 	gManager->SetEnemyList(newEnemy);
 

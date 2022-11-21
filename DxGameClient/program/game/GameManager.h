@@ -5,9 +5,6 @@
 #include<list>
 #include<thread>
 
-
-
-
 class SceneBase;
 class SceneManager;
 class ChatBase;
@@ -15,6 +12,8 @@ class Map;
 class Enemy;
 class Player;
 class Connect;
+
+typedef int (*FUNCCOUNT)(int);
 
 class GameManager {
 private:
@@ -116,6 +115,8 @@ public:
 		return tnl::Vector3(X / vecLength, Y / vecLength, 0);
 	}
 
+	/*スポーンカウント*/
+	int ContSpawn(int count, FUNCCOUNT f);
 
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
@@ -170,8 +171,6 @@ public:
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
 	//エネミーリストの取得
-	/*std::list<std::shared_ptr<Enemy>> Enemys;*/
-	//std::list<std::shared_ptr<Enemy>>&GetEnemyList();
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
@@ -183,9 +182,6 @@ public:
 inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 	Enemys.emplace_back(enemy);
 }
-//void CreateEnemy();
-
-
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 	
 };

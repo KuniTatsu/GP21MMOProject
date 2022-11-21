@@ -38,6 +38,9 @@ private:
 	/*範囲指定のランダム関数*/
 	int randomRange(int minRange, int maxRange);
 
+	/*エネミー生成回数*/
+	int createCount = 0;
+
 	//const int FIXDIS[4] = { -512,512,512,-512 };
 	const int FIXDIS[4] = { -100,100,100,-100 };
 
