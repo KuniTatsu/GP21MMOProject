@@ -57,6 +57,10 @@ protected:
 	//ローカル座標
 	tnl::Vector3 localPos;
 
+	//test
+	std::vector<tnl::Vector3> bufPos;
+
+
 	//キャラクター画像の幅 初期値はプレイヤーの基本の大きさ
 	//横幅
 	float width = 32.0f;
@@ -79,8 +83,8 @@ protected:
 		MAX
 	};
 
-	//方向 8方向バージョン 回転を前提
-	enum class EXDIR:uint32_t {
+	//方向 8方向バージョン 回転を前提　こっちを使うこと
+	enum class EXDIR :uint32_t {
 		LEFTTOP,
 		LEFT,
 		LEFTBOTTOM,
@@ -111,7 +115,7 @@ protected:
 	std::shared_ptr<ActorData> myData = nullptr;
 
 	//向いている方向の距離のオフセット 上,右,下,左
-	const tnl::Vector3 VECOFFSET[4] = {tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0)};
+	const tnl::Vector3 VECOFFSET[4] = { tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0) };
 
 
 	//このクラス内でしか使わない関数はここに書く
@@ -144,7 +148,9 @@ protected:
 
 	//基本攻撃関数	
 	void DefaultAttack();
-	
+
+	//基本攻撃の近接タイプの範囲を計算する関数 左上,右上,左下,右下の順
+	std::vector<tnl::Vector3>GetMeleeAttackBox();
 
 };
 

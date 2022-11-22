@@ -6,6 +6,7 @@
 #include"scene/Map.h"
 #include<algorithm>
 #include"ChatBase.h"
+#include<math.h>
 
 
 GameManager* GameManager::instance = nullptr;
@@ -41,6 +42,7 @@ void GameManager::Destroy() {
 		instance = nullptr;
 	}
 }
+
 
 int GameManager::LoadGraphEx(std::string Gh)
 {
@@ -234,20 +236,77 @@ bool GameManager::isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, t
 
 	return true;
 }
-
-tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos)
+//点座標のアフィン変換
+tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& rotatePos, int dir, tnl::Vector3 centerPos)
 {
-	/* 
-	//左回転
-	float fixX = vec.x * radianX - vec.y * radianY;
-	float fixY = vec.x * radianY + vec.y * radianX;
+	//回転する角度を求める
+	float rotateDegree = ROTATEDEGREE[dir];
+	//回転に用いるラジアン角を求める
+	float radianX = std::cos(tnl::ToRadian(rotateDegree));
+	float radianY = std::sin(tnl::ToRadian(rotateDegree));
 
-	//右回転
-	float fixX = vec.x * radianX + vec.y * radianY;
-	float fixY = vec.x * radianY*(-1) + vec.y * radianX;
-	*/
+	//中心回転の場合の補正
+	float xFacter = centerPos.x - (centerPos.x * radianX) + (centerPos.y * radianY);
+	float yFacter = centerPos.y - (centerPos.x * radianY) - (centerPos.y * radianX);
 
-	return tnl::Vector3();
+	float testX = radianX * rotatePos.x - radianY * rotatePos.y + xFacter;
+	float testY = radianY * rotatePos.x + radianX * rotatePos.y + yFacter;
+	return tnl::Vector3(testX, testY, 0);
+}
+
+tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& rotatePos, float degree, tnl::Vector3 centerPos)
+{
+	//回転に用いるラジアン角を求める
+	float radianX = std::cos(tnl::ToRadian(degree));
+	float radianY = std::sin(tnl::ToRadian(degree));
+
+	//中心回転の場合の補正
+	float xFacter = centerPos.x - (centerPos.x * radianX) + (centerPos.y * radianY);
+	float yFacter = centerPos.y - (centerPos.x * radianY) - (centerPos.y * radianX);
+
+	float testX = radianX * rotatePos.x - radianY * rotatePos.y + xFacter;
+	float testY = radianY * rotatePos.x + radianX * rotatePos.y + yFacter;
+	return tnl::Vector3(testX, testY, 0);
+}
+//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ,args2:判定する点座標
+bool GameManager::isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Vector3& hitPoint)
+{
+	bool ret = true;
+
+	//頂点座標4つのベクトルを作成(右回転)
+	tnl::Vector3 vec1 = { hitBoxPoint[1].x - hitBoxPoint[0].x,hitBoxPoint[1].y - hitBoxPoint[0].y,0 };
+	tnl::Vector3 vec2 = { hitBoxPoint[3].x - hitBoxPoint[1].x,hitBoxPoint[3].y - hitBoxPoint[1].y,0 };
+	tnl::Vector3 vec3 = { hitBoxPoint[2].x - hitBoxPoint[3].x,hitBoxPoint[2].y - hitBoxPoint[3].y,0 };
+	tnl::Vector3 vec4 = { hitBoxPoint[0].x - hitBoxPoint[2].x,hitBoxPoint[0].y - hitBoxPoint[2].y,0 };
+
+	std::vector<tnl::Vector3> boxVecs;
+	boxVecs.emplace_back(vec1);
+	boxVecs.emplace_back(vec2);
+	boxVecs.emplace_back(vec3);
+	boxVecs.emplace_back(vec4);
+
+	//各張点からのベクトルを作成
+	tnl::Vector3 pVec1 = { hitPoint.x - hitBoxPoint[0].x,hitPoint.y - hitBoxPoint[0].y,0 };
+	tnl::Vector3 pVec2 = { hitPoint.x - hitBoxPoint[1].x,hitPoint.y - hitBoxPoint[1].y,0 };
+	tnl::Vector3 pVec3 = { hitPoint.x - hitBoxPoint[3].x,hitPoint.y - hitBoxPoint[3].y,0 };
+	tnl::Vector3 pVec4 = { hitPoint.x - hitBoxPoint[2].x,hitPoint.y - hitBoxPoint[2].y,0 };
+
+	std::vector<tnl::Vector3> pointVecs;
+	pointVecs.emplace_back(pVec1);
+	pointVecs.emplace_back(pVec2);
+	pointVecs.emplace_back(pVec3);
+	pointVecs.emplace_back(pVec4);
+
+	//頂点へのベクトルと点へのベクトルの外積をとる
+	for (int i = 0; i < 4; ++i) {
+		float cross = GetCross(boxVecs[i], pointVecs[i]);
+		//一つでも負の数があれば点は内部にない=当たってない
+		if (cross < 0) {
+			ret = false;
+			break;
+		}
+	}
+	return ret;
 }
 
 void GameManager::SetStayMap()
@@ -342,9 +401,9 @@ void GameManager::Update(float delta_time) {
 		sManager = SceneManager::GetInstance();
 		init = true;
 	}
-	if (chat == nullptr) {
+	/*if (chat == nullptr) {
 		chat = new ChatBase();
-	}
+	}*/
 
 
 	deltaTime = delta_time;

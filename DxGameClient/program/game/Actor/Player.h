@@ -39,6 +39,7 @@ private:
 	const int MOVEAMOUNT[static_cast<int>(DIR::MAX)] = { -SPEED,SPEED,SPEED,-SPEED };
 
 
+	int testGh = 0;
 
 };
 
