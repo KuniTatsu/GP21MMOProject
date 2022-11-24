@@ -268,7 +268,7 @@ tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& rotatePos, float degree, tnl
 	float testY = radianY * rotatePos.x + radianX * rotatePos.y + yFacter;
 	return tnl::Vector3(testX, testY, 0);
 }
-//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ,args2:判定する点座標
+//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ 左上,右上,左下,右下の順で入れること,args2:判定する点座標
 bool GameManager::isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Vector3& hitPoint)
 {
 	bool ret = true;
