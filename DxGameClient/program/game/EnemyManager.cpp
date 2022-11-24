@@ -140,7 +140,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	auto newEnemy = std::make_shared<Enemy>(posEnemy,data->GetAttackRange(),data->GetAttack(),data->GetDefence(),data->GetMoveSpeed());
 	createCount++;
 
-	FUNCCOUNT p;
+	//FUNCCOUNT p;
 	
 
 	gManager->SetEnemyList(newEnemy);

@@ -13,7 +13,7 @@ class Enemy;
 class Player;
 class Connect;
 
-typedef int (*FUNCCOUNT)(int);
+//typedef int (*FUNCCOUNT)(int);
 
 class GameManager {
 private:
@@ -116,7 +116,7 @@ public:
 	}
 
 	/*スポーンカウント*/
-	int ContSpawn(int count, FUNCCOUNT f);
+	//int ContSpawn(int count, FUNCCOUNT f);
 
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す

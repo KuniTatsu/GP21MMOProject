@@ -91,11 +91,11 @@ void GameManager::Destroy() {
 	}
 }
 
-int GameManager::ContSpawn(int count, FUNCCOUNT f)
-{
-
-	return f(count);
-}
+//int GameManager::ContSpawn(int count, FUNCCOUNT f)
+//{
+//
+//	return f(count);
+//}
 
 int GameManager::LoadGraphEx(std::string Gh)
 {
