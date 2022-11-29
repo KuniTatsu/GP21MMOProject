@@ -57,6 +57,9 @@ std::vector<int>& ResourceManager::GetGraphicVector(int type)
 	case static_cast<uint32_t>(RESOUCETYPE::TALENT):
 		return talentGhs;
 		break;
+	case static_cast<uint32_t>(RESOUCETYPE::SKILL):
+		return skillGhs;
+		break;
 	default:
 		break;
 	}

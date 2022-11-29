@@ -24,6 +24,7 @@ public:
 		ITEM,
 		JOB,
 		TALENT,
+		SKILL,
 		MAX
 	};
 
@@ -51,6 +52,7 @@ private:
 	std::vector<int>itemGhs;
 	std::vector<int>jobGhs;
 	std::vector<int>talentGhs;
+	std::vector<int>skillGhs;
 
 };
 
