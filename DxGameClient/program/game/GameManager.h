@@ -170,12 +170,11 @@ public:
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
-
-
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
