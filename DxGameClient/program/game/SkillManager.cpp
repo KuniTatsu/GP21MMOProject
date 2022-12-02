@@ -2,6 +2,7 @@
 #include"Skill.h"
 #include"SpecialSkillEffect.h"
 
+SkillManager* SkillManager::instance = nullptr;
 SkillManager::SkillManager()
 {
 }
