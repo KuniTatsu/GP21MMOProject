@@ -6,6 +6,7 @@
 
 class Camera;
 class GameManager;
+class EnemySpawnManager;
 class Enemy;
 class ActorData;
 
@@ -17,19 +18,13 @@ private:
 	static EnemyManager* instance;
 
 	GameManager* gManager = nullptr;
+	EnemySpawnManager* eSpawn = nullptr;
 
 	enum class DIR {
 		UP,
 		RIGHT,
 		DOWN,
 		LEFT,
-		MAX
-	};
-
-	enum class EnemyType {
-		GHOST,
-		SLIME,
-		GOBLIN,
 		MAX
 	};
 
@@ -53,20 +48,36 @@ private:
 private:
 	void LoadEnemyMaster();
 
-	std::shared_ptr<ActorData> GetEnemyData(int type);
-
-
 public:
 	//インスタンスの取得
 	static EnemyManager* GetInstance();
 
 	void Destory();
 
+	/*エネミー種類*/
+	enum class EnemyType {
+		GHOST,
+		SLIME,
+		GOBLIN,
+		MAX
+	};
+
+	/*エネミーリスト*/
+	std::list<std::shared_ptr<Enemy>> EnemyList;
+	//Enemyデータ取得
+	std::shared_ptr<ActorData> GetEnemyData(int type);
+	//Enemy種類選択
 	void SelectEnemy(tnl::Vector3 posEnemy);
-
-	/*Enemyスポーン*/
+	//Enemyスポーン範囲検索
 	void SpawnEnemy(tnl::Vector3& PlayerPos);
-
+	//エネミーリストの取得
+	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
+		return EnemyList;
+	}
+	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
+		EnemyList.emplace_back(enemy);
+	}
+	
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);
 
 	void Update(float deltatime);

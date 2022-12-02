@@ -52,7 +52,6 @@
     <ClCompile Include="program\game\scene\Map.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
     <ClCompile Include="program\game\EnemyManager.cpp" />
-    <ClCompile Include="program\game\Spawn.cpp" />
     <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
     <ClCompile Include="program\game\Item\ItemSpawnManager.cpp" />
     <ClCompile Include="program\game\Item\ItemManager.cpp" />
@@ -124,7 +123,6 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
     <ClInclude Include="program\game\EnemyManager.h" />
-    <ClInclude Include="program\game\Spawn.h" />
     <ClInclude Include="program\game\Actor\DummyPlayer.h" />
     <ClInclude Include="program\game\Item\ItemSpawnManager.h" />
     <ClInclude Include="program\game\Item\ItemManager.h" />

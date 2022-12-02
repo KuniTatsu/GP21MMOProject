@@ -5,7 +5,6 @@
 #include"../EnemyManager.h"
 #include"../Actor/Enemy.h"
 
-
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();

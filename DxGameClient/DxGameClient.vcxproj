@@ -184,7 +184,6 @@
     <ClInclude Include="program\game\scene\scene_base.h" />
     <ClInclude Include="program\game\scene\scene_map.h" />
     <ClInclude Include="program\game\scene\scene_title.h" />
-    <ClInclude Include="program\game\Spawn.h" />
     <ClInclude Include="program\game\Skill.h" />
     <ClInclude Include="program\game\SkillManager.h" />
     <ClInclude Include="program\game\SpecialSkillEffect.h" />
@@ -266,7 +265,6 @@
     <ClCompile Include="program\game\scene\Map.cpp" />
     <ClCompile Include="program\game\scene\scene_map.cpp" />
     <ClCompile Include="program\game\scene\scene_title.cpp" />
-    <ClCompile Include="program\game\Spawn.cpp" />
     <ClCompile Include="program\game\Skill.cpp" />
     <ClCompile Include="program\game\SkillManager.cpp" />
     <ClCompile Include="program\game\SpecialSkillEffect.cpp" />
