@@ -111,6 +111,18 @@ int GameManager::LoadGraphEx(std::string Gh)
 	return ghmap[Gh];
 }
 
+void GameManager::LoadDivGraphEx(const std::string gh, const int allNum, const int widthNum, const int heightNum, int xSize, int ySize, std::vector<int>& ghVector)
+{
+	int* buf = new int[allNum];
+	LoadDivGraph(gh.c_str(), allNum, widthNum, heightNum, xSize, ySize, buf);
+
+	for (int i = 0; i < allNum; ++i) {
+		ghVector.emplace_back(buf[i]);
+	}
+	delete[] buf;
+
+}
+
 std::shared_ptr<Player> GameManager::CreatePlayer()
 {
 	player = std::make_shared<Player>(0, 0);

@@ -122,6 +122,10 @@ public:
 	//‚·‚Å‚É‚ ‚égh‚È‚ç‚»‚ê‚ğ•Ô‚·
 	int LoadGraphEx(std::string Gh);
 
+	//•¡”–‡‚Ì˜A‚È‚Á‚½‰æ‘œ‚ğvector‚ÉŠi”[‚·‚éŠÖ”
+	void LoadDivGraphEx(const std::string pass, const int allNum, const int widthNum, const int heightNum,
+		int xSize, int ySize, std::vector<int>& ghVector);
+
 	//stringŒ^‚Ì•¶šƒR[ƒh•ÏŠ·
 	std::string SjistoUTF8(std::string srcSjis);
 	std::string UTF8toSjis(std::string srcUTF8);

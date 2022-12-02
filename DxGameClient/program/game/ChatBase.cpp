@@ -76,9 +76,11 @@ ChatBase::ChatBase()
 		{ "chat", test },
 		});
 
-	std::string hogehoge = obj.dump();
+	std::string hogehoge = obj.dump();*/
 
-	string utf = gManager->SjistoUTF8(hogehoge);*/
+
+	//string utf = gManager->SjistoUTF8(test);
+
 
 	//メッセージを送信
 	connect->SendClientMessage(test);
