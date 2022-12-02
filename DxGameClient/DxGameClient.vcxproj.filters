@@ -52,6 +52,21 @@
     <ClCompile Include="program\game\scene\Map.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
     <ClCompile Include="program\game\EnemyManager.cpp" />
+    <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
+    <ClCompile Include="program\game\Item\ItemSpawnManager.cpp" />
+    <ClCompile Include="program\game\Item\ItemManager.cpp" />
+    <ClCompile Include="program\game\BattleLogic.cpp" />
+    <ClCompile Include="program\game\Effect.cpp" />
+    <ClCompile Include="program\game\EffectManager.cpp" />
+    <ClCompile Include="program\game\EnemySpawnManager.cpp" />
+    <ClCompile Include="program\game\Job.cpp" />
+    <ClCompile Include="program\game\JobManager.cpp" />
+    <ClCompile Include="program\game\ResourceManager.cpp" />
+    <ClCompile Include="program\game\Skill.cpp" />
+    <ClCompile Include="program\game\SkillManager.cpp" />
+    <ClCompile Include="program\game\SpecialSkillEffect.cpp" />
+    <ClCompile Include="program\game\Talent.cpp" />
+    <ClCompile Include="program\game\TalentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -108,6 +123,21 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
     <ClInclude Include="program\game\EnemyManager.h" />
+    <ClInclude Include="program\game\Actor\DummyPlayer.h" />
+    <ClInclude Include="program\game\Item\ItemSpawnManager.h" />
+    <ClInclude Include="program\game\Item\ItemManager.h" />
+    <ClInclude Include="program\game\BattleLogic.h" />
+    <ClInclude Include="program\game\Effect.h" />
+    <ClInclude Include="program\game\EffectManager.h" />
+    <ClInclude Include="program\game\EnemySpawnManager.h" />
+    <ClInclude Include="program\game\Job.h" />
+    <ClInclude Include="program\game\JobManager.h" />
+    <ClInclude Include="program\game\ResourceManager.h" />
+    <ClInclude Include="program\game\Skill.h" />
+    <ClInclude Include="program\game\SkillManager.h" />
+    <ClInclude Include="program\game\SpecialSkillEffect.h" />
+    <ClInclude Include="program\game\Talent.h" />
+    <ClInclude Include="program\game\TalentManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">
