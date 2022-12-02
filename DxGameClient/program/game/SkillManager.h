@@ -13,7 +13,7 @@ class SkillManager
 public:
 	
 	// インスタンスの取得
-	static GameManager* GetInstance();
+	static SkillManager* GetInstance();
 
 	void LoadSkillMaster();
 
