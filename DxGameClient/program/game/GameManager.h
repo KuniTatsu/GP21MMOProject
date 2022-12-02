@@ -27,7 +27,7 @@ private:
 	SceneManager* sManager = nullptr;
 	std::shared_ptr<Player> player = nullptr;
 
-	std::shared_ptr<Connect> connect = nullptr;
+	//std::shared_ptr<Connect> connect = nullptr;
 
 	std::thread acceptThread ;
 
@@ -38,7 +38,7 @@ private:
 	void Send(const std::string sendMessage);
 
 
-	ChatBase* chat = nullptr;
+	//ChatBase* chat = nullptr;
 
 	//ˆê“x“Ç‚İ‚ñ‚¾gh‚ğ•Û‘¶‚·‚émap
 	std::unordered_map<std::string, int> ghmap;
