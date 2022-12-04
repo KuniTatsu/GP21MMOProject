@@ -14,7 +14,7 @@ EnemyManager* EnemyManager::instance = nullptr;
 EnemyManager::EnemyManager()
 {
 	gManager = GameManager::GetInstance();
-	//eSpawn = new EnemySpawnManager();
+	eSpawn = std::make_shared<EnemySpawnManager>();
 	createCount = 0;
 	LoadEnemyMaster();
 }
@@ -71,7 +71,10 @@ void EnemyManager::Destory()
 
 void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 {
-	eSpawn->SpawnEnemy(PlayerPos);
+	if (eSpawn) {
+		eSpawn->SpawnEnemy(PlayerPos);
+	}
+
 	//srand(static_cast<unsigned int>(time(0)));
 	//random = static_cast<uint32_t>(rand()) % 4;
 
@@ -137,6 +140,7 @@ std::shared_ptr<ActorData> EnemyManager::GetEnemyData(int type)
 	return data;
 }
 
+/*エネミー生成*/
 void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);

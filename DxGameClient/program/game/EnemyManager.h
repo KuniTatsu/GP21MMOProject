@@ -18,7 +18,7 @@ private:
 	static EnemyManager* instance;
 
 	GameManager* gManager = nullptr;
-	EnemySpawnManager* eSpawn = nullptr;
+	std::shared_ptr<EnemySpawnManager> eSpawn = nullptr;
 
 	enum class DIR {
 		UP,
@@ -29,9 +29,9 @@ private:
 	};
 
 	/*ランダム変数*/
-	int random = 0;
+	//int random = 0;
 	/*範囲指定のランダム関数*/
-	int randomRange(int minRange, int maxRange);
+	//int randomRange(int minRange, int maxRange);
 
 	/*エネミー生成回数*/
 	int createCount = 0;
@@ -67,7 +67,7 @@ public:
 	//Enemyデータ取得
 	std::shared_ptr<ActorData> GetEnemyData(int type);
 	//Enemy種類選択
-	void SelectEnemy(tnl::Vector3 posEnemy);
+	//void SelectEnemy(tnl::Vector3 posEnemy);
 	//Enemyスポーン範囲検索
 	void SpawnEnemy(tnl::Vector3& PlayerPos);
 	//エネミーリストの取得

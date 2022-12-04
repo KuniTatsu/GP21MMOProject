@@ -17,10 +17,6 @@ EnemySpawnManager::~EnemySpawnManager()
 
 void EnemySpawnManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 {
-	srand(static_cast<unsigned int>(time(0)));
-	random = static_cast<uint32_t>(rand()) % 4;
-
-	tnl::Vector3 fix = { 0,0,0 };
 	tnl::Vector3 minPos = { 0, 0, 0 };
 	tnl::Vector3 maxPos = { 0, 0, 0 };
 	int x = 0;
@@ -68,7 +64,7 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 	if (CheckCanCreateEnemy(posEnemy))return;
 
 	srand(static_cast<unsigned int>(time(NULL)));
-	//random = static_cast<uint32_t>(rand()) % 2;
+	//random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX)-1);
 	random = 0;
 
 	switch (random)

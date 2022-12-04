@@ -10,9 +10,10 @@ public:
 	EnemySpawnManager();
 	~EnemySpawnManager();
 
+private:
 	GameManager* gManager = nullptr;
 	EnemyManager* eManager = nullptr;
-
+	
 public:
 
 	/*Enemyí—Ş‘I‘ğ*/
