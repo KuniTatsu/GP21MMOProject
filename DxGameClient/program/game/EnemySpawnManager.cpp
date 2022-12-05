@@ -8,7 +8,6 @@
 EnemySpawnManager::EnemySpawnManager()
 {
 	gManager = GameManager::GetInstance();
-	eManager = EnemyManager::GetInstance();
 }
 
 EnemySpawnManager::~EnemySpawnManager()
@@ -61,8 +60,8 @@ int EnemySpawnManager::randomRange(int minRange, int maxRange)
 void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 {
 	//敵を生成できるかチェック
-	if (CheckCanCreateEnemy(posEnemy))return;
-
+	if (!CheckCanCreateEnemy(posEnemy))return;
+	
 	srand(static_cast<unsigned int>(time(NULL)));
 	//random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX)-1);
 	random = 0;
@@ -71,6 +70,7 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 	{
 	case static_cast<uint32_t>(EnemyManager::EnemyType::GHOST):
 		eManager->CreateEnemy(static_cast<uint32_t>(EnemyManager::EnemyType::GHOST), posEnemy);
+		eManager->spawntiming = true;
 		break;
 	case static_cast<uint32_t>(EnemyManager::EnemyType::SLIME):
 		//スライムの生成
@@ -84,6 +84,12 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 bool EnemySpawnManager::CheckCanCreateEnemy(tnl::Vector3& Pos)
 {
 	bool canSpawn = true;
+	
+	if (!flagEnemyManager) {
+		eManager = EnemyManager::GetInstance();
+		flagEnemyManager = true;
+	}
+	
 	//既存の敵のポジションとかぶっていないかチェック
 	for (auto& enemy : eManager->EnemyList) {
 		auto listEnemyPos = enemy->GetPos();

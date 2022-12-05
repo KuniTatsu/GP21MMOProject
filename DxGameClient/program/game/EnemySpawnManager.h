@@ -13,6 +13,8 @@ public:
 private:
 	GameManager* gManager = nullptr;
 	EnemyManager* eManager = nullptr;
+
+	bool flagEnemyManager = false;
 	
 public:
 

@@ -91,12 +91,6 @@ void GameManager::Destroy() {
 	}
 }
 
-//int GameManager::ContSpawn(int count, FUNCCOUNT f)
-//{
-//
-//	return f(count);
-//}
-
 int GameManager::LoadGraphEx(std::string Gh)
 {
 	auto it = ghmap.find(Gh);
@@ -392,26 +386,6 @@ tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 	auto vectorToPlayer = player->GetPos() - enemyPos;
 
 	return GetFixVector(vectorToPlayer.x, vectorToPlayer.y);
-}
-
-
-bool GameManager::CheckCanCreateEnemy(tnl::Vector3& Pos) {
-
-	bool canSpawn = true;
-	//既存の敵のポジションとかぶっていないかチェック
-	for (auto& enemy : Enemys) {
-		auto listEnemyPos = enemy->GetPos();
-		if (GetLength(Pos, listEnemyPos) < 32) {
-			canSpawn = false;
-			break;
-		}
-	}
-	return canSpawn;
-	////かぶっていたら生成しない
-	//if (!canSpawn)return;
-
-	//auto enemy = std::make_shared<Enemy>(Pos);
-	//Enemys.emplace_back(enemy);
 }
 
 //-----------------------------------------------------------------------------------------

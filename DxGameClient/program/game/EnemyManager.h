@@ -19,6 +19,7 @@ private:
 
 	GameManager* gManager = nullptr;
 	std::shared_ptr<EnemySpawnManager> eSpawn = nullptr;
+	bool hoge = false;
 
 	enum class DIR {
 		UP,
@@ -35,6 +36,7 @@ private:
 
 	/*エネミー生成回数*/
 	int createCount = 0;
+	int spawnLimit = 5;
 
 	//const int FIXDIS[4] = { -512,512,512,-512 };
 	const int FIXDIS[4] = { -100,100,100,-100 };
@@ -51,7 +53,6 @@ private:
 public:
 	//インスタンスの取得
 	static EnemyManager* GetInstance();
-
 	void Destory();
 
 	/*エネミー種類*/
@@ -62,12 +63,11 @@ public:
 		MAX
 	};
 
+	bool spawntiming = false;
 	/*エネミーリスト*/
 	std::list<std::shared_ptr<Enemy>> EnemyList;
 	//Enemyデータ取得
 	std::shared_ptr<ActorData> GetEnemyData(int type);
-	//Enemy種類選択
-	//void SelectEnemy(tnl::Vector3 posEnemy);
 	//Enemyスポーン範囲検索
 	void SpawnEnemy(tnl::Vector3& PlayerPos);
 	//エネミーリストの取得
@@ -77,7 +77,6 @@ public:
 	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 		EnemyList.emplace_back(enemy);
 	}
-	
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);
 
 	void Update(float deltatime);
