@@ -72,10 +72,13 @@ void EnemyManager::Destory()
 /*エネミースポーン*/
 void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 {
-	if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_RETURN)) {
-		spawntiming = false;
+	if (!spawntiming) {
+		intervalCount++;
 	}
-	if (eSpawn /*&& createCount < spawnLimit*/ && !spawntiming) {
+	if (intervalCount % (60 * intervalLimit) == 0) {
+		spawntiming = true;
+	}
+	if (eSpawn && createCount < spawnLimit && spawntiming) {
 		eSpawn->SpawnEnemy(PlayerPos);
 	}
 }
@@ -93,11 +96,12 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
-	createCount++;
-
-	//FUNCCOUNT p;
 
 	SetEnemyList(newEnemy);
+	spawntiming = false;
+	intervalCount = 0;
+	createCount++;
+	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
 }
 
 void EnemyManager::Update(float deltatime)

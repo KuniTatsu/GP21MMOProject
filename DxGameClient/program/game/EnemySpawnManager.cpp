@@ -64,13 +64,13 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 	
 	srand(static_cast<unsigned int>(time(NULL)));
 	//random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX)-1);
+	
 	random = 0;
 
 	switch (random)
 	{
 	case static_cast<uint32_t>(EnemyManager::EnemyType::GHOST):
 		eManager->CreateEnemy(static_cast<uint32_t>(EnemyManager::EnemyType::GHOST), posEnemy);
-		eManager->spawntiming = true;
 		break;
 	case static_cast<uint32_t>(EnemyManager::EnemyType::SLIME):
 		//ƒXƒ‰ƒCƒ€‚Ì¶¬

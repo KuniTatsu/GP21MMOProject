@@ -418,8 +418,8 @@ void GameManager::Update(float delta_time) {
 		init = true;
 	}
 
-	tnl::DebugTrace("%d", num1);
-	tnl::DebugTrace("\n");
+	/*tnl::DebugTrace("%d", num1);
+	tnl::DebugTrace("\n");*/
 
 	/*if (chat == nullptr) {
 		chat = new ChatBase();
