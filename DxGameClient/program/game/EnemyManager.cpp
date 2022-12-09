@@ -14,7 +14,7 @@ EnemyManager* EnemyManager::instance = nullptr;
 EnemyManager::EnemyManager()
 {
 	gManager = GameManager::GetInstance();
-	eSpawn = std::make_shared<EnemySpawnManager>();
+	eSpawnManager = std::make_shared<EnemySpawnManager>();
 	createCount = 0;
 	LoadEnemyMaster();
 }
@@ -78,8 +78,8 @@ void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	if (intervalCount % (60 * intervalLimit) == 0) {
 		spawntiming = true;
 	}
-	if (eSpawn && createCount < spawnLimit && spawntiming) {
-		eSpawn->SpawnEnemy(PlayerPos);
+	if (createCount < spawnLimit && spawntiming) {
+		eSpawnManager->SpawnEnemy(PlayerPos);
 	}
 }
 

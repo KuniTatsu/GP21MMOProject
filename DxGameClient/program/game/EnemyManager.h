@@ -18,7 +18,7 @@ private:
 	static EnemyManager* instance;
 
 	GameManager* gManager = nullptr;
-	std::shared_ptr<EnemySpawnManager> eSpawn = nullptr;
+	std::shared_ptr<EnemySpawnManager> eSpawnManager = nullptr;
 	bool hoge = false;
 
 	enum class DIR {
