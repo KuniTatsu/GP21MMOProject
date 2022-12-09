@@ -32,7 +32,7 @@ public:
 private:
 
 	//通常攻撃の当たる距離(レンジ)基本値
-	float attackRange = 20.0f;
+	float attackRange = 100.0f;
 
 	//通常攻撃の当たる横幅  デフォルトはキャラ画像と同じ幅
 	float attackWidth = 32.0f;

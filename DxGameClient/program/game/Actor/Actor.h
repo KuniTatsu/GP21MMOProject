@@ -42,6 +42,9 @@ public:
 		localPos = Pos;
 	}
 
+	//キャラ画像の四点の座標を求める関数 左上,右上,左下,右下
+	std::vector<tnl::Vector3> GetCharaEdgePos();
+
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
 

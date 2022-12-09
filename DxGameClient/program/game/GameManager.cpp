@@ -309,6 +309,11 @@ bool GameManager::isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Ve
 	return ret;
 }
 
+tnl::Vector3 GameManager::GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos)
+{
+	return ((firstPos + secondPos) / 2);
+}
+
 void GameManager::SetStayMap()
 {
 	lastStayMap = GetPlayerOnMap();

@@ -53,7 +53,6 @@ void Player::Draw(Camera* camera)
 	/*DrawExtendGraph(boxX1, boxY1, boxX2, boxY2, testGh, true);*/
 	//左上、右上、右下、左下の頂点の座標 
 	DrawModiGraphF(boxX1, boxY1, boxX2, boxY2, boxX4, boxY4, boxX3, boxY3, testGh, true);
-
 }
 
 void Player::Init()

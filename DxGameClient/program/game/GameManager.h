@@ -102,6 +102,14 @@ public:
 		return vec1.x * vec2.y - vec2.x * vec1.y;
 	}
 
+	//2つの座標間の距離を求める関数
+	inline float GetLengthFromTwoPoint(tnl::Vector3& pos1, tnl::Vector3& pos2) {
+		auto defX = (pos2.x - pos1.x);
+		auto defY = (pos2.y - pos1.y);
+		return sqrtf((defX * defX) + (defY * defY));
+	}
+
+
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
 	int LoadGraphEx(std::string Gh);
@@ -119,6 +127,8 @@ public:
 	//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ 左上,右上,左下,右下の順で入れること,args2:判定する点座標
 	bool isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Vector3& hitPoint);
 
+	//2つの座標から中心座標を求める関数 args1:座標1,args2:座標2
+	tnl::Vector3 GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos);
 
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
