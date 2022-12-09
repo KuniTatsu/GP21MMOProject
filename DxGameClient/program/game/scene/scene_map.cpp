@@ -5,7 +5,6 @@
 #include"../EnemyManager.h"
 #include"../Actor/Enemy.h"
 
-
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
@@ -24,7 +23,6 @@ void Scene_Map::initialzie()
 	gManager->CreateMap();
 	//エネミーの生成
 	eManager->GetInstance();
-	//eManager->SpawnEnemy(player->GetPos());
 	
 	//playerの初期マップを登録
 	gManager->SetStayMap();
@@ -47,10 +45,8 @@ void Scene_Map::update(float delta_time)
 	//listの中のenemyすべてに対して、playerとの距離が一定以下ならplayerの方に移動させる
 	//gManager->enemyMove();
 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
-		eManager->SpawnEnemy(player->GetPos());
-	}
-
+	/*Enemy生成*/
+	eManager->SpawnEnemy(player->GetPos());
 	/*カメラ操作*/
 	camera.pos += (player->GetPos() - camera.pos) * 0.1f;
 

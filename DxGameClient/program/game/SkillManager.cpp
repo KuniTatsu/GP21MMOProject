@@ -21,6 +21,8 @@ SkillManager* SkillManager::GetInstance()
 
 void SkillManager::LoadSkillMaster()
 {
+	//csvì«çû
+
 }
 
 std::shared_ptr<SpecialSkillEffect> SkillManager::SetSpecialSkillEffect(int skillId)

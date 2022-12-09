@@ -5,9 +5,6 @@
 #include<list>
 #include<thread>
 
-
-
-
 class SceneBase;
 class SceneManager;
 class ChatBase;
@@ -15,6 +12,8 @@ class Map;
 class Enemy;
 class Player;
 class Connect;
+
+//typedef int (*FUNCCOUNT)(int);
 
 class GameManager {
 private:
@@ -116,7 +115,6 @@ public:
 		return tnl::Vector3(X / vecLength, Y / vecLength, 0);
 	}
 
-
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
 	int LoadGraphEx(std::string Gh);
@@ -133,7 +131,6 @@ public:
 	bool isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, tnl::Vector3& leftTop2, tnl::Vector3& rightBottom2);
 	//座標の回転
 	tnl::Vector3 RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos);
-
 
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
@@ -168,28 +165,19 @@ public:
 		return std::sqrt(((PosA.x - PosB.x) * (PosA.x - PosB.x)) + ((PosA.y - PosB.y) * (PosA.y - PosB.y)));
 	}
 
-	//void CreateEnemy(tnl::Vector3& Pos,int type);
-	bool CheckCanCreateEnemy(tnl::Vector3& Pos);
-
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	
 	//エネミーリストの取得
-	/*std::list<std::shared_ptr<Enemy>> Enemys;*/
-	//std::list<std::shared_ptr<Enemy>>&GetEnemyList();
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
-
-
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
 inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 	Enemys.emplace_back(enemy);
 }
-//void CreateEnemy();
-
-
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 	
 };

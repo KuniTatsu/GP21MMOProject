@@ -25,7 +25,7 @@ private:
 
 private:
 
-	std::vector<Skill> skillMaster;
+	std::vector<std::shared_ptr<Skill>> skillMaster;
 
 	static SkillManager* instance;
 };
