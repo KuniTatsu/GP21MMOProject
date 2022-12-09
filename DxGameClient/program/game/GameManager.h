@@ -5,9 +5,6 @@
 #include<list>
 #include<thread>
 
-
-
-
 class SceneBase;
 class SceneManager;
 class ChatBase;
@@ -15,6 +12,8 @@ class Map;
 class Enemy;
 class Player;
 class Connect;
+
+//typedef int (*FUNCCOUNT)(int);
 
 class GameManager {
 private:
@@ -116,6 +115,7 @@ public:
 		return tnl::Vector3(X / vecLength, Y / vecLength, 0);
 	}
 
+
 	//外積を取得する関数
 	float GetCross(tnl::Vector3& vec1, tnl::Vector3& vec2) {
 		return vec1.x * vec2.y - vec2.x * vec1.y;
@@ -127,7 +127,6 @@ public:
 		auto defY = (pos2.y - pos1.y);
 		return sqrtf((defX * defX) + (defY * defY));
 	}
-
 
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
@@ -149,6 +148,7 @@ public:
 
 	//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ 左上,右上,左下,右下の順で入れること,args2:判定する点座標
 	bool isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Vector3& hitPoint);
+
 
 	//2つの座標から中心座標を求める関数 args1:座標1,args2:座標2
 	tnl::Vector3 GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos);
@@ -186,28 +186,19 @@ public:
 		return std::sqrt(((PosA.x - PosB.x) * (PosA.x - PosB.x)) + ((PosA.y - PosB.y) * (PosA.y - PosB.y)));
 	}
 
-	//void CreateEnemy(tnl::Vector3& Pos,int type);
-	bool CheckCanCreateEnemy(tnl::Vector3& Pos);
-
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	
 	//エネミーリストの取得
-	/*std::list<std::shared_ptr<Enemy>> Enemys;*/
-	//std::list<std::shared_ptr<Enemy>>&GetEnemyList();
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
-
-
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
 inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 	Enemys.emplace_back(enemy);
 }
-//void CreateEnemy();
-
-
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 	
 };

@@ -78,7 +78,9 @@ ChatBase::ChatBase()
 
 	std::string hogehoge = obj.dump();*/
 
+
 	//string utf = gManager->SjistoUTF8(test);
+
 
 	//ƒƒbƒZ[ƒW‚ð‘—M
 	connect->SendClientMessage(test);
@@ -188,7 +190,7 @@ void ChatBase::ParseMessage(const std::string message)
 void ChatBase::InsertStringToChatVector(const std::string chat)
 {
 	//Ž©•ª‚ª‘—‚Á‚½ƒƒbƒZ[ƒW‚¾‚Á‚½ê‡‚Í“o˜^‚µ‚È‚¢
-	if (chat == myLastMessage)return;
+	//if (chat == myLastMessage)return;
 	//vector‚É“o˜^
 	//hoge.emplace_back(chat);
 	savedMessage.emplace_back(chat);
@@ -231,7 +233,7 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 
 			//‹ó”’•¶Žš‚È‚ç“o˜^‚µ‚È‚¢
 			if (buf != "") {
-				savedMessage.emplace_back(buf);
+				//savedMessage.emplace_back(buf);
 				//ƒT[ƒo[‚Ébuf‚ð‘—‚é
 				//connect->SendClientMessage(buf);
 				gManager->CreateSendThread(buf);
