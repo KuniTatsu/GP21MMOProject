@@ -3,12 +3,18 @@
 #include<unordered_map>
 #include<memory>
 #include<list>
+#include<thread>
+
+
+
 
 class SceneBase;
 class SceneManager;
 class ChatBase;
 class Map;
+class Enemy;
 class Player;
+class Connect;
 
 class GameManager {
 private:
@@ -20,6 +26,18 @@ private:
 
 	SceneManager* sManager = nullptr;
 	std::shared_ptr<Player> player = nullptr;
+
+	std::shared_ptr<Connect> connect = nullptr;
+
+	std::thread acceptThread ;
+
+	//マルチスレッドで動かす受信用関数
+	void Accept();
+
+	//マルチスレッドで動かす送信用関数
+	void Send(const std::string sendMessage);
+
+
 	ChatBase* chat = nullptr;
 
 	//一度読み込んだghを保存するmap
@@ -27,9 +45,10 @@ private:
 	//各チャンクのマップポインタを持つ配列
 	std::list<std::shared_ptr<Map>>Maps;
 
-
 	//playerがいるマップのポインタ
 	std::shared_ptr<Map>lastStayMap = nullptr;
+
+	std::list<std::shared_ptr<Enemy>> Enemys;
 
 	// ゲーム全体で参照したい変数はここで用意
 public:
@@ -37,22 +56,23 @@ public:
 	static constexpr int SCREEN_HEIGHT = 768;
 
 	//一チャンクの一辺のチップ数
-	const int MAPSIZE = 5;
+	const int MAPSIZE = 5.0;
 	//一チップの大きさ
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
 
 	float deltaTime = 0.0f;
 
-	//マップ生成に使用する中心座標へのオフセット
-	const tnl::Vector3 MAPPOSOFFSET[8] = { tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
-	tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
-	tnl::Vector3(-MAPSIZE * CHIPWIDTH,0,0),//左
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,0,0),//右
-	tnl::Vector3(-MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0),//左下
-	tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
-	tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
+	const tnl::Vector3 MAPPOSOFFSET[8] = { 
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
+		tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,0,0),//左
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,0,0),//右
+		tnl::Vector3(-MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0),//左下
+		tnl::Vector3(0,MAPSIZE * CHIPHEIGHT,0),//下
+		tnl::Vector3(MAPSIZE * CHIPWIDTH,MAPSIZE * CHIPHEIGHT,0)//右下 
+
 	};
 	//回転角の方向
 	enum class ROTATEDIR :uint32_t {
@@ -86,10 +106,9 @@ public:
 	static GameManager* GetInstance();
 
 	void Update(float delta_time);
-
+	// 破棄
 	void Destroy();
 
-	// 
 	//単位ベクトル取得関数
 	inline tnl::Vector3 GetFixVector(float X, float Y) {
 		float vecLength = std::sqrt(X * X + Y * Y);
@@ -113,6 +132,10 @@ public:
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
 	int LoadGraphEx(std::string Gh);
+
+	//複数枚の連なった画像をvectorに格納する関数
+	void LoadDivGraphEx(const std::string pass, const int allNum, const int widthNum, const int heightNum,
+		int xSize, int ySize, std::vector<int>& ghVector);
 
 	//string型の文字コード変換
 	std::string SjistoUTF8(std::string srcSjis);
@@ -157,12 +180,34 @@ public:
 	inline float GetChunkDistance() {
 		return static_cast<float>(MAPSIZE * CHIPHEIGHT);
 	}
+	
+	//二つのPos同士の距離を取得する関数
+	inline float GetLength(tnl::Vector3& PosA, tnl::Vector3& PosB) {
+		return std::sqrt(((PosA.x - PosB.x) * (PosA.x - PosB.x)) + ((PosA.y - PosB.y) * (PosA.y - PosB.y)));
+	}
+
+	//void CreateEnemy(tnl::Vector3& Pos,int type);
+	bool CheckCanCreateEnemy(tnl::Vector3& Pos);
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	//エネミーリストの取得
+	/*std::list<std::shared_ptr<Enemy>> Enemys;*/
+	//std::list<std::shared_ptr<Enemy>>&GetEnemyList();
+	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
+		return Enemys;
+	}
 
+
+	//送信用スレッドを作成する関数
+	void CreateSendThread(const std::string sendMessage);
+
+inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
+	Enemys.emplace_back(enemy);
+}
+//void CreateEnemy();
+
+
+	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+	
 };
-
-
-
-

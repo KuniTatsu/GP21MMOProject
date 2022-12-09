@@ -5,8 +5,8 @@
 
 class Player;
 class CreateMap;
-class Map;
 class GameManager;
+class EnemyManager;
 
 class Scene_Map : public SceneBase {
 public:
@@ -14,7 +14,6 @@ public:
 	~Scene_Map();
 
 	//std::list<CreateMap*>	map;
-	std::list<Map*> map;
 	
 	void initialzie() override;
 	void update(float delta_time) override;
@@ -25,6 +24,7 @@ private:
 	Camera camera;
 
 	GameManager* gManager = nullptr;
+	EnemyManager* eManager = nullptr;
 
 	bool createChipRight = false;
 

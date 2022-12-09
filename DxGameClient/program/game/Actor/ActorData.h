@@ -28,15 +28,34 @@ public:
 		attackWidth = setWidth;
 	}
 
+	inline float GetAttack() {
+		return attack;
+	}
+
+	inline float GetDefence() {
+		return defence;
+	}
+
+	inline float GetMoveSpeed() {
+		return moveSpeed;
+	}
+
+	void SetAllStatus(double AttackRange, float Attack, float Defence, float MoveSpeed);
 
 private:
 
 	//通常攻撃の当たる距離(レンジ)基本値
 	float attackRange = 100.0f;
 
+
+	//攻撃力
+	float attack = 0.0f;
+	//防御力
+	float defence = 0.0f;
+	//移動スピード
+	float moveSpeed = 0.0f;
+
 	//通常攻撃の当たる横幅  デフォルトはキャラ画像と同じ幅
 	float attackWidth = 32.0f;
-
-
 };
 

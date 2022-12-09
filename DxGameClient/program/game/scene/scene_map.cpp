@@ -2,11 +2,14 @@
 #include"../Actor/Player.h"
 #include"../GameManager.h"
 #include"Map.h"
+#include"../EnemyManager.h"
+#include"../Actor/Enemy.h"
 
 
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
+	eManager = EnemyManager::GetInstance();
 }
 
 Scene_Map::~Scene_Map()
@@ -19,13 +22,15 @@ void Scene_Map::initialzie()
 	player=gManager->CreatePlayer();
 	//マップの生成
 	gManager->CreateMap();
+	//エネミーの生成
+	eManager->GetInstance();
+	//eManager->SpawnEnemy(player->GetPos());
+	
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
-
-
-	/*Playerの生成*/
-	player->Draw(&camera);
+	///*Playerの生成*/
+	//player->Draw(&camera);
 	
 	/*どこのシーンであるか*/
 	SetFontSize(50);
@@ -39,8 +44,11 @@ void Scene_Map::update(float delta_time)
 	/*Player操作*/
 	player->Update();
 
+	//listの中のenemyすべてに対して、playerとの距離が一定以下ならplayerの方に移動させる
+	//gManager->enemyMove();
+
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
-		gManager->CreateMap();
+		eManager->SpawnEnemy(player->GetPos());
 	}
 
 	/*カメラ操作*/
@@ -51,22 +59,19 @@ void Scene_Map::update(float delta_time)
 		createChipRight = true;
 	}
 
-	/*std::list<CreateMap*>::iterator it = map.begin();
-	while (it != map.end()) {
-		if (!(*it)->is_alive) {
-			delete(*it);
-			it = map.erase(it);
-			continue;
-		}
-		it++;
-	}*/
 }
 void Scene_Map::render()
 {
+	/*マップの描画*/
 	for (auto map : gManager->GetMapList()) {
 		map->Draw(&camera);
 	}
 
+	/*エネミーの描画*/
+	if (eManager != nullptr) {
+		eManager->Draw(&camera);
+	}
+	
 	/*Playerの描画*/
 	player->Draw(&camera);
 

@@ -41,6 +41,11 @@ public:
 	inline void	SetLocalPos(tnl::Vector3 Pos) {
 		localPos = Pos;
 	}
+	//actorDataの取得
+	inline std::shared_ptr<ActorData>GetActorData() {
+		return myData;
+	}
+	 void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
 
 	//キャラ画像の四点の座標を求める関数 左上,右上,左下,右下
 	std::vector<tnl::Vector3> GetCharaEdgePos();

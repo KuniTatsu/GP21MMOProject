@@ -123,53 +123,42 @@ void Connect::SendClientMessage(std::string sendMessage)
 {
 	const std::string  text = sendMessage;
 
-	myLastMessage = sendMessage;
+	Json obj = Json::object({
+		{ "chat", text },
+		});
 
+	std::string hogehoge = obj.dump();
 
-	/*Json obj = Json::object({
-		{ "message", text },
-		});*/
-		//obj.string_value();
+	auto fix = gManager->SjistoUTF8(hogehoge);
 
-		// Send the message
-	ws.write(net::buffer(text));
-
-	//ws.write(net::buffer(obj.string_value()));
+	ws.write(net::buffer(fix));
 
 }
-//チャット受信
-void Connect::GetServerMessage(std::vector<std::string>& Save)
+
+const std::string Connect::GetServerMessage()
+
 {
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
+
+	tnl::DebugTrace("読み取り開始");
+	tnl::DebugTrace("\n");
 	// Read a message into our buffer
 	ws.read(buffer);
 
 	ws.text(true);
 
-	const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
+	//const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
 
 	const std::string getMessage = beast::buffers_to_string(buffer.data());
 
-	std::string err;
-	auto hoge = json11::Json::parse(getMessage, err);
-	//Json::parse()
+	tnl::DebugTrace("読み取り成功");
+	tnl::DebugTrace(getMessage.c_str());
+	tnl::DebugTrace("\n");
 
-	auto message = gManager->UTF8toSjis(hoge["chat"].string_value());
-	//chatキーでメッセージが送られて来ていれば
-	if (message != "") {
-		auto count = hoge["count"].int_value();
-	}
-
-	/*auto message = gManager->UTF8toSjis(hoge["info"].string_value());
-	auto count = hoge["count"].int_value();*/
-
-	//自分が送ったメッセージだった場合は登録しない
-	if (getMessage == myLastMessage)return;
-	//引数のvectorに登録
-	Save.emplace_back(message);
-
+	return getMessage;
 }
+
 
 void Connect::EntryServer(std::string playerName)
 {
@@ -177,10 +166,6 @@ void Connect::EntryServer(std::string playerName)
 	Json obj = Json::object({
 		{ "playerName", text },
 		});
-	//obj.string_value();
-
-	// Send the message
-//ws.write(net::buffer(text));
 
 	std::string hogehoge = obj.dump();
 
@@ -210,5 +195,10 @@ void Connect::GetEntryUserId()
 		return;
 	}
 
-	WritePrivateProfileString("UUID", "data", message.data(), "clientUUID.ini");
+	bool check = WritePrivateProfileString("UUID", "data", message.data(), "clientUUID.ini");
+	if (!check) {
+		tnl::DebugTrace("書き込み失敗");
+		tnl::DebugTrace("\n");
+	}
 }
+

@@ -27,6 +27,11 @@ std::vector<tnl::Vector3> Actor::GetCharaEdgePos()
 	return ret;
 }
 
+void Actor::SetActorData(double attackRange, float attack, float defence, float moveSpeed)
+{
+	myData->SetAllStatus(attackRange, attack, defence, moveSpeed);
+}
+
 void Actor::MoveUp()
 {
 	//ローカルポジションの移動
