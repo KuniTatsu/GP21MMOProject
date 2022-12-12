@@ -7,7 +7,8 @@
 #include"Actor/Enemy.h"
 #include<algorithm>
 #include"ChatBase.h"
-// #include"Connect.h"
+#include"Connect.h"
+#include<random>
 
 
 
@@ -33,9 +34,10 @@ void GameManager::Accept()
 {
 	while (isEnd == false)
 	{
-		//auto get = connect->GetServerMessage();
-		//chat->SetGetMessage(get);
-		num1++;
+
+		auto get = connect->GetServerMessage();
+		chat->SetGetMessage(get);
+		/*num1++;
 
 		tnl::DebugTrace("呼ばれたよ%d回目", num1);
 		tnl::DebugTrace("\n");
@@ -43,11 +45,11 @@ void GameManager::Accept()
 		tnl::DebugTrace(hoge.c_str());
 		tnl::DebugTrace("\n");
 
-		if (num1 > 10000)num1 = 0;
+		if (num1 > 10000)num1 = 0;*/
 	}
-	tnl::DebugTrace("抜けたよ");
+	/*tnl::DebugTrace("抜けたよ");
 	int hoge = 0;
-	hoge++;
+	hoge++;*/
 }
 
 void GameManager::Send(const std::string sendMessage)
@@ -380,6 +382,7 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 
+//プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
 	auto vectorToPlayer = player->GetPos() - enemyPos;
@@ -398,23 +401,40 @@ int GameManager::GetRandBetweenNum(int num1, int num2)
 }
 
 
-bool GameManager::CheckCanCreateEnemy(tnl::Vector3& Pos) {
+int GameManager::GerRandomNumInWeight(const std::vector<int> WeightList)
+{
+	// 非決定的な乱数生成器->初期シードに使う
+	std::random_device rnd;
+	//ランダムな数を求めるための関数名を決める
+	//メルセンヌ・ツイスタの32ビット版、引数は初期シード
+	std::mt19937 GetRandom(rnd());
 
-	bool canSpawn = true;
-	//既存の敵のポジションとかぶっていないかチェック
-	for (auto& enemy : Enemys) {
-		auto listEnemyPos = enemy->GetPos();
-		if (GetLength(Pos, listEnemyPos) < 32) {
-			canSpawn = false;
+	//レアリティを決定する
+	int totalWeight = 0;
+	int selected = 0;
+
+	//totalWeightを求める
+	for (int i = 0; i < WeightList.size(); ++i) {
+		totalWeight += WeightList[i];
+	}
+	//一定範囲の一様分布乱数取得
+	std::uniform_int_distribution<> Weight(0, totalWeight);
+	//レアリティをランダムで決める
+	int rand = Weight(GetRandom);
+
+	//--------ここからウェイトを用いた抽選--------//
+	//抽選
+	for (int i = 0; i < WeightList.size(); i++) {
+		if (rand < WeightList[i]) {
+			//決定
+			selected = i;
 			break;
 		}
-	}
-	return canSpawn;
-	////かぶっていたら生成しない
-	//if (!canSpawn)return;
 
-	//auto enemy = std::make_shared<Enemy>(Pos);
-	//Enemys.emplace_back(enemy);
+		// 次の対象を調べる
+		rand -= WeightList[i];
+	}
+	return selected;
 }
 
 //-----------------------------------------------------------------------------------------
@@ -424,15 +444,19 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
+		//connect = std::make_shared<Connect>();
 
-		/*connect = std::make_shared<Connect>();
 
-		if (chat == nullptr) {
+		/*if (chat == nullptr) {
 			chat = new ChatBase();
+
 		}
-		*/
 
 
+
+
+
+		}*/
 
 		//チャット受け取り用スレッド作成
 		//std::thread hoge(&GameManager::Accept, &instance);
@@ -455,8 +479,8 @@ void GameManager::Update(float delta_time) {
 		init = true;
 	}
 
-	tnl::DebugTrace("%d", num1);
-	tnl::DebugTrace("\n");
+	/*tnl::DebugTrace("%d", num1);
+	tnl::DebugTrace("\n");*/
 
 	/*if (chat == nullptr) {
 		chat = new ChatBase();
@@ -467,8 +491,9 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	//chat->Update();
-	//chat->Draw();
+	/*chat->Update();
+	chat->Draw();*/
+
 
 }
 
