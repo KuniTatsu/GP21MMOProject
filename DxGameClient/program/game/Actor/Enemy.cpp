@@ -28,7 +28,7 @@ void Enemy::Init()
 
 void Enemy::Update()
 {
-
+	
 }
 
 void Enemy::Draw(Camera* camera)

@@ -13,8 +13,6 @@ class Enemy;
 class Player;
 class Connect;
 
-//typedef int (*FUNCCOUNT)(int);
-
 class GameManager {
 private:
 	GameManager();
