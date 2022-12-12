@@ -191,5 +191,8 @@ inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 
 
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+
+	//“ñ‚Â‚Ì®”‚ÌŠÔ‚Ìƒ‰ƒ“ƒ_ƒ€‚È”‚ğ•Ô‚·ŠÖ”
+	int GetRandBetweenNum(int num1, int num2);
 	
 };
