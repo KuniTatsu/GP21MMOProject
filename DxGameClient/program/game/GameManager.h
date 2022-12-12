@@ -179,5 +179,9 @@ inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 	Enemys.emplace_back(enemy);
 }
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+
+	//メルセンヌ・ツイスターを採用した正規分布ランダム関数
+	int GerRandomNumInWeight(const std::vector<int>WeightList);
+
 	
 };
