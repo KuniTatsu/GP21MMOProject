@@ -3,13 +3,14 @@
 #include "scene/scene_title.h"
 #include"SceneManager.h"
 #include"Actor/Player.h"
+#include"Actor/DummyPlayer.h"
 #include"scene/Map.h"
 #include"Actor/Enemy.h"
 #include<algorithm>
 #include"ChatBase.h"
 #include"Connect.h"
 #include<random>
-
+#include"../json11.hpp"
 
 
 GameManager* GameManager::instance = nullptr;
@@ -35,20 +36,10 @@ void GameManager::Accept()
 	while (isEnd == false)
 	{
 		auto get = connect->GetServerMessage();
+		if (get == "")continue;
 		chat->SetGetMessage(get);
-		/*num1++;
 
-		tnl::DebugTrace("呼ばれたよ%d回目", num1);
-		tnl::DebugTrace("\n");
-		std::string hoge = std::to_string(isEnd);
-		tnl::DebugTrace(hoge.c_str());
-		tnl::DebugTrace("\n");
-
-		if (num1 > 10000)num1 = 0;*/
 	}
-	/*tnl::DebugTrace("抜けたよ");
-	int hoge = 0;
-	hoge++;*/
 }
 
 void GameManager::Send(const std::string sendMessage)
@@ -60,12 +51,12 @@ void GameManager::Send(const std::string sendMessage)
 //送る文章を引数に入れる。SJISでいい
 void GameManager::CreateSendThread(const std::string sendMessage)
 {
-	
+
 	std::thread sendThread = std::thread([&] {GameManager::Send(sendMessage); });
-	
+
 	//送り終えたらスレッドを閉じる
 	sendThread.join();
-	
+
 }
 
 
@@ -120,7 +111,7 @@ void GameManager::LoadDivGraphEx(const std::string gh, const int allNum, const i
 
 std::shared_ptr<Player> GameManager::CreatePlayer()
 {
-	player = std::make_shared<Player>(0, 0);
+	player = std::make_shared<Player>(10, 10);
 	return player;
 }
 
@@ -424,32 +415,105 @@ int GameManager::GerRandomNumInWeight(const std::vector<int> WeightList)
 	return selected;
 }
 
+bool GameManager::CreateDummyPlayer(std::string json)
+{
+	if (json == "")return false;
+
+	//メッセージを受信
+	//const std::string getMessage = connect->GetServerMessage();
+
+	//文字コード変換
+	auto fixMessage = UTF8toSjis(json);
+
+	std::string err;
+	//Jsonをパース
+	auto pJson = json11::Json::parse(fixMessage, err);
+
+	//各種ステータスの入れ物を用意
+	float posX = 0;
+	float posY = 0;
+	int ghNum = 0;
+	std::string UUID = "";
+
+	//中身を代入
+	posX = static_cast<float>(pJson["PlayerposX"].number_value());
+	posY = static_cast<float>(pJson["PlayerposY"].number_value());
+
+	ghNum = pJson["Playergh"].int_value();
+	UUID = pJson["PlayerUUID"].string_value();
+
+	//すでに存在しないかチェック
+	if (CheckIsThereInUUID(UUID))return false;
+
+	auto dummy = std::make_shared<DummyPlayer>(posX, posY, UUID, ghNum);
+	//Dummyプレイヤー生成成功
+	if (dummy != nullptr) {
+		otherPlayers.emplace_back(dummy);
+		return true;
+	}
+	//Dummyプレイヤー生成失敗
+	return false;
+}
+bool GameManager::CheckIsThereInUUID(std::string UUID)
+{
+	bool ret = false;
+	for (auto& other : otherPlayers) {
+
+		auto bufUUID = other->GetUUID();
+		if (UUID == bufUUID) {
+			ret = true;
+			break;
+		}
+	}
+	return ret;
+}
+void GameManager::MoveDummyInUUID(float x, float y, std::string UUID)
+{
+	for (auto& other : otherPlayers) {
+
+		auto bufUUID = other->GetUUID();
+		if (UUID == bufUUID) {
+			other->UpdatePosition(x, y);
+			break;
+		}
+	}
+
+}
+//他プレイヤーのリストからの削除
+void GameManager::PopOtherPlayerInUUID(std::string UUID)
+{
+	auto itr = otherPlayers.begin();
+	for (auto& other : otherPlayers) {
+
+		auto thisUUID = other->GetUUID();
+		if (UUID == thisUUID) {
+			otherPlayers.erase(itr);
+		}
+		itr++;
+	}
+}
+
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
 
 
 	if (!init) {
 		sManager = SceneManager::GetInstance();
-		//connect = std::make_shared<Connect>();
+		connect = std::make_shared<Connect>();
 
-		/*if (chat == nullptr) {
+		if (chat == nullptr) {
 			chat = new ChatBase();
-		}*/
-		//チャット受け取り用スレッド作成
-		//std::thread hoge(&GameManager::Accept, &instance);
-		//acceptThread = std::thread(& GameManager::Accept, & instance);
+		}
 
-		//std::thread hoge(&GameManager::Accept,this);
+		acceptThread = std::thread([this] {GameManager::Accept(); });
+
+		//他のプレイヤーにDummyを作るための処理
+		const auto& pos = player->GetPos();
+		connect->SendClientPlayerInfo(pos.x, pos.y);
 
 
-		//std::thread hoge([this] {GameManager::Accept(); });
-		//acceptThread = std::move(hoge);
-		//acceptThread = std::thread([this] {GameManager::Accept(); });
-
-		//auto id = acceptThread.get_id();
-
-		// std::thread t([this] { do_(); });
-		// thread_ = std::move(t);
+		//test用Dummy生成
+		connect->SendClientPlayerInfo(100, 100,0,1);
 
 		init = true;
 	}
@@ -466,8 +530,8 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	/*chat->Update();
-	chat->Draw();*/
+	chat->Update();
+	chat->Draw();
 
 }
 

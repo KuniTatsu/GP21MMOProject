@@ -14,21 +14,29 @@ class Camera;
 class DummyPlayer:public Actor
 {
 public:
-	DummyPlayer(float posX,float posY);
+	DummyPlayer(float posX,float posY, std::string UUID,int ghNum=0);
 	~DummyPlayer();
 
+	void Update()override;
 	void Draw(Camera* camera)override;
+	void Init()override;
 
 	void SetGh(std::string ghPass);
 
 	//他プレイヤーの描画座標をサーバーから受け取り更新する関数
 	void UpdatePosition(float posX, float posY);
+	//UUID取得
+	const inline std::string GetUUID() {
+		return myUUID;
+	}
 
 private:
-	//描画するgh
-	int gh = 0;
+	////描画するgh
+	//int gh = 0;
 	//アニメーションするgh 本来はこっちを使う
 	std::vector<int>ghs;
+
+	std::string myUUID="";
 
 };
 
