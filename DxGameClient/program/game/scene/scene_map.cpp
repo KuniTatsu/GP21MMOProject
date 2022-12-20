@@ -4,6 +4,7 @@
 #include"Map.h"
 #include"../EnemyManager.h"
 #include"../Actor/Enemy.h"
+#include"../Actor/DummyPlayer.h"
 
 Scene_Map::Scene_Map()
 {
@@ -30,11 +31,6 @@ void Scene_Map::initialzie()
 	///*Playerの生成*/
 	//player->Draw(&camera);
 	
-	/*どこのシーンであるか*/
-	SetFontSize(50);
-	DrawStringEx(50, 50, -1, "Scene_map");
-	SetFontSize(16);
-
 }
 
 void Scene_Map::update(float delta_time)
@@ -71,7 +67,15 @@ void Scene_Map::render()
 	/*Playerの描画*/
 	player->Draw(&camera);
 
-	/*どこのシーンであるか*/
+	/*どこのシーンであるか*///debugMessage
 	SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");
+
+	/*他のプレイヤーの描画*/
+	auto&  others = gManager->GetOtherPlayersList();
+	if (others.empty())return;
+	for (auto& dummy : others) {
+		dummy->Draw(&camera);
+	}
+	
 }

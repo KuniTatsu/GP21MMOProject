@@ -13,6 +13,20 @@ void Actor::SetActorData(double attackRange, float attack, float defence, float 
 	myData->SetAllStatus(attackRange, attack, defence, moveSpeed);
 }
 
+void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
+{
+	if (--actWait <= 0) {
+		actIndex++;
+		actWait = Speed;
+		actIndex %= MaxIndex;
+	}
+	drawGh = DrawGhs[actIndex + MaxIndex * static_cast<uint32_t>(myExDir)];
+
+	if (drawGh == -1) {
+		int hoge = 0;
+	}
+}
+
 void Actor::MoveUp()
 {
 	//ローカルポジションの移動

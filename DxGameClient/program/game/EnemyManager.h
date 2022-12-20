@@ -18,7 +18,7 @@ private:
 	static EnemyManager* instance;
 
 	GameManager* gManager = nullptr;
-	std::shared_ptr<EnemySpawnManager> eSpawn = nullptr;
+	std::shared_ptr<EnemySpawnManager> eSpawnManager = nullptr;
 	bool hoge = false;
 
 	enum class DIR {
@@ -33,7 +33,7 @@ private:
 	//生成回数
 	int createCount = 0;
 	//生成制限
-	int spawnLimit = 20;
+	int spawnLimit = 2;
 	//インターバルのカウント開始Flag
 	bool spawntiming = false;
 	//生成するまでのインターバルをカウント

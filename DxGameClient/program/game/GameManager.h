@@ -12,8 +12,7 @@ class Map;
 class Enemy;
 class Player;
 class Connect;
-
-//typedef int (*FUNCCOUNT)(int);
+class DummyPlayer;
 
 class GameManager {
 private:
@@ -28,7 +27,7 @@ private:
 
 	std::shared_ptr<Connect> connect = nullptr;
 
-	std::thread acceptThread ;
+	std::thread acceptThread;
 
 	//マルチスレッドで動かす受信用関数
 	void Accept();
@@ -48,6 +47,10 @@ private:
 	std::shared_ptr<Map>lastStayMap = nullptr;
 
 	std::list<std::shared_ptr<Enemy>> Enemys;
+	std::list<std::shared_ptr<DummyPlayer>>otherPlayers;
+
+	std::string clientUUID = "";
+
 
 	// ゲーム全体で参照したい変数はここで用意
 public:
@@ -62,7 +65,7 @@ public:
 
 	float deltaTime = 0.0f;
 
-	const tnl::Vector3 MAPPOSOFFSET[8] = { 
+	const tnl::Vector3 MAPPOSOFFSET[8] = {
 		tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
 		tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
 		tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
@@ -159,7 +162,7 @@ public:
 	inline float GetChunkDistance() {
 		return static_cast<float>(MAPSIZE * CHIPHEIGHT);
 	}
-	
+
 	//二つのPos同士の距離を取得する関数
 	inline float GetLength(tnl::Vector3& PosA, tnl::Vector3& PosB) {
 		return std::sqrt(((PosA.x - PosB.x) * (PosA.x - PosB.x)) + ((PosA.y - PosB.y) * (PosA.y - PosB.y)));
@@ -167,7 +170,7 @@ public:
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
-	
+
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
@@ -175,9 +178,9 @@ public:
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
-inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
-	Enemys.emplace_back(enemy);
-}
+	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
+		Enemys.emplace_back(enemy);
+	}
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 
 	//メルセンヌ・ツイスターを採用した正規分布ランダム関数
@@ -189,5 +192,29 @@ inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 	//二つの整数の間のランダムな数を返す関数
 	int GetRandBetweenNum(int num1, int num2);
 
-	
+	//このクライアントのUUIDを登録する関数
+	inline void SetClientUUID(std::string UUID) {
+		clientUUID = UUID;
+	}
+	//このクライアントのUUIDを取得する関数
+	inline std::string GetClientUUID() {
+		return clientUUID;
+	}
+
+	//サーバーから送られてきた他のプレイヤーの情報からDummyPlayerを生成し登録する関数
+	bool CreateDummyPlayer(std::string json);
+
+	//他のプレイヤーのリストを取得する関数
+	const inline std::list<std::shared_ptr<DummyPlayer>>& GetOtherPlayersList() {
+		return otherPlayers;
+	}
+	//UUIDと合致するDummyPlayerをリストから消去する関数
+	void PopOtherPlayerInUUID(std::string UUID);
+
+	//UUIDと合致するDummyPlayerがいるかどうか確かめる関数
+	bool CheckIsThereInUUID(std::string UUID);
+
+	//UUIDと合致するDummyPlayerを動かす関数
+	void MoveDummyInUUID(float x, float y, std::string UUID);
+
 };
