@@ -27,6 +27,9 @@ public:
 
 private:
 	int img_Ghost = 0;
+
+	unsigned int ChangedColor(bool atack);
+
 	GameManager* gManager = nullptr;
 private:
 	void SearchCircle(int SpawnPosX,int SpawnPosY, double atackRange);

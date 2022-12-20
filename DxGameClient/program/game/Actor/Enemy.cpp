@@ -26,12 +26,18 @@ void Enemy::Init()
 
 }
 
+
 /*エネミー索敵範囲（円）*/
 void Enemy::SearchCircle(int SpawnPosX, int SpawnPosY, double atackRange)
 {
 	int range = (static_cast<int>(atackRange) * gManager->CHIPWIDTH) + (gManager->CHIPWIDTH >> 1);
 	/*DrawCircle(SpawnPosX, SpawnPosY, range, GetColor(244,167,167), false);
 	if (tnl::IsIntersectSphere);*/
+}
+
+unsigned int Enemy::ChangedColor(bool atack)
+{
+	return 0;
 }
 
 void Enemy::Update()
