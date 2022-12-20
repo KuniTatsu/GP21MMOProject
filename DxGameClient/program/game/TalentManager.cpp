@@ -44,6 +44,9 @@ void TalentManager::LoadCsv()
 		auto SPD = std::stoi(loadCsv[i][8]);//spd
 		auto DEX = std::stoi(loadCsv[i][9]);//dex
 
+		auto weight = std::stoi(loadCsv[i][10]);//dex
+		talentWaight.emplace_back(weight);
+
 
 		//int talentId, std::string talentName, int talentRare, int lowestRank,
 		//int addSTR, int addVIT, int addINT, int addMIN, int addSPD, int addDEX
@@ -57,7 +60,9 @@ std::shared_ptr<Talent> TalentManager::GetNewTalent(int remainRank, std::vector<
 	int randId = -1;
 	while (true) {
 		//マスターシートのタレント一覧からランダムにidを決定する
-		randId = gManager->GetRandBetweenNum(0, talentMaster.size() - 1);
+		//randId = gManager->GetRandBetweenNum(0, talentMaster.size() - 1);
+
+		randId = gManager->GerRandomNumInWeight(talentWaight);
 
 		bool alreadyHave = false;
 		if (!haveTalentList.empty()) {

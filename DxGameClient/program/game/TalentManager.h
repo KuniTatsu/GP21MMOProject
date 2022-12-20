@@ -36,6 +36,8 @@ private:
 
 	std::vector<std::shared_ptr<Talent>>talentMaster;
 
+	std::vector<int> talentWaight;
+
 
 };
 
