@@ -14,8 +14,6 @@ class Player;
 class Connect;
 class DummyPlayer;
 
-//typedef int (*FUNCCOUNT)(int);
-
 class GameManager {
 private:
 	GameManager();

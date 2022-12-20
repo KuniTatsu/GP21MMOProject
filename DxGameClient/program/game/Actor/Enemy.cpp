@@ -26,6 +26,14 @@ void Enemy::Init()
 
 }
 
+/*エネミー索敵範囲（円）*/
+void Enemy::SearchCircle(int SpawnPosX, int SpawnPosY, double atackRange)
+{
+	int range = (static_cast<int>(atackRange) * gManager->CHIPWIDTH) + (gManager->CHIPWIDTH >> 1);
+	/*DrawCircle(SpawnPosX, SpawnPosY, range, GetColor(244,167,167), false);
+	if (tnl::IsIntersectSphere);*/
+}
+
 void Enemy::Update()
 {
 
@@ -35,6 +43,8 @@ void Enemy::Draw(Camera* camera)
 {
 	int x = static_cast<int>(drawPos.x) - camera->pos.x + (gManager->SCREEN_WIDTH >> 1);
 	int y = static_cast<int>(drawPos.y) - camera->pos.y + (gManager->SCREEN_HEIGHT >> 1);
+
 	DrawRotaGraph(x, y, 1.0f, 0, img_Ghost, true);
+	SearchCircle(x, y, myData->GetAttackRange());
 }
 

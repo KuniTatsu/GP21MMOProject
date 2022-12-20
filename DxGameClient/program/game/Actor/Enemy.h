@@ -13,7 +13,7 @@ class GameManager;
 class Enemy : public Actor {
 public:
 
-	Enemy(tnl::Vector3 SpawnPos);
+	//Enemy(tnl::Vector3 SpawnPos);
 	Enemy(tnl::Vector3 SpawnPos,double attackRange, float attack, float defence, float speed);
 	~Enemy();
 
@@ -28,4 +28,6 @@ public:
 private:
 	int img_Ghost = 0;
 	GameManager* gManager = nullptr;
+private:
+	void SearchCircle(int SpawnPosX,int SpawnPosY, double atackRange);
 };
