@@ -95,7 +95,8 @@ std::shared_ptr<ActorData> EnemyManager::GetEnemyData(int type)
 void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	auto newEnemy = std::make_shared<Enemy>(posEnemy, 3, data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 
 	SetEnemyList(newEnemy);
 	spawntiming = false;
