@@ -187,7 +187,7 @@ public:
 	int GerRandomNumInWeight(const std::vector<int>WeightList);
 
 
-	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+	//tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 
 	//“ñ‚Â‚Ì®”‚ÌŠÔ‚Ìƒ‰ƒ“ƒ_ƒ€‚È”‚ğ•Ô‚·ŠÖ”
 	int GetRandBetweenNum(int num1, int num2);
