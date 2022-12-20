@@ -26,7 +26,7 @@ GameManager::GameManager() {
 // デストラクタ
 GameManager::~GameManager()
 {
-	// delete chat;
+	 delete chat;
 }
 
 volatile int num1 = 0;
@@ -46,7 +46,7 @@ void GameManager::Accept()
 void GameManager::Send(const std::string sendMessage)
 {
 	//引数のメッセージをconnect->SendServerMessageで送る
-	//connect->SendClientMessage(sendMessage);
+	connect->SendClientMessage(sendMessage);
 
 }
 //送る文章を引数に入れる。SJISでいい
