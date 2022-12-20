@@ -45,7 +45,7 @@ public:
 	inline std::shared_ptr<ActorData>GetActorData() {
 		return myData;
 	}
-	 void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
+	void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
 
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
@@ -71,6 +71,16 @@ protected:
 	//画像ハンドル
 	int gh = 0;
 
+	//アニメーション関係
+	//アニメーション切替速度
+	const int actSpeed = 20;
+	//実際に今描画中のグラフィックハンドル
+	int drawGh = 0;
+	//現在の切り替えタイマー
+	int actWait = actSpeed;
+	//描画するアニメーション配列のインデックス番号
+	int actIndex = 0;
+
 	GameManager* gManager = nullptr;
 
 	bool isLive = true;
@@ -85,7 +95,7 @@ protected:
 	};
 
 	//方向 8方向バージョン 回転を前提
-	enum class EXDIR:uint32_t {
+	enum class EXDIR :uint32_t {
 		LEFTTOP,
 		LEFT,
 		LEFTBOTTOM,
@@ -116,7 +126,7 @@ protected:
 	std::shared_ptr<ActorData> myData = nullptr;
 
 	//向いている方向の距離のオフセット 上,右,下,左
-	const tnl::Vector3 VECOFFSET[4] = {tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0)};
+	const tnl::Vector3 VECOFFSET[4] = { tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0) };
 
 
 	//このクラス内でしか使わない関数はここに書く
@@ -149,7 +159,10 @@ protected:
 
 	//基本攻撃関数	
 	void DefaultAttack();
-	
+
+	//アニメーション更新関数
+	void Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed = 20);
+
 
 };
 

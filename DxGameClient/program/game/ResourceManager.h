@@ -16,6 +16,8 @@ public:
 	std::vector< std::vector<int>>& GetAnimVector(int type);
 	std::vector<int>& GetGraphicVector(int type);
 
+	std::vector<int>& GetCharaVectorAtGhNum(int graphicNum);
+
 public:
 	enum class RESOUCETYPE :uint32_t {
 		PLAYER,

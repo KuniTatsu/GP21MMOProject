@@ -1,3 +1,4 @@
+
 #include"Connect.h"
 
 #include <boost/beast/core.hpp>
@@ -11,6 +12,10 @@
 #include"../json11.hpp"
 
 #include<boost/version.hpp>
+#include <boost/uuid/uuid.hpp>
+#include <boost/uuid/uuid_io.hpp>
+#include <boost/uuid/uuid_generators.hpp>
+#include <boost/lexical_cast.hpp>
 
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -26,41 +31,6 @@ net::io_context ioc;
 //// These objects perform our I/O
 tcp::resolver resolver{ ioc };
 websocket::stream<tcp::socket> ws{ ioc };
-
-/*
-std::string UTF8toSjis(std::string srcUTF8)
-{
-	//Unicodeへ変換後の文字列長を得る
-	int lenghtUnicode = MultiByteToWideChar(CP_UTF8, 0, srcUTF8.c_str(), srcUTF8.size() + 1, NULL, 0);
-
-	//必要な分だけUnicode文字列のバッファを確保
-	wchar_t* bufUnicode = new wchar_t[lenghtUnicode];
-
-	memset(bufUnicode, 0, sizeof(char) * lenghtUnicode);
-
-	//UTF8からUnicodeへ変換
-	MultiByteToWideChar(CP_UTF8, 0, srcUTF8.c_str(), srcUTF8.size() + 1, bufUnicode, lenghtUnicode);
-
-	//ShiftJISへ変換後の文字列長を得る
-	int lengthSJis = WideCharToMultiByte(CP_THREAD_ACP, 0, bufUnicode, -1, NULL, 0, NULL, NULL);
-
-	//必要な分だけShiftJIS文字列のバッファを確保
-	char* bufShiftJis = new char[lengthSJis];
-
-	memset(bufShiftJis, 0, sizeof(char) * lengthSJis);
-
-	//UnicodeからShiftJISへ変換
-	WideCharToMultiByte(CP_THREAD_ACP, 0, bufUnicode, lenghtUnicode + 1, bufShiftJis, lengthSJis, NULL, NULL);
-
-	std::string strSJis(bufShiftJis);
-
-	delete[] bufUnicode;
-	delete[] bufShiftJis;
-
-	return strSJis;
-}
-*/
-
 
 
 Connect::Connect()
@@ -127,9 +97,9 @@ void Connect::SendClientMessage(std::string sendMessage)
 		{ "chat", text },
 		});
 
-	std::string hogehoge = obj.dump();
+	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(hogehoge);
+	auto fix = gManager->SjistoUTF8(send);
 
 	ws.write(net::buffer(fix));
 
@@ -140,15 +110,10 @@ const std::string Connect::GetServerMessage()
 {
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
-
-	tnl::DebugTrace("読み取り開始");
-	tnl::DebugTrace("\n");
 	// Read a message into our buffer
 	ws.read(buffer);
 
 	ws.text(true);
-
-	//const std::string result = boost::asio::buffer_cast<const char*>(buffer.data());
 
 	const std::string getMessage = beast::buffers_to_string(buffer.data());
 
@@ -156,7 +121,25 @@ const std::string Connect::GetServerMessage()
 	tnl::DebugTrace(getMessage.c_str());
 	tnl::DebugTrace("\n");
 
-	return getMessage;
+	std::string err;
+	auto hoge = json11::Json::parse(getMessage, err);
+
+	//プレイヤーのサーバー退出系の情報処理
+	if (hoge["ExitPlayerUUID"].string_value() != "") {
+		std::string message = "";
+		message = gManager->UTF8toSjis(hoge["ExitPlayerUUID"].string_value());
+
+		gManager->PopOtherPlayerInUUID(message);
+		return "";
+	}
+
+	//UUIDを含むメッセージかどうか判定 含まないならチャットメッセージなのでそのまま帰す
+	if (hoge["UUID"].string_value() == "")return getMessage;
+
+	//UUIDを含むならプレイヤーの位置座標情報なのでそっちの処理に進む
+	gManager->CreateDummyPlayer(getMessage);
+
+	return "";
 }
 
 
@@ -167,9 +150,9 @@ void Connect::EntryServer(std::string playerName)
 		{ "playerName", text },
 		});
 
-	std::string hogehoge = obj.dump();
+	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(hogehoge);
+	auto fix = gManager->SjistoUTF8(send);
 	ws.write(net::buffer(fix));
 }
 //UUIDを取得してiniファイルで出力
@@ -194,11 +177,53 @@ void Connect::GetEntryUserId()
 	if (message == "") {
 		return;
 	}
+	//UUIDの登録
+	gManager->SetClientUUID(message);
 
 	bool check = WritePrivateProfileString("UUID", "data", message.data(), "clientUUID.ini");
 	if (!check) {
 		tnl::DebugTrace("書き込み失敗");
 		tnl::DebugTrace("\n");
 	}
+}
+
+void Connect::SendClientPlayerInfo(float x, float y, int ghNum, int isDebug)
+{
+	//const std::string  text = playerName;
+	std::string UUID = "";
+	if(isDebug==0){
+	UUID = gManager->GetClientUUID();
+	}
+	else {
+		UUID = boost::lexical_cast<std::string>(boost::uuids::random_generator()());
+	}
+
+	Json obj = Json::object({
+		{ "PlayerposX", x },
+		{ "PlayerposY", y },
+		{ "PlayerUUID", UUID },
+		{ "Playergh", ghNum },
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
+
+}
+
+void Connect::SendExitServer()
+{
+	std::string UUID = gManager->GetClientUUID();
+	Json obj = Json::object({
+		{ "ExitPlayerUUID", UUID },
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
+
+
 }
 

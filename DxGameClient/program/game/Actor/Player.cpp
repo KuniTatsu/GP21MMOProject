@@ -1,12 +1,16 @@
 #include "Player.h"
 #include"../GameManager.h"
 #include"Camera.h"
+#include"../Talent.h"
+#include"../TalentManager.h"
 
 Player::Player(int startX, int startY)
 {
 	drawPos.x = startX;
 	drawPos.y = startY;
 	gh = gManager->LoadGraphEx("graphics/Player.png");
+
+	SetTalent();
 }
 
 Player::~Player()
@@ -28,6 +32,24 @@ void Player::Draw(Camera* camera)
 
 void Player::Init()
 {
+}
+//才能の付与 ※レア度によるウェイトがかかってない完全ランダムでの選択なので要修正
+void Player::SetTalent()
+{
+	auto talentManager = TalentManager::GetInstance();
+	std::vector<int>talentIds;
+
+	while (remainRankNum > 0) {
+
+		auto talent = talentManager->GetNewTalent(remainRankNum, talentIds);
+		talent->SetFixStatus();
+		myTalents.emplace_back(talent);
+		talentIds.emplace_back(talent->GetId());
+	
+		MinusRemainRank(talent->GetThisRank());
+	}
+	int hoge = 0;
+	hoge++;
 }
 
 void Player::Move()
