@@ -26,7 +26,7 @@ GameManager::GameManager() {
 // デストラクタ
 GameManager::~GameManager()
 {
-	delete chat;
+	 delete chat;
 }
 
 volatile int num1 = 0;
@@ -35,6 +35,7 @@ void GameManager::Accept()
 {
 	while (isEnd == false)
 	{
+
 		auto get = connect->GetServerMessage();
 		if (get == "")continue;
 		chat->SetGetMessage(get);
@@ -379,6 +380,18 @@ tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 
 	return GetFixVector(vectorToPlayer.x, vectorToPlayer.y);
 }
+
+int GameManager::GetRandBetweenNum(int num1, int num2)
+{
+	auto buf = std::abs(num2 - num1);
+	auto ret = GetRand(buf);
+
+	if (num1 < num2)return ret + num1;
+
+	return ret + num2;
+}
+
+
 int GameManager::GerRandomNumInWeight(const std::vector<int> WeightList)
 {
 	// 非決定的な乱数生成器->初期シードに使う
@@ -499,6 +512,7 @@ void GameManager::Update(float delta_time) {
 
 	if (!init) {
 		sManager = SceneManager::GetInstance();
+
 		connect = std::make_shared<Connect>();
 
 		if (chat == nullptr) {
@@ -506,6 +520,7 @@ void GameManager::Update(float delta_time) {
 		}
 
 		acceptThread = std::thread([this] {GameManager::Accept(); });
+
 
 		//他のプレイヤーにDummyを作るための処理
 		const auto& pos = player->GetPos();
@@ -532,6 +547,7 @@ void GameManager::Update(float delta_time) {
 
 	chat->Update();
 	chat->Draw();
+
 
 }
 

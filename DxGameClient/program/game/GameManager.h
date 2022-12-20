@@ -186,6 +186,12 @@ public:
 	//メルセンヌ・ツイスターを採用した正規分布ランダム関数
 	int GerRandomNumInWeight(const std::vector<int>WeightList);
 
+
+	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+
+	//二つの整数の間のランダムな数を返す関数
+	int GetRandBetweenNum(int num1, int num2);
+
 	//このクライアントのUUIDを登録する関数
 	inline void SetClientUUID(std::string UUID) {
 		clientUUID = UUID;

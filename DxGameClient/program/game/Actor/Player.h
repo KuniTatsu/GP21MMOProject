@@ -2,10 +2,11 @@
 #include"Actor.h"
 
 
+class Talent;
 class Player :public Actor
 {
 public:
-	Player(int startX,int startY);
+	Player(int startX, int startY);
 	~Player();
 
 	void Update()override;
@@ -13,6 +14,17 @@ public:
 	void Draw(Camera* camera)override;
 
 	void Init()override;
+
+	//才能の残りランク数を取得する関数
+	inline int GetRemainRankNum() {
+		return remainRankNum;
+	}
+	//才能の残りランク数を減らす関数
+	inline void MinusRemainRank(int minusNum) {
+		remainRankNum -= minusNum;
+	}
+
+	void SetTalent();
 
 private:
 
@@ -38,6 +50,15 @@ private:
 	//移動キーを押したときの移動量
 	const int MOVEAMOUNT[static_cast<int>(DIR::MAX)] = { -SPEED,SPEED,SPEED,-SPEED };
 
+
+	//才能の最大ランク合計数
+	const int maxTalentRank = 20;
+
+	//才能の現在の残りランク数
+	int remainRankNum = maxTalentRank;
+
+	//プレイヤーが持っているタレントの配列
+	std::vector<std::shared_ptr<Talent>>myTalents;
 
 
 };
