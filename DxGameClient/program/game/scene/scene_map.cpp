@@ -19,18 +19,18 @@ Scene_Map::~Scene_Map()
 void Scene_Map::initialzie()
 {
 	//プレイヤーの生成
-	player=gManager->CreatePlayer();
+	player = gManager->CreatePlayer();
 	//マップの生成
 	gManager->CreateMap();
 	//エネミーの生成
 	eManager->GetInstance();
-	
+
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
 	///*Playerの生成*/
 	//player->Draw(&camera);
-	
+
 }
 
 void Scene_Map::update(float delta_time)
@@ -63,7 +63,7 @@ void Scene_Map::render()
 	if (eManager != nullptr) {
 		eManager->Draw(&camera);
 	}
-	
+
 	/*Playerの描画*/
 	player->Draw(&camera);
 
@@ -72,10 +72,10 @@ void Scene_Map::render()
 	DrawStringEx(50, 50, -1, "Scene_map");
 
 	/*他のプレイヤーの描画*/
-	auto&  others = gManager->GetOtherPlayersList();
+	auto& others = gManager->GetOtherPlayersList();
 	if (others.empty())return;
 	for (auto& dummy : others) {
 		dummy->Draw(&camera);
 	}
-	
+
 }

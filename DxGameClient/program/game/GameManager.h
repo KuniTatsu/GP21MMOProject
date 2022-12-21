@@ -58,7 +58,7 @@ public:
 	static constexpr int SCREEN_HEIGHT = 768;
 
 	//一チャンクの一辺のチップ数
-	const int MAPSIZE = 5.0;
+	const int MAPSIZE = 35.0;
 	//一チップの大きさ
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
@@ -186,8 +186,6 @@ public:
 	//メルセンヌ・ツイスターを採用した正規分布ランダム関数
 	int GerRandomNumInWeight(const std::vector<int>WeightList);
 
-
-	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 
 	//二つの整数の間のランダムな数を返す関数
 	int GetRandBetweenNum(int num1, int num2);

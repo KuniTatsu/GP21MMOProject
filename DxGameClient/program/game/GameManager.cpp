@@ -513,22 +513,22 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		connect = std::make_shared<Connect>();
+		//connect = std::make_shared<Connect>();
 
-		if (chat == nullptr) {
+		/*if (chat == nullptr) {
 			chat = new ChatBase();
-		}
+		}*/
 
-		acceptThread = std::thread([this] {GameManager::Accept(); });
+		//acceptThread = std::thread([this] {GameManager::Accept(); });
 
 
 		//他のプレイヤーにDummyを作るための処理
-		const auto& pos = player->GetPos();
-		connect->SendClientPlayerInfo(pos.x, pos.y);
+		//const auto& pos = player->GetPos();
+		//connect->SendClientPlayerInfo(pos.x, pos.y);
 
 
 		//test用Dummy生成
-		connect->SendClientPlayerInfo(100, 100,0,1);
+		//connect->SendClientPlayerInfo(100, 100,0,1);
 
 		init = true;
 	}
@@ -545,8 +545,8 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	chat->Update();
-	chat->Draw();
+	//chat->Update();
+	//chat->Draw();
 
 
 }

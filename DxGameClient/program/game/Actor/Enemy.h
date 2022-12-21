@@ -33,4 +33,5 @@ private:
 	GameManager* gManager = nullptr;
 private:
 	void SearchCircle(int SpawnPosX,int SpawnPosY, double atackRange);
+	//void Move();
 };
