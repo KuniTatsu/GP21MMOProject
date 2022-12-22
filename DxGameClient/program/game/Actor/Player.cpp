@@ -6,8 +6,8 @@
 
 Player::Player(int startX, int startY)
 {
-	drawPos.x = startX;
-	drawPos.y = startY;
+	drawPos.x = static_cast<float>(startX);
+	drawPos.y = static_cast<float>(startY);
 	gh = gManager->LoadGraphEx("graphics/Player.png");
 
 	SetTalent();
@@ -27,7 +27,7 @@ void Player::Draw(Camera* camera)
 {
 	float x = drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
 	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
-	DrawRotaGraph(x, y, 1, 0, gh, false);
+	DrawRotaGraphF(x, y, 1, 0, gh, false);
 }
 
 void Player::Init()

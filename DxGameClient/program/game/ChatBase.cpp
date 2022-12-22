@@ -128,7 +128,7 @@ void ChatBase::DrawAllMessage()
 	if (!savedMessage.empty()) {
 		//auto hoge = savedMessage.end();
 
-		int arrayNum = savedMessage.size();
+		auto arrayNum = savedMessage.size();
 		for (int i = 0; i < 10; ++i) {
 
 			if (i + 1 > arrayNum)break;

@@ -13,6 +13,7 @@ class Enemy;
 class Player;
 class Connect;
 class DummyPlayer;
+class UIEditor;
 
 class GameManager {
 private:
@@ -37,6 +38,8 @@ private:
 
 
 	ChatBase* chat = nullptr;
+	//UIEditor* editor = nullptr;
+	std::shared_ptr<UIEditor> uiEditor = nullptr;
 
 	//一度読み込んだghを保存するmap
 	std::unordered_map<std::string, int> ghmap;
@@ -50,6 +53,8 @@ private:
 	std::list<std::shared_ptr<DummyPlayer>>otherPlayers;
 
 	std::string clientUUID = "";
+
+
 
 
 	// ゲーム全体で参照したい変数はここで用意
@@ -100,7 +105,16 @@ public:
 		315.0f,//右上
 		360.0f//上
 	};
+	//マウス座標
+	int mousePosX = 0;
+	int mousePosY = 0;
 
+	//UIを並べる方向
+	enum class DIR {
+		HORIZONTAL,
+		VERTICAL,
+		MAX
+	};
 
 
 public:
@@ -187,6 +201,8 @@ public:
 	int GerRandomNumInWeight(const std::vector<int>WeightList);
 
 
+	//tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+
 	//二つの整数の間のランダムな数を返す関数
 	int GetRandBetweenNum(int num1, int num2);
 
@@ -214,5 +230,16 @@ public:
 
 	//UUIDと合致するDummyPlayerを動かす関数
 	void MoveDummyInUUID(float x, float y, std::string UUID);
+
+	//四角形のマウスクリック感知
+	bool isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
+
+	//四角形のマウス範囲内感知
+	bool OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
+
+	//マウス座標の取得
+	tnl::Vector3 GetMousePos();
+
+	
 
 };

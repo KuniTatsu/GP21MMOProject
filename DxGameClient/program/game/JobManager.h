@@ -1,6 +1,6 @@
 #pragma once
-#include<memory>
 #include<vector>
+#include<memory>
 
 class GameManager;
 class Job;

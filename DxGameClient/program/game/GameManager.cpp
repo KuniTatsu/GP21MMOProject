@@ -9,8 +9,10 @@
 #include<algorithm>
 #include"ChatBase.h"
 #include"Connect.h"
+#include"UI/UIEditor.h"
 #include<random>
 #include"../json11.hpp"
+#include"UI/UIManager.h"
 
 
 GameManager* GameManager::instance = nullptr;
@@ -20,13 +22,14 @@ volatile bool isEnd = false;
 // コンストラクタ
 GameManager::GameManager() {
 	SetBackgroundColor(32, 32, 32);
+
 }
 
 //-----------------------------------------------------------------------------------------
 // デストラクタ
 GameManager::~GameManager()
 {
-	 delete chat;
+	delete chat;
 }
 
 volatile int num1 = 0;
@@ -77,6 +80,10 @@ void GameManager::Destroy() {
 	isEnd = true;
 	//acceptThread->join();
 	acceptThread.join();
+
+
+	UIManager::GetInstance()->Destroy();
+	InitGraph();
 
 	if (instance) {
 		delete instance;
@@ -506,6 +513,33 @@ void GameManager::PopOtherPlayerInUUID(std::string UUID)
 	}
 }
 
+bool GameManager::isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom)
+{
+	bool ret = false;
+	//マウスの座標が四角形の外側ならreturn false
+	if (mousePosX<RectLeft || mousePosX>RectRight || mousePosY<RectTop || mousePosY>RectBottom)return false;
+
+	//四角形の内側かつ左クリックしていたら
+	if (tnl::Input::IsMouseTrigger(tnl::Input::eMouseTrigger::IN_LEFT)) {
+		ret = true;
+	}
+	return ret;
+}
+
+bool GameManager::OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom)
+{
+	//マウスの座標が四角形の外側ならreturn false
+	if (mousePosX<RectLeft || mousePosX>RectRight || mousePosY<RectTop || mousePosY>RectBottom)return false;
+
+	return true;
+}
+
+tnl::Vector3 GameManager::GetMousePos()
+{
+	GetMousePoint(&mousePosX, &mousePosY);
+	return tnl::Vector3(mousePosX, mousePosY, 0);
+}
+
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
 
@@ -513,7 +547,10 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		//connect = std::make_shared<Connect>();
+		connect = std::make_shared<Connect>();
+		uiEditor = std::make_shared<UIEditor>();
+
+		uiEditor->Init();
 
 		/*if (chat == nullptr) {
 			chat = new ChatBase();
@@ -528,11 +565,11 @@ void GameManager::Update(float delta_time) {
 
 
 		//test用Dummy生成
-		//connect->SendClientPlayerInfo(100, 100,0,1);
+		connect->SendClientPlayerInfo(100, 100, 0, 1);
 
 		init = true;
 	}
-
+	GetMousePoint(&mousePosX, &mousePosY);
 	/*tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");*/
 
@@ -541,12 +578,21 @@ void GameManager::Update(float delta_time) {
 	}*/
 
 	deltaTime = delta_time;
+	
 
 	sManager->Update(delta_time);
 	sManager->Draw();
 
 	//chat->Update();
 	//chat->Draw();
+
+
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
+		uiEditor->ChangeEnable();
+	}
+
+	uiEditor->Update();
+	uiEditor->Draw();
 
 
 }
