@@ -3,13 +3,14 @@
 #include"../GameManager.h"
 #include"../ResourceManager.h"
 
-DummyPlayer::DummyPlayer(float posX, float posY, std::string UUID, int ghNum)
+DummyPlayer::DummyPlayer(float posX, float posY, std::string UUID, int dir, int ghNum)
 {
 	drawPos.x = posX;
 	drawPos.y = posY;
 	auto rManager = ResourceManager::GetInstance();
 	ghs = rManager->GetCharaVectorAtGhNum(ghNum);
 	myUUID = UUID;
+	SetExDirFromInt(dir);
 }
 
 DummyPlayer::~DummyPlayer()

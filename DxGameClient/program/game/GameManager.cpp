@@ -526,6 +526,21 @@ bool GameManager::isClickedRect(int RectLeft, int RectTop, int RectRight, int Re
 	return ret;
 }
 
+void GameManager::SendPlayerInfoToServer()
+{
+	//他のプレイヤーにDummyを作るための処理
+	const auto& pos = player->GetPos();
+	auto dir = player->GetDir();
+
+	if (player->GetIsCreatedDummy()) {
+		//既にダミーが作られているならダミーの情報更新のための通信なので引数を1にする
+		connect->SendClientPlayerInfo(pos.x, pos.y, dir, 1);
+	}
+	else {
+		connect->SendClientPlayerInfo(pos.x, pos.y, dir);
+	}
+}
+
 bool GameManager::OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom)
 {
 	//マウスの座標が四角形の外側ならreturn false
@@ -557,15 +572,12 @@ void GameManager::Update(float delta_time) {
 		}
 
 		acceptThread = std::thread([this] {GameManager::Accept(); });
-
-
-		//他のプレイヤーにDummyを作るための処理
-		const auto& pos = player->GetPos();
-		connect->SendClientPlayerInfo(pos.x, pos.y);
-
+		SendPlayerInfoToServer();
+		//Dummy生成完了
+		player->SetIsCreatedDummy();
 
 		//test用Dummy生成
-		connect->SendClientPlayerInfo(100, 100, 0, 1);
+		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
 
 		init = true;
 	}
@@ -578,7 +590,7 @@ void GameManager::Update(float delta_time) {
 	}*/
 
 	deltaTime = delta_time;
-	
+
 
 	sManager->Update(delta_time);
 	sManager->Draw();

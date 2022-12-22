@@ -24,11 +24,11 @@ public:
 	void GetEntryUserId();
 
 	//クライアントキャラクターの位置座標と画像ハンドル番号を送る関数
-	void SendClientPlayerInfo(float x, float y, int ghNum=0,int isDebug=0);
-	
+	void SendClientPlayerInfo(float x, float y, int dir, int isCreated = 0, int ghNum = 0, int isDebug = 0);
+
 	//クライアントキャラクターの位置座標
 
-	
+
 	//自分がサーバーから抜けることを知らせる関数
 	void SendExitServer();
 
