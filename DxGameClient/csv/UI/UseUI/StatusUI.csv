@@ -1,0 +1,10 @@
+id, frameGhPass, type 0:split, 1 : normal, allNum, widthNum, heightNum, widthSize, heightSize, leftTopPos.x, leftTopPos.y, FrameWidth, FrameHeight, ingraphicsPass
+0,graphics/FrameBlack.png,0,9,3,3,16,16,3,8,346,290,none,
+1,graphics/FrameBlack.png,0,9,3,3,16,16,589,11,418,745,none,
+0,graphics/FrameBlack.png,0,9,3,3,16,16,3,8,346,290,none,
+1,graphics/FrameBlack.png,0,9,3,3,16,16,590,11,418,745,none,
+2,graphics/FrameBlack.png,0,9,3,3,16,16,600,20,404,201,none,
+3,graphics/FrameBlack.png,0,9,3,3,16,16,600,239,204,507,none,
+4,graphics/FrameBlack.png,0,9,3,3,16,16,805,239,193,507,none,
+5,graphics/FrameBlack.png,0,9,3,3,16,16,600,246,192,58,none,
+6,graphics/FrameBlack.png,0,9,3,3,16,16,810,246,183,57,none,
