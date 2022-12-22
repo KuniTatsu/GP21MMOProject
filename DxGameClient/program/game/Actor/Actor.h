@@ -47,6 +47,12 @@ public:
 	}
 	void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
 
+	//向いている向きの取得
+	inline int GetDir() {
+		return static_cast<int>(myExDir);
+	}
+	
+
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
 
@@ -128,7 +134,6 @@ protected:
 	//向いている方向の距離のオフセット 上,右,下,左
 	const tnl::Vector3 VECOFFSET[4] = { tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0) };
 
-
 	//このクラス内でしか使わない関数はここに書く
 private:
 	//移動関数 上下左右
@@ -153,6 +158,8 @@ protected:
 
 	//XとYから方向を返す関数
 	uint32_t GetExDir(float x, float y);
+
+	void SetExDirFromInt(int dir);
 
 	//XとYから自分の向いている方向を変更する関数
 	void SetExDir(float x, float y);

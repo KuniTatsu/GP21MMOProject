@@ -137,7 +137,19 @@ const std::string Connect::GetServerMessage()
 	if (hoge["UUID"].string_value() == "")return getMessage;
 
 	//UUIDを含むならプレイヤーの位置座標情報なのでそっちの処理に進む
-	gManager->CreateDummyPlayer(getMessage);
+	//もしisCreatedが1ならダミーは作成済みなので位置座標更新関数を呼ぶ
+	if (hoge["isCreated"].int_value() == 1) {
+
+		auto x = static_cast<float>(hoge["posX"].number_value());
+		auto y = static_cast<float>(hoge["posY"].number_value());
+
+		auto UUID= gManager->UTF8toSjis(hoge["UUID"].string_value());
+
+		gManager->MoveDummyInUUID(x, y, UUID);
+	}
+	else {
+		gManager->CreateDummyPlayer(getMessage);
+	}
 
 	return "";
 }
@@ -187,12 +199,12 @@ void Connect::GetEntryUserId()
 	}
 }
 
-void Connect::SendClientPlayerInfo(float x, float y, int ghNum, int isDebug)
+void Connect::SendClientPlayerInfo(float x, float y, int dir, int isCreated, int ghNum, int isDebug)
 {
 	//const std::string  text = playerName;
 	std::string UUID = "";
-	if(isDebug==0){
-	UUID = gManager->GetClientUUID();
+	if (isDebug == 0) {
+		UUID = gManager->GetClientUUID();
 	}
 	else {
 		UUID = boost::lexical_cast<std::string>(boost::uuids::random_generator()());
@@ -202,6 +214,8 @@ void Connect::SendClientPlayerInfo(float x, float y, int ghNum, int isDebug)
 		{ "PlayerposX", x },
 		{ "PlayerposY", y },
 		{ "PlayerUUID", UUID },
+		{"Dir",dir},
+		{"IsCreated",isCreated},
 		{ "Playergh", ghNum },
 		});
 
