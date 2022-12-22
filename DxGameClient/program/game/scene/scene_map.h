@@ -2,6 +2,7 @@
 #include"scene_base.h"
 #include"../Actor/Camera.h"
 #include<memory>
+#include"../UI/UIEditor.h"
 
 class Player;
 class CreateMap;
