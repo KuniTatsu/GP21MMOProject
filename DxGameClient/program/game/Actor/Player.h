@@ -24,6 +24,13 @@ public:
 		remainRankNum -= minusNum;
 	}
 
+	inline bool GetIsCreatedDummy() {
+		return isCreatedDummy;
+	}
+	inline void	SetIsCreatedDummy() {
+		isCreatedDummy = true;
+	}
+
 	void SetTalent();
 
 private:
@@ -59,6 +66,9 @@ private:
 
 	//プレイヤーが持っているタレントの配列
 	std::vector<std::shared_ptr<Talent>>myTalents;
+
+	//すでにDummyが作られているか
+	bool isCreatedDummy = false;
 
 
 };

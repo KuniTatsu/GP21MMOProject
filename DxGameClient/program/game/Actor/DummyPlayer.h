@@ -14,7 +14,7 @@ class Camera;
 class DummyPlayer:public Actor
 {
 public:
-	DummyPlayer(float posX,float posY, std::string UUID,int ghNum=0);
+	DummyPlayer(float posX,float posY, std::string UUID,int dir,int ghNum=0);
 	~DummyPlayer();
 
 	void Update()override;
@@ -38,5 +38,6 @@ private:
 
 	std::string myUUID="";
 
+	
 };
 
