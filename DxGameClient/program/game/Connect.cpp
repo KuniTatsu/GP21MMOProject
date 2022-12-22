@@ -138,7 +138,7 @@ const std::string Connect::GetServerMessage()
 
 	//UUIDを含むならプレイヤーの位置座標情報なのでそっちの処理に進む
 	//もしisCreatedが1ならダミーは作成済みなので位置座標更新関数を呼ぶ
-	if (hoge["isCreated"].string_value() == "1") {
+	if (hoge["isCreated"].int_value() == 1) {
 
 		auto x = static_cast<float>(hoge["posX"].number_value());
 		auto y = static_cast<float>(hoge["posY"].number_value());
