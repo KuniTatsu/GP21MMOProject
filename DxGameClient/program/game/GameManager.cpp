@@ -595,8 +595,8 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	//chat->Update();
-	//chat->Draw();
+	chat->Update();
+	chat->Draw();
 
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
