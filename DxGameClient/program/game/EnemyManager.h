@@ -33,13 +33,13 @@ private:
 	//生成回数
 	int createCount = 0;
 	//生成制限
-	int spawnLimit = 2;
+	int spawnLimit = 20;
 	//インターバルのカウント開始Flag
 	bool spawntiming = false;
 	//生成するまでのインターバルをカウント
 	int intervalCount = 0;
 	//インターバルの制限時間
-	const int intervalLimit = 3;
+	const int intervalLimit = 1;
 
 	std::vector<std::shared_ptr<Enemy>> enemyMaster;
 
@@ -67,9 +67,6 @@ public:
 	//Enemyデータ取得
 	std::shared_ptr<ActorData> GetEnemyData(int type);
 	
-	//Enemyスポーン範囲検索
-	void SpawnEnemy(tnl::Vector3& PlayerPos);
-	
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return EnemyList;
@@ -77,6 +74,9 @@ public:
 	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 		EnemyList.emplace_back(enemy);
 	}
+
+	//Enemyスポーン範囲検索
+	void SpawnEnemy(tnl::Vector3& PlayerPos);
 
 	/*エネミー生成関数*/
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);

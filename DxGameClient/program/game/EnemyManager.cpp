@@ -57,18 +57,6 @@ void EnemyManager::Destory()
 	}
 }
 
-//int EnemyManager::randomRange(int minRange, int maxRange)
-//{
-//	std::random_device rd;
-//	std::mt19937 gen(rd());
-//
-//	std::uniform_int_distribution<> dist(minRange, maxRange);
-//
-//	int rand = dist(gen);
-//
-//	return rand;
-//}
-
 /*エネミースポーン*/
 void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 {
@@ -102,7 +90,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	spawntiming = false;
 	intervalCount = 0;
 	createCount++;
-	//tnl::DebugTrace("エネミー生成された：%d\n", createCount);
+	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
 }
 
 void EnemyManager::Update(float deltatime)

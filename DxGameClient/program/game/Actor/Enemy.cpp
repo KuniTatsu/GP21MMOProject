@@ -13,7 +13,6 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defe
 
 	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus(attackRange, attack, defence, speed);
-
 }
 
 Enemy::~Enemy()
@@ -26,12 +25,20 @@ void Enemy::Init()
 
 }
 
+
 /*エネミー索敵範囲（円）*/
 void Enemy::SearchCircle(int SpawnPosX, int SpawnPosY, double atackRange)
 {
 	int range = (static_cast<int>(atackRange) * gManager->CHIPWIDTH) + (gManager->CHIPWIDTH >> 1);
-	/*DrawCircle(SpawnPosX, SpawnPosY, range, GetColor(244,167,167), false);
-	if (tnl::IsIntersectSphere);*/
+	///*DrawCircle(SpawnPosX, SpawnPosY, range, GetColor(244,167,167), false);
+	/*if (tnl::IsIntersectSphere(drawPos,range,)) {
+
+	}*/
+}
+
+unsigned int Enemy::ChangedColor(bool atack)
+{
+	return 0;
 }
 
 void Enemy::Update()
