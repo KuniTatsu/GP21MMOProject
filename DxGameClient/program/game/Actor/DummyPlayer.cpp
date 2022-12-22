@@ -40,8 +40,10 @@ void DummyPlayer::SetGh(std::string ghPass)
 	gManager->LoadDivGraphEx(ghPass, 4, 4, 1, 32, 32, ghs);
 }
 
-void DummyPlayer::UpdatePosition(float posX, float posY)
+void DummyPlayer::UpdatePosition(float posX, float posY, int dir)
 {
+	SetExDirFromInt(dir);
+
 	drawPos.x = posX;
 	drawPos.y = posY;
 }

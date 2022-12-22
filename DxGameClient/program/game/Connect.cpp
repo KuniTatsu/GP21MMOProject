@@ -142,10 +142,11 @@ const std::string Connect::GetServerMessage()
 
 		auto x = static_cast<float>(hoge["posX"].number_value());
 		auto y = static_cast<float>(hoge["posY"].number_value());
+		auto dir = hoge["dir"].int_value();
 
-		auto UUID= gManager->UTF8toSjis(hoge["UUID"].string_value());
+		auto UUID = gManager->UTF8toSjis(hoge["UUID"].string_value());
 
-		gManager->MoveDummyInUUID(x, y, UUID);
+		gManager->MoveDummyInUUID(x, y, dir, UUID);
 	}
 	else {
 		gManager->CreateDummyPlayer(getMessage);
