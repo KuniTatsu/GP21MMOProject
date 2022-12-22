@@ -567,9 +567,9 @@ void GameManager::Update(float delta_time) {
 
 		uiEditor->Init();
 
-		/*if (chat == nullptr) {
+		if (chat == nullptr) {
 			chat = new ChatBase();
-		}*/
+		}
 
 		acceptThread = std::thread([this] {GameManager::Accept(); });
 		SendPlayerInfoToServer();
