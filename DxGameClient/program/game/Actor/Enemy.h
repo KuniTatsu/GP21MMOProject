@@ -27,11 +27,16 @@ public:
 
 private:
 	int img_Ghost = 0;
+	bool onFollowToPlayer = false;
+	
+	/*移動スピード*/
+	float SPEED = 0;
 
-	unsigned int ChangedColor(bool atack);
+	unsigned int ChangedColor();
 
 	GameManager* gManager = nullptr;
 private:
-	void SearchCircle(int SpawnPosX,int SpawnPosY, double atackRange);
+	void SearchBox(tnl::Vector3 SpawnPos, double atackRange);
+	void EnemyMove(tnl::Vector3 SpawnPos,double speed);
 	//void Move();
 };

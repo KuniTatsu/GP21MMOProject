@@ -312,6 +312,9 @@ tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rot
 	return tnl::Vector3();
 }
 
+
+//------------------------------------------------------------------------------------------------
+//Map
 void GameManager::SetStayMap()
 {
 	lastStayMap = GetPlayerOnMap();
@@ -379,7 +382,9 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 
 	return nearMap;
 }
+//------------------------------------------------------------------------------------------------
 
+//develop_fukushi
 //プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
@@ -562,25 +567,27 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		connect = std::make_shared<Connect>();
+		/*connect = std::make_shared<Connect>();
 		uiEditor = std::make_shared<UIEditor>();
+		*/
 
-		uiEditor->Init();
+		//uiEditor->Init();
 
-		if (chat == nullptr) {
+		/*if (chat == nullptr) {
 			chat = new ChatBase();
-		}
+		}*/
 
-		acceptThread = std::thread([this] {GameManager::Accept(); });
-		SendPlayerInfoToServer();
+		//acceptThread = std::thread([this] {GameManager::Accept(); });
+		//SendPlayerInfoToServer();
 		//Dummy生成完了
-		player->SetIsCreatedDummy();
+		//player->SetIsCreatedDummy();
 
 		//test用Dummy生成
-		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
 
 		init = true;
 	}
+
 	GetMousePoint(&mousePosX, &mousePosY);
 	/*tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");*/
@@ -591,20 +598,19 @@ void GameManager::Update(float delta_time) {
 
 	deltaTime = delta_time;
 
-
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	chat->Update();
-	chat->Draw();
+	/*chat->Update();
+	chat->Draw();*/
 
 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
+	/*if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
 		uiEditor->ChangeEnable();
-	}
+	}*/
 
-	uiEditor->Update();
-	uiEditor->Draw();
+	/*uiEditor->Update();
+	uiEditor->Draw();*/
 
 
 }
