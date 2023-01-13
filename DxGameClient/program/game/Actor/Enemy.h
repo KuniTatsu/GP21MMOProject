@@ -37,6 +37,5 @@ private:
 	GameManager* gManager = nullptr;
 private:
 	void SearchBox(tnl::Vector3 SpawnPos, double atackRange);
-	void EnemyMove(tnl::Vector3 SpawnPos,double speed);
-	//void Move();
+	void EnemyMove();
 };

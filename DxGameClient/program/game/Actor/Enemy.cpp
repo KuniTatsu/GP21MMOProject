@@ -71,24 +71,16 @@ unsigned int Enemy::ChangedColor()
 	}
 }
 
-void Enemy::EnemyMove(tnl::Vector3 SpawnPos, double speed) {
-	
-	float A = gManager->GetVectorToPlayer(SpawnPos).x;
-	float B = gManager->GetVectorToPlayer(SpawnPos).y;
-	float C = sqrt(A * A + B * B);
+void Enemy::EnemyMove() {
 
-	float dx = A / C;
-	float dy = B / C;
-
-	SpawnPos += tnl::Vector3(dx, dy, 0) * static_cast<float>(speed);
-
+	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 }
 
 void Enemy::Update()
 {
-	EnemyMove(drawPos, myData->GetMoveSpeed());
-	if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))drawPos.x++;
-	
+	if (onFollowToPlayer) {
+		EnemyMove();
+	}
 }
 
 void Enemy::Draw(Camera* camera)

@@ -90,11 +90,15 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	spawntiming = false;
 	intervalCount = 0;
 	createCount++;
-	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
+	//tnl::DebugTrace("エネミー生成された：%d\n", createCount);
 }
 
 void EnemyManager::Update(float deltatime)
 {
+	auto& list = GetEnemyList();
+	for (auto& enemy : list) {
+		enemy->Update();
+	}
 }
 
 void EnemyManager::Draw(Camera* camera)
