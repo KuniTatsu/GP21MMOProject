@@ -21,8 +21,8 @@ public:
 		return isLive;
 	}
 	//死亡判定セット関数
-	inline void	SetIsLive() {
-		isLive = false;
+	inline void	SetIsLive(bool IsLive) {
+		isLive = IsLive;
 	}
 
 	//描画座標の取得
@@ -51,7 +51,7 @@ public:
 	inline int GetDir() {
 		return static_cast<int>(myExDir);
 	}
-	
+
 
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
@@ -163,6 +163,9 @@ protected:
 
 	//XとYから自分の向いている方向を変更する関数
 	void SetExDir(float x, float y);
+
+	//引数から向いている方向を変更する関数
+	void SetExDir(int dir);
 
 	//基本攻撃関数	
 	void DefaultAttack();

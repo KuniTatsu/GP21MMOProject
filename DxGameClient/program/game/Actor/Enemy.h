@@ -14,7 +14,8 @@ class Enemy : public Actor {
 public:
 
 	//Enemy(tnl::Vector3 SpawnPos);
-	Enemy(tnl::Vector3 SpawnPos,double attackRange, float attack, float defence, float speed);
+	Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed);
+	Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed, int IdentId);
 	~Enemy();
 
 	int createEnemy = 0;
@@ -25,13 +26,23 @@ public:
 
 	void Init()override;
 
+	inline int GetIdentId() {
+		return identId;
+	}
+	//位置座標の同期
+	void MoveEnemyFromServerInfo(float x,float y,int dir);
+	//ステータスの同期
+	void ChangeStatusFromServerInfo(float moveHP);
+
 private:
 	int img_Ghost = 0;
+
+	int identId = -1;
 
 	unsigned int ChangedColor(bool atack);
 
 	GameManager* gManager = nullptr;
 private:
-	void SearchCircle(int SpawnPosX,int SpawnPosY, double atackRange);
+	void SearchCircle(int SpawnPosX, int SpawnPosY, double atackRange);
 	//void Move();
 };

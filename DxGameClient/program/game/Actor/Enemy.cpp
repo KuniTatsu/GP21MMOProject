@@ -15,6 +15,18 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defe
 	myData->SetAllStatus(attackRange, attack, defence, speed);
 }
 
+Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed, int IdentId)
+{
+	drawPos = SpawnPos;
+	gManager = GameManager::GetInstance();
+	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
+
+	myData = std::make_shared<ActorData>();
+	myData->SetAllStatus(attackRange, attack, defence, speed);
+
+	identId = IdentId;
+}
+
 Enemy::~Enemy()
 {
 
@@ -23,6 +35,28 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
 
+}
+
+void Enemy::MoveEnemyFromServerInfo(float x, float y, int dir)
+{
+	if (drawPos.x != x) {
+		drawPos.x = x;
+	}
+	if (drawPos.y != y) {
+		drawPos.y = y;
+	}
+
+	//“G‚ÍãŒü‚«‚Æ‰ºŒü‚«‚Ì‰æ‘œ‚ª‚È‚¢‚Ì‚ÅA‚»‚êˆÈŠO‚È‚çŒü‚¢‚Ä‚¢‚é•ûŒü‚ğ•Ï‚¦‚é
+	if (dir != static_cast<int>(EXDIR::BOTTOM) && dir != static_cast<int>(EXDIR::TOP)) {
+		//Œü‚¢‚Ä‚¢‚éŒü‚«‚ª“¯‚¶‚È‚çˆ—‚µ‚È‚¢
+		if (dir == static_cast<int>(myExDir))return;
+		SetExDir(dir);
+	}
+}
+
+void Enemy::ChangeStatusFromServerInfo(float moveHP)
+{
+	myData->SetHP(moveHP);
 }
 
 
@@ -43,6 +77,33 @@ unsigned int Enemy::ChangedColor(bool atack)
 
 void Enemy::Update()
 {
+	//debug
+	bool isMove = false;
+
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_W)) {
+		drawPos.y--;
+		myExDir = EXDIR::TOP;
+		isMove = true;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_A)) {
+		drawPos.x--;
+		myExDir = EXDIR::LEFT;
+		isMove = true;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_S)) {
+		drawPos.y++;
+		myExDir = EXDIR::BOTTOM;
+		isMove = true;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_D)) {
+		drawPos.x++;
+		myExDir = EXDIR::RIGHT;
+		isMove = true;
+	}
+
+	if (!isMove)return;
+
+	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 
 }
 

@@ -6,6 +6,7 @@
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
 #include"GameManager.h"
+#include"EnemyManager.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -133,6 +134,42 @@ const std::string Connect::GetServerMessage()
 		return "";
 	}
 
+	//enemyの位置情報系の処理(他クライアントで生成された敵の生成も含む)
+	//if (hoge["EPosX"].string_value() != "") {
+	int aaa = hoge["EPosX"].int_value();
+
+	bool isnull = hoge["EPosX"].is_null();
+	if (hoge["EPosX"].is_null()!=true) {
+
+		auto enemyManager = EnemyManager::GetInstance();
+
+		int id = hoge["id"].int_value();
+		float x = static_cast<float>(hoge["EPosX"].number_value());
+		float y = static_cast<float>(hoge["EPosY"].number_value());
+		int dir = hoge["dir"].int_value();
+		int type = hoge["type"].int_value();
+		enemyManager->ShareEnemyPosFromServer(id, x, y, dir, type);
+		return "";
+	}
+
+	//enemyのステータス変動系の処理
+	if (hoge["EMoveHP"].string_value() != "") {
+		auto enemyManager = EnemyManager::GetInstance();
+
+		int id = hoge["id"].int_value();
+		float moveHP = static_cast<float>(hoge["EMoveHP"].number_value());
+
+		enemyManager->ShareEnemyStatusFromServer(id, moveHP);
+		return "";
+	}
+
+	//enemyの死亡状況の処理
+	if (hoge["isDead"].string_value() != "") {
+		auto enemyManager = EnemyManager::GetInstance();
+		int id = hoge["id"].int_value();
+
+	}
+
 	//UUIDを含むメッセージかどうか判定 含まないならチャットメッセージなのでそのまま帰す
 	if (hoge["UUID"].string_value() == "")return getMessage;
 
@@ -225,6 +262,48 @@ void Connect::SendClientPlayerInfo(float x, float y, int dir, int isCreated, int
 	auto fix = gManager->SjistoUTF8(send);
 	ws.write(net::buffer(fix));
 
+}
+
+void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationNum, int type)
+{
+	Json obj = Json::object({
+		{ "EnemyPosX", x },
+		{ "EnemyPosY", y },
+		{ "Dir",dir},
+		{ "identId",identificationNum},
+		{ "type",type},
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
+}
+
+void Connect::SendClientEnemyStatus(int identificationNum, float moveHP)
+{
+	Json obj = Json::object({
+		{ "EnemyMoveHP", moveHP },
+		{ "identId",identificationNum},
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
+}
+
+void Connect::SendClientEnemyIsDead(int identificationNum, int isDead)
+{
+	Json obj = Json::object({
+		{ "isDead", isDead },
+		{ "identId",identificationNum},
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
 }
 
 void Connect::SendExitServer()

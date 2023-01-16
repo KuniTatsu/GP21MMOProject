@@ -34,6 +34,8 @@ public:
 
 	void SetAllStatus(double AttackRange, float Attack, float Defence, float MoveSpeed);
 
+	void SetHP(float Hp);
+
 private:
 
 	//通常攻撃の当たる距離(レンジ)基本値
@@ -46,6 +48,7 @@ private:
 	//移動スピード
 	float moveSpeed = 0.0f;
 
+	float hp = 0.0f;
 
 
 };

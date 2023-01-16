@@ -493,7 +493,7 @@ void GameManager::MoveDummyInUUID(float x, float y, int dir, std::string UUID)
 
 		auto bufUUID = other->GetUUID();
 		if (UUID == bufUUID) {
-			other->UpdatePosition(x, y,dir);
+			other->UpdatePosition(x, y, dir);
 			break;
 		}
 	}
@@ -539,6 +539,22 @@ void GameManager::SendPlayerInfoToServer()
 	else {
 		connect->SendClientPlayerInfo(pos.x, pos.y, dir);
 	}
+}
+
+void GameManager::SendEnemyInfoToServer(float x, float y, int dir, int identNum,int type)
+{
+	connect->SendClientEnemyInfo(x, y, dir, identNum,type);
+}
+
+void GameManager::SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool isPlus)
+{
+	//HPŒ¸­‚¾‚Á‚½‚ç
+	if (!isPlus) {
+		float decreaseHP = moveHP * -1;
+		connect->SendClientEnemyStatus(identNum, decreaseHP);
+		return;
+	}
+	connect->SendClientEnemyStatus(identNum, moveHP);
 }
 
 bool GameManager::OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom)

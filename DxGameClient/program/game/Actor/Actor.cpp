@@ -77,7 +77,7 @@ uint32_t Actor::GetExDir(float x, float y)
 	//éŒÇﬂï˚å¸ÇÃà⁄ìÆ
 	//âEï˚å¸
 	if (x > 0) {
-		if(y>0)return static_cast<uint32_t>(EXDIR::RIGHTBOTTOM);
+		if (y > 0)return static_cast<uint32_t>(EXDIR::RIGHTBOTTOM);
 		else return static_cast<uint32_t>(EXDIR::RIGHTTOP);
 	}
 	//ç∂ï˚å¸
@@ -124,7 +124,7 @@ void Actor::SetExDir(float x, float y)
 	//è„â∫ç∂âEÇÃèÍçá
 	//è„â∫
 	if (x == 0.0f) {
-		if (y > 0)myExDir=EXDIR::BOTTOM;
+		if (y > 0)myExDir = EXDIR::BOTTOM;
 		else if (y < 0)myExDir = EXDIR::TOP;
 		return;
 	}
@@ -147,6 +147,38 @@ void Actor::SetExDir(float x, float y)
 		if (y > 0)myExDir = EXDIR::LEFTBOTTOM;
 		else myExDir = EXDIR::LEFTTOP;
 		return;
+	}
+}
+void Actor::SetExDir(int dir)
+{
+	switch (dir)
+	{
+	case 0:
+		myExDir = EXDIR::LEFTTOP;
+		break;
+	case 1:
+		myExDir = EXDIR::LEFT;
+		break;
+	case 2:
+		myExDir = EXDIR::LEFTBOTTOM;
+		break;
+	case 3:
+		myExDir = EXDIR::BOTTOM;
+		break;
+	case 4:
+		myExDir = EXDIR::RIGHTBOTTOM;
+		break;
+	case 5:
+		myExDir = EXDIR::RIGHT;
+		break;
+	case 6:
+		myExDir = EXDIR::RIGHTTOP;
+		break;
+	case 7:
+		myExDir = EXDIR::TOP;
+		break;
+	default:
+		break;
 	}
 }
 //í èÌçUåÇä÷êî
