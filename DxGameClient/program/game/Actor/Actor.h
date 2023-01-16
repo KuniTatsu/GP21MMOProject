@@ -3,6 +3,7 @@
 #include<functional>
 #include<vector>
 #include<memory>
+
 #include"../../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
@@ -45,7 +46,17 @@ public:
 	inline std::shared_ptr<ActorData>GetActorData() {
 		return myData;
 	}
-	 void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
+	void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
+
+	//typeの取得
+	inline int GetActorType() {
+		return actorType;
+	}
+	inline void SetActorType(int type) {
+		if (type > 1)return;
+		if (type == actorType)return;
+		actorType = type;
+	}
 
 	//キャラ画像の四点の座標を求める関数 左上,右上,左下,右下
 	std::vector<tnl::Vector3> GetCharaEdgePos();
@@ -67,6 +78,9 @@ protected:
 
 	//test
 	std::vector<tnl::Vector3> bufPos;
+
+	//プレイヤーか敵か
+	int actorType = 0;//デフォルトはプレイヤー
 
 
 	//キャラクター画像の幅 初期値はプレイヤーの基本の大きさ

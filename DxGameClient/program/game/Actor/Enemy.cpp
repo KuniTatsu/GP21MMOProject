@@ -4,8 +4,9 @@
 #include"ActorData.h"
 #include<time.h>
 #include<random>
+#include"../ResourceManager.h"
 
-Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed)
+Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed, int type)
 {
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
@@ -13,6 +14,11 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defe
 
 	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus(attackRange, attack, defence, speed);
+
+	auto rManager = ResourceManager::GetInstance();
+	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+
+	SetCircleSize(hoge[type]);
 
 }
 
@@ -24,6 +30,12 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
 
+}
+
+void Enemy::SetCircleSize(tnl::Vector3& size)
+{
+	if (size.x >= size.y)circleSize = size.x;
+	else circleSize = size.y;
 }
 
 void Enemy::Update()

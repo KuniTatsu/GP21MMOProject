@@ -2,6 +2,8 @@
 #include"ActorData.h"
 #include"../GameManager.h"
 #include"Camera.h"
+#include"../EnemyManager.h"
+#include"Enemy.h"
 
 
 Actor::Actor()
@@ -131,10 +133,57 @@ void Actor::DefaultAttack()
 		//左上, 右上, 左下, 右下の順で格納(回転済みの当たり判定座標)
 		auto boxPos = GetMeleeAttackBox();
 
-		//当たり判定の中央を取得する
-		auto boxCenter = gManager->GetCenterVector(boxPos[0], boxPos[3]);
+		//敵のリストのソート　プレイヤーに近い順
+		auto eManager = EnemyManager::GetInstance();
+		eManager->SortEnemyList(drawPos);
 
-		//中心から一番近くの敵の4点のうち一番近い点を取得する
+		auto& list = eManager->GetEnemyList();
+
+		bool isHit = false;
+
+		for (auto& enemy : list) {
+			//敵の座標
+			auto& pos = enemy->GetPos();
+
+			std::vector<tnl::Vector3> nearPoses;
+
+			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[0], boxPos[1]));
+			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[1], boxPos[2]));
+			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[2], boxPos[3]));
+			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[3], boxPos[0]));
+
+			std::vector<float>distances;
+
+			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[0]));
+			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[1]));
+			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[2]));
+			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[3]));
+
+			int mostNearNum = 0;
+
+			for (int i = 1; i < 4; ++i) {
+				if (distances[mostNearNum] > distances[i]) {
+					mostNearNum = i;
+				}
+			}
+			tnl::Vector3 mostNear = nearPoses[mostNearNum];
+
+			//一番近い点と敵の当たり判定の円の中心との距離を求める
+			float pointToCircleCenter = gManager->GetLengthFromTwoPoint(mostNear, pos);
+			//この距離が敵の当たり判定の半径より小さいなら当たっている
+			if (enemy->GetCircleSize() > pointToCircleCenter)isHit = true;
+
+			//内包している場合の判定
+			if (gManager->isHitRotateBox(boxPos, pos))isHit = true;
+			//当たっている場合のダメージ判定
+			if (isHit) {
+
+			}
+
+			//当たっていないキャラが来たらそれ以降も当たっていないのでやめる
+			break;
+		}
+
 
 		//その点と範囲の4つの点のベクトルとの外積を取り、一つでも負があれば当たってない
 

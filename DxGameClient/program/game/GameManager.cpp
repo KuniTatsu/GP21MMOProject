@@ -59,12 +59,12 @@ void GameManager::Send(const std::string sendMessage)
 //送る文章を引数に入れる。SJISでいい
 void GameManager::CreateSendThread(const std::string sendMessage)
 {
-	
+
 	std::thread sendThread = std::thread([&] {GameManager::Send(sendMessage); });
-	
+
 	//送り終えたらスレッドを閉じる
 	sendThread.join();
-	
+
 }
 
 
@@ -374,6 +374,24 @@ bool GameManager::isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Ve
 tnl::Vector3 GameManager::GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos)
 {
 	return ((firstPos + secondPos) / 2);
+}
+
+tnl::Vector3 GameManager::GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB) {
+	tnl::Vector3 ab = linePointB - linePointA;
+	float t = tnl::Vector3::Dot(point - linePointA, ab);
+	if (t <= 0.0f) {
+		return linePointA;
+	}
+	else {
+		float denom = tnl::Vector3::Dot(ab, ab);
+		if (t >= denom) {
+			return linePointB;
+		}
+		else {
+			t /= denom;
+			return linePointA + (ab * t);
+		}
+	}
 }
 
 void GameManager::SetStayMap()

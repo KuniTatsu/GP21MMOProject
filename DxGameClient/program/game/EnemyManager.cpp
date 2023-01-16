@@ -91,6 +91,17 @@ std::shared_ptr<ActorData> EnemyManager::GetEnemyData(int type)
 	return data;
 }
 
+void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
+{
+	EnemyList.sort([&](std::shared_ptr<Enemy>left, std::shared_ptr<Enemy>right) {
+		auto distance1 = gManager->GetLengthFromTwoPoint(playerPos, left->GetPos());
+		auto distance2 = gManager->GetLengthFromTwoPoint(playerPos, right->GetPos());
+
+		if (distance1 > distance2)return true;
+		return false;
+		});
+}
+
 /*エネミー生成*/
 void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {

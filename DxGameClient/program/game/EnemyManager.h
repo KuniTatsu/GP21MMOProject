@@ -29,8 +29,8 @@ private:
 		MAX
 	};
 
-			/*SpawnEnemy関数*/
-	//生成回数
+	/*SpawnEnemy関数*/
+//生成回数
 	int createCount = 0;
 	//生成制限
 	int spawnLimit = 20;
@@ -43,8 +43,8 @@ private:
 
 	std::vector<std::shared_ptr<Enemy>> enemyMaster;
 
-		
-//private関数群
+
+	//private関数群
 private:
 	void LoadEnemyMaster();
 
@@ -63,13 +63,13 @@ public:
 
 	/*エネミーリスト*/
 	std::list<std::shared_ptr<Enemy>> EnemyList;
-	
+
 	//Enemyデータ取得
 	std::shared_ptr<ActorData> GetEnemyData(int type);
-	
+
 	//Enemyスポーン範囲検索
 	void SpawnEnemy(tnl::Vector3& PlayerPos);
-	
+
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return EnemyList;
@@ -77,6 +77,8 @@ public:
 	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
 		EnemyList.emplace_back(enemy);
 	}
+
+	void SortEnemyList(tnl::Vector3& playerPos);
 
 	/*エネミー生成関数*/
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);

@@ -67,6 +67,7 @@
     <ClCompile Include="program\game\SpecialSkillEffect.cpp" />
     <ClCompile Include="program\game\Talent.cpp" />
     <ClCompile Include="program\game\TalentManager.cpp" />
+    <ClCompile Include="program\game\Animation.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -138,6 +139,7 @@
     <ClInclude Include="program\game\SpecialSkillEffect.h" />
     <ClInclude Include="program\game\Talent.h" />
     <ClInclude Include="program\game\TalentManager.h" />
+    <ClInclude Include="program\game\Animation.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

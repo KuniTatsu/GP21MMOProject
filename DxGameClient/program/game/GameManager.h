@@ -153,6 +153,9 @@ public:
 	//2つの座標から中心座標を求める関数 args1:座標1,args2:座標2
 	tnl::Vector3 GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos);
 
+	//点から線分中の最近点を求める関数
+	tnl::Vector3 GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB);
+
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
 

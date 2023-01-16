@@ -14,7 +14,7 @@ class Enemy : public Actor {
 public:
 
 	Enemy(tnl::Vector3 SpawnPos);
-	Enemy(tnl::Vector3 SpawnPos,double attackRange, float attack, float defence, float speed);
+	Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed, int type);
 	~Enemy();
 
 	int createEnemy = 0;
@@ -25,7 +25,15 @@ public:
 
 	void Init()override;
 
+	void SetCircleSize(tnl::Vector3& size);
+
+	inline float GetCircleSize() {
+		return circleSize;
+	}
+
 private:
 	int img_Ghost = 0;
 	GameManager* gManager = nullptr;
+	//“–‚½‚è”»’è—p‚Ì”¼Œa
+	float circleSize = 0.0f;
 };
