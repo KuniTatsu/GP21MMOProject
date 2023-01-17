@@ -34,9 +34,24 @@ void Actor::SetActorData(double attackRange, float attack, float defence, float 
 	myData->SetAllStatus(attackRange, attack, defence, moveSpeed);
 }
 
-void Actor::SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
+	void Actor::SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
 {
 	myData->SetAttribute(STR, VIT, INT, MID, SPD, DEX);
+}
+
+void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
+{
+	if (--actWait <= 0) {
+		actIndex++;
+		actWait = Speed;
+		actIndex %= MaxIndex;
+	}
+	drawGh = DrawGhs[actIndex + MaxIndex * static_cast<uint32_t>(myExDir)];
+
+	if (drawGh == -1) {
+		int hoge = 0;
+	}
+
 }
 
 void Actor::MoveUp()
@@ -98,6 +113,38 @@ uint32_t Actor::GetExDir(float x, float y)
 		else return static_cast<uint32_t>(EXDIR::LEFTTOP);
 	}
 	return 0;
+}
+void Actor::SetExDirFromInt(int dir)
+{
+	switch (dir)
+	{
+	case 0:
+		myExDir = EXDIR::LEFTTOP;
+		break;
+	case 1:
+		myExDir = EXDIR::LEFT;
+		break;
+	case 2:
+		myExDir = EXDIR::LEFTBOTTOM;
+		break;
+	case 3:
+		myExDir = EXDIR::BOTTOM;
+		break;
+	case 4:
+		myExDir = EXDIR::RIGHTBOTTOM;
+		break;
+	case 5:
+		myExDir = EXDIR::RIGHT;
+		break;
+	case 6:
+		myExDir = EXDIR::RIGHTTOP;
+		break;
+	case 7:
+		myExDir = EXDIR::TOP;
+		break;
+	default:
+		break;
+	}
 }
 void Actor::SetExDir(float x, float y)
 {

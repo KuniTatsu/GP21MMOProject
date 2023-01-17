@@ -70,12 +70,24 @@ std::vector<tnl::Vector3>& ResourceManager::GetGraphicSize(int type)
 	return graphicSizes[type];
 }
 
+std::vector<int>& ResourceManager::GetCharaVectorAtGhNum(int graphicNum)
+{
+	return playerGhs[graphicNum];
+}
+
 ResourceManager::ResourceManager()
 {
 	gManager = GameManager::GetInstance();
 
 	graphicSizes.resize(static_cast<int>(RESOUCETYPE::MAX));
 	SetLoadCsvPass();
+
+	playerGhs.resize(5);
+	enemyGhs.resize(5);
+	effectGhs.resize(5);
+
+	LoadResouce(static_cast<int>(RESOUCETYPE::PLAYER));
+	LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
 }
 
 ResourceManager::~ResourceManager()
@@ -85,12 +97,12 @@ ResourceManager::~ResourceManager()
 void ResourceManager::SetLoadCsvPass()
 {
 
-	loadCsvPasses.emplace_back("csv/playerGraphics.csv");//エフェクトあり
-	loadCsvPasses.emplace_back("csv/enemyGraphics.csv"); //エフェクトあり
-	loadCsvPasses.emplace_back("csv/effectGraphics.csv");//エフェクトあり
-	loadCsvPasses.emplace_back("csv/itemIconGraphics.csv");
-	loadCsvPasses.emplace_back("csv/jobIconGraphics.csv");
-	loadCsvPasses.emplace_back("csv/talentIconGraphics.csv");
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/PlayerGraphics.csv");//エフェクトあり
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/EnemyGraphics.csv"); //エフェクトあり
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/EffectGraphics.csv");//エフェクトあり
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/ItemIconGraphics.csv");
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/JobIconGraphics.csv");
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/TalentIconGraphics.csv");
 
 }
 //単一画像のグラフィックハンドルのロード

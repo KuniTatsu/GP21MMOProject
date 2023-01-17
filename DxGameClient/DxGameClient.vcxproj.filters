@@ -67,7 +67,13 @@
     <ClCompile Include="program\game\SpecialSkillEffect.cpp" />
     <ClCompile Include="program\game\Talent.cpp" />
     <ClCompile Include="program\game\TalentManager.cpp" />
+
     <ClCompile Include="program\game\Animation.cpp" />
+    <ClCompile Include="program\game\UI\Graphic.cpp" />
+    <ClCompile Include="program\game\UI\GraphicUI.cpp" />
+    <ClCompile Include="program\game\UI\UIEditor.cpp" />
+    <ClCompile Include="program\game\UI\UIManager.cpp" />
+
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -140,6 +146,11 @@
     <ClInclude Include="program\game\Talent.h" />
     <ClInclude Include="program\game\TalentManager.h" />
     <ClInclude Include="program\game\Animation.h" />
+    <ClInclude Include="program\game\UI\Graphic.h" />
+    <ClInclude Include="program\game\UI\GraphicUI.h" />
+    <ClInclude Include="program\game\UI\UIEditor.h" />
+    <ClInclude Include="program\game\UI\UIManager.h" />
+
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">
@@ -272,5 +283,33 @@
   <ItemGroup>
     <Image Include="DxGameClient.ico" />
     <Image Include="small.ico" />
+    <Image Include="graphics\FrameBlack.png" />
+    <Image Include="graphics\FrameWhite.png" />
+    <Image Include="graphics\GhostEnemy.png" />
+    <Image Include="graphics\LocalMapChip.png" />
+    <Image Include="graphics\mapchip.png" />
+    <Image Include="graphics\mapchip_grass.png" />
+    <Image Include="graphics\mapchip_grass_line.png" />
+    <Image Include="graphics\mapchip_sea.png" />
+    <Image Include="graphics\Player.png" />
+    <Image Include="graphics\player_sample.png" />
+    <Image Include="graphics\UIEditor\LoadButton.png" />
+    <Image Include="graphics\UIEditor\ModeFreeRatio.png" />
+    <Image Include="graphics\UIEditor\ModeNoEdit.png" />
+    <Image Include="graphics\UIEditor\ModeSameRatio.png" />
+    <Image Include="graphics\UIEditor\ReloadDebug.png" />
+    <Image Include="graphics\UIEditor\ReloadDefault.png" />
+    <Image Include="graphics\UIEditor\ReloadSaved.png" />
+    <Image Include="graphics\UIEditor\ResetButton.png" />
+    <Image Include="graphics\UIEditor\ResourceLoadButton.png" />
+    <Image Include="graphics\UIEditor\SaveButton.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="csv\mapchip_island.csv" />
+    <None Include="csv\TalentMaster.csv" />
+    <None Include="csv\test.csv" />
+    <None Include="csv\UI\MakedSaveUI.csv" />
+    <None Include="csv\UI\SaveUI.csv" />
+    <None Include="csv\UI\TestSaveUI.csv" />
   </ItemGroup>
 </Project>

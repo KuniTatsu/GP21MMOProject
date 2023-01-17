@@ -12,8 +12,8 @@ class Map;
 class Enemy;
 class Player;
 class Connect;
-
-//typedef int (*FUNCCOUNT)(int);
+class DummyPlayer;
+class UIEditor;
 
 class GameManager {
 private:
@@ -28,7 +28,7 @@ private:
 
 	std::shared_ptr<Connect> connect = nullptr;
 
-	std::thread acceptThread ;
+	std::thread acceptThread;
 
 	//マルチスレッドで動かす受信用関数
 	void Accept();
@@ -38,6 +38,8 @@ private:
 
 
 	ChatBase* chat = nullptr;
+	//UIEditor* editor = nullptr;
+	std::shared_ptr<UIEditor> uiEditor = nullptr;
 
 	//一度読み込んだghを保存するmap
 	std::unordered_map<std::string, int> ghmap;
@@ -48,6 +50,12 @@ private:
 	std::shared_ptr<Map>lastStayMap = nullptr;
 
 	std::list<std::shared_ptr<Enemy>> Enemys;
+	std::list<std::shared_ptr<DummyPlayer>>otherPlayers;
+
+	std::string clientUUID = "";
+
+
+
 
 	// ゲーム全体で参照したい変数はここで用意
 public:
@@ -55,14 +63,14 @@ public:
 	static constexpr int SCREEN_HEIGHT = 768;
 
 	//一チャンクの一辺のチップ数
-	const int MAPSIZE = 5.0;
+	const int MAPSIZE = 35.0;
 	//一チップの大きさ
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
 
 	float deltaTime = 0.0f;
 
-	const tnl::Vector3 MAPPOSOFFSET[8] = { 
+	const tnl::Vector3 MAPPOSOFFSET[8] = {
 		tnl::Vector3(-MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//左上
 		tnl::Vector3(0,-MAPSIZE * CHIPHEIGHT,0),//上
 		tnl::Vector3(MAPSIZE * CHIPWIDTH,-MAPSIZE * CHIPHEIGHT,0),//右上
@@ -97,7 +105,16 @@ public:
 		-315.0f,//右上
 		-360.0f//上
 	};
+	//マウス座標
+	int mousePosX = 0;
+	int mousePosY = 0;
 
+	//UIを並べる方向
+	enum class DIR {
+		HORIZONTAL,
+		VERTICAL,
+		MAX
+	};
 
 
 public:
@@ -183,7 +200,7 @@ public:
 	inline float GetChunkDistance() {
 		return static_cast<float>(MAPSIZE * CHIPHEIGHT);
 	}
-	
+
 	//二つのPos同士の距離を取得する関数
 	inline float GetLength(tnl::Vector3& PosA, tnl::Vector3& PosB) {
 		return std::sqrt(((PosA.x - PosB.x) * (PosA.x - PosB.x)) + ((PosA.y - PosB.y) * (PosA.y - PosB.y)));
@@ -191,17 +208,66 @@ public:
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
-	
+
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
+
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
-inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
-	Enemys.emplace_back(enemy);
-}
+	inline void SetEnemyList(std::shared_ptr<Enemy>& enemy) {
+		Enemys.emplace_back(enemy);
+	}
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
-	
+
+	//メルセンヌ・ツイスターを採用した正規分布ランダム関数
+	int GerRandomNumInWeight(const std::vector<int>WeightList);
+
+
+	//tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
+
+	//二つの整数の間のランダムな数を返す関数
+	int GetRandBetweenNum(int num1, int num2);
+
+	//このクライアントのUUIDを登録する関数
+	inline void SetClientUUID(std::string UUID) {
+		clientUUID = UUID;
+	}
+	//このクライアントのUUIDを取得する関数
+	inline std::string GetClientUUID() {
+		return clientUUID;
+	}
+
+	//サーバーから送られてきた他のプレイヤーの情報からDummyPlayerを生成し登録する関数
+	bool CreateDummyPlayer(std::string json);
+
+	//プレイヤーの情報をサーバーに送る関数
+	void SendPlayerInfoToServer();
+
+	//他のプレイヤーのリストを取得する関数
+	const inline std::list<std::shared_ptr<DummyPlayer>>& GetOtherPlayersList() {
+		return otherPlayers;
+	}
+	//UUIDと合致するDummyPlayerをリストから消去する関数
+	void PopOtherPlayerInUUID(std::string UUID);
+
+	//UUIDと合致するDummyPlayerがいるかどうか確かめる関数
+	bool CheckIsThereInUUID(std::string UUID);
+
+	//UUIDと合致するDummyPlayerを動かす関数
+	void MoveDummyInUUID(float x, float y, int dir,std::string UUID);
+
+
+	//四角形のマウスクリック感知
+	bool isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
+
+	//四角形のマウス範囲内感知
+	bool OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
+
+	//マウス座標の取得
+	tnl::Vector3 GetMousePos();
+
+
 };

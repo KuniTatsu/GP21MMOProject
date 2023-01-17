@@ -57,9 +57,9 @@ private:
 	int img_mapchip_sea = 0;
 
 	/*チップサイズ、配置数*/
-	const int MAPCHIP_SIZE = 32;
-	const int ChipMax = 5;
-	const int Margin = 2;
+	//const int MAPCHIP_SIZE = 32;
+	//const int ChipMax = 5;
+	//const int Margin = 2;
 	int chanknum = 0;
 
 	int ChipStartX = 0;

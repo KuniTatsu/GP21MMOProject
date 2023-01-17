@@ -18,7 +18,7 @@ private:
 	static EnemyManager* instance;
 
 	GameManager* gManager = nullptr;
-	std::shared_ptr<EnemySpawnManager> eSpawn = nullptr;
+	std::shared_ptr<EnemySpawnManager> eSpawnManager = nullptr;
 	bool hoge = false;
 
 	enum class DIR {
@@ -33,13 +33,13 @@ private:
 //生成回数
 	int createCount = 0;
 	//生成制限
-	int spawnLimit = 20;
+	int spawnLimit = 5;
 	//インターバルのカウント開始Flag
 	bool spawntiming = false;
 	//生成するまでのインターバルをカウント
 	int intervalCount = 0;
 	//インターバルの制限時間
-	const int intervalLimit = 3;
+	const int intervalLimit = 1;
 
 	std::vector<std::shared_ptr<Enemy>> enemyMaster;
 
@@ -54,7 +54,7 @@ public:
 	void Destory();
 
 	/*エネミー種類*/
-	enum class EnemyType {
+	enum class EnemyType : uint32_t {
 		GHOST,
 		SLIME,
 		GOBLIN,
@@ -79,6 +79,9 @@ public:
 	}
 
 	void SortEnemyList(tnl::Vector3& playerPos);
+
+	//Enemyスポーン範囲検索
+	void SpawnEnemy(tnl::Vector3& PlayerPos);
 
 	/*エネミー生成関数*/
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);

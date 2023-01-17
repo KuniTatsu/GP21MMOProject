@@ -4,6 +4,7 @@
 #include"Actor/Enemy.h"
 #include"Actor/ActorData.h"
 #include"GameManager.h"
+#include"ResourceManager.h"
 #include<time.h>
 #include<random>
 
@@ -14,7 +15,7 @@ EnemyManager* EnemyManager::instance = nullptr;
 EnemyManager::EnemyManager()
 {
 	gManager = GameManager::GetInstance();
-	eSpawn = std::make_shared<EnemySpawnManager>();
+	eSpawnManager = std::make_shared<EnemySpawnManager>();
 	createCount = 0;
 	LoadEnemyMaster();
 }
@@ -32,7 +33,9 @@ void EnemyManager::LoadEnemyMaster()
 
 
 	//debug用 -本来はcsvから読み取って入れる値
-	auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, 3.0, 5.0f, 3.0f, 2.0f);
+
+	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+	auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, 3.0, animList[0],0);
 	enemyMaster.emplace_back(newEnemy);
 
 }
@@ -57,18 +60,6 @@ void EnemyManager::Destory()
 	}
 }
 
-//int EnemyManager::randomRange(int minRange, int maxRange)
-//{
-//	std::random_device rd;
-//	std::mt19937 gen(rd());
-//
-//	std::uniform_int_distribution<> dist(minRange, maxRange);
-//
-//	int rand = dist(gen);
-//
-//	return rand;
-//}
-
 /*エネミースポーン*/
 void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 {
@@ -78,8 +69,8 @@ void EnemyManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	if (intervalCount % (60 * intervalLimit) == 0) {
 		spawntiming = true;
 	}
-	if (eSpawn && createCount < spawnLimit && spawntiming) {
-		eSpawn->SpawnEnemy(PlayerPos);
+	if (createCount < spawnLimit && spawntiming) {
+		eSpawnManager->SpawnEnemy(PlayerPos);
 	}
 }
 
@@ -109,6 +100,10 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, 0);
 
+	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+
+	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+
 	SetEnemyList(newEnemy);
 	spawntiming = false;
 	intervalCount = 0;
@@ -119,6 +114,10 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 
 void EnemyManager::Update(float deltatime)
 {
+	auto& list = GetEnemyList();
+	for (auto& enemy : list) {
+		enemy->Update();
+	}
 }
 
 void EnemyManager::Draw(Camera* camera)

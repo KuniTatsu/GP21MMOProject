@@ -2,11 +2,13 @@
 #include"scene_base.h"
 #include"../Actor/Camera.h"
 #include<memory>
+#include"../UI/UIEditor.h"
 
 class Player;
 class CreateMap;
 class GameManager;
 class EnemyManager;
+class ResourceManager;
 
 class Scene_Map : public SceneBase {
 public:
@@ -25,6 +27,7 @@ private:
 
 	GameManager* gManager = nullptr;
 	EnemyManager* eManager = nullptr;
+	ResourceManager* rManager = nullptr;
 
 	bool createChipRight = false;
 

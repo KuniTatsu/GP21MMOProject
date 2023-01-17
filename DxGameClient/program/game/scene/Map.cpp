@@ -8,7 +8,7 @@ Map::Map(tnl::Vector3 centerPos)
 	gManager = GameManager::GetInstance();
 
 	nearMaps.resize(8);
-	mapChips.resize(gManager->CHIPHEIGHT);
+	mapChips.resize(gManager->MAPSIZE);
 
 	mapCenterPos = centerPos;
 
@@ -49,8 +49,7 @@ void Map::SetNearMap(int dirNum, std::shared_ptr<Map> map)
 void Map::LoadMap()
 {
 	std::vector<std::vector<std::string>>map_csv;
-	//map_csv = tnl::LoadCsv("csv/mapchip_island.csv");
-	map_csv = tnl::LoadCsv("csv/test.csv");
+	map_csv = tnl::LoadCsv("csv/mapchip_island.csv");
 
 	for (int i = 0; i < map_csv.size(); ++i) {
 		for (int k = 0; k < map_csv.size(); ++k) {

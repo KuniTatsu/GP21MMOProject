@@ -18,6 +18,8 @@ public:
 
 	std::vector<tnl::Vector3>& GetGraphicSize(int type);
 
+	std::vector<int>& GetCharaVectorAtGhNum(int graphicNum);
+
 public:
 	enum class RESOUCETYPE :uint32_t {
 		PLAYER,

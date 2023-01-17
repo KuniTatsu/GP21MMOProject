@@ -63,6 +63,13 @@ public:
 	//キャラ画像の四点の座標を求める関数 左上,右上,左下,右下
 	std::vector<tnl::Vector3> GetCharaEdgePos();
 
+	//向いている向きの取得
+	inline int GetDir() {
+		return static_cast<int>(myExDir);
+	}
+
+
+
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
 
@@ -94,6 +101,16 @@ protected:
 	//画像ハンドル
 	int gh = 0;
 
+	//アニメーション関係
+	//アニメーション切替速度
+	const int actSpeed = 20;
+	//実際に今描画中のグラフィックハンドル
+	int drawGh = 0;
+	//現在の切り替えタイマー
+	int actWait = actSpeed;
+	//描画するアニメーション配列のインデックス番号
+	int actIndex = 0;
+
 	GameManager* gManager = nullptr;
 
 	bool isLive = true;
@@ -106,6 +123,7 @@ protected:
 		LEFT,
 		MAX
 	};
+
 
 	//方向 8方向バージョン 回転を前提　こっちを使うこと
 	enum class EXDIR :uint32_t {
@@ -167,6 +185,8 @@ protected:
 	//XとYから方向を返す関数
 	uint32_t GetExDir(float x, float y);
 
+	void SetExDirFromInt(int dir);
+
 	//XとYから自分の向いている方向を変更する関数
 	void SetExDir(float x, float y);
 
@@ -175,6 +195,9 @@ protected:
 
 	//基本攻撃の近接タイプの範囲を計算する関数 左上,右上,左下,右下の順
 	std::vector<tnl::Vector3>GetMeleeAttackBox();
+	//アニメーション更新関数
+	void Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed = 20);
+
 
 };
 
