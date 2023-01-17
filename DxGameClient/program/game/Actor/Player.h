@@ -58,6 +58,8 @@ private:
 	const int MOVEAMOUNT[static_cast<int>(DIR::MAX)] = { -SPEED,SPEED,SPEED,-SPEED };
 
 
+	int testGh = 0;
+
 	//Ë”\‚ÌÅ‘åƒ‰ƒ“ƒN‡Œv”
 	const int maxTalentRank = 20;
 
@@ -69,7 +71,6 @@ private:
 
 	//‚·‚Å‚ÉDummy‚ªì‚ç‚ê‚Ä‚¢‚é‚©
 	bool isCreatedDummy = false;
-
 
 };
 

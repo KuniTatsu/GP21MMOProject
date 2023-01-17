@@ -82,21 +82,34 @@ std::shared_ptr<ActorData> EnemyManager::GetEnemyData(int type)
 	return data;
 }
 
+void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
+{
+	EnemyList.sort([&](std::shared_ptr<Enemy>left, std::shared_ptr<Enemy>right) {
+		auto distance1 = gManager->GetLengthFromTwoPoint(playerPos, left->GetPos());
+		auto distance2 = gManager->GetLengthFromTwoPoint(playerPos, right->GetPos());
+
+		if (distance1 > distance2)return true;
+		return false;
+		});
+}
+
 /*エネミー生成*/
 void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
+	
+	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, 0);
+
 	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
-
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, 3.0, animList[type], type);
 
 	SetEnemyList(newEnemy);
 	spawntiming = false;
 	intervalCount = 0;
 	createCount++;
-	//tnl::DebugTrace("エネミー生成された：%d\n", createCount);
+
+	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
 }
 
 void EnemyManager::Update(float deltatime)

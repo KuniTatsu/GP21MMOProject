@@ -96,14 +96,14 @@ public:
 
 	//座標回転時に使用する回転角の配列(角度) 上方向を0度とする。(左は+90度とする)
 	const float ROTATEDEGREE[static_cast<uint32_t>(ROTATEDIR::MAX)] = {
-		45.0f,//左上
-		90.0f,//左
-		135.0f,//左下
-		180.0f,//下
-		225.0f,//右下
-		270.0f,//右
-		315.0f,//右上
-		360.0f//上
+		-45.0f,//左上
+		-90.0f,//左
+		-135.0f,//左下
+		-180.0f,//下
+		-225.0f,//右下
+		-270.0f,//右
+		-315.0f,//右上
+		-360.0f//上
 	};
 	//マウス座標
 	int mousePosX = 0;
@@ -132,6 +132,19 @@ public:
 		return tnl::Vector3(X / vecLength, Y / vecLength, 0);
 	}
 
+
+	//外積を取得する関数
+	float GetCross(tnl::Vector3& vec1, tnl::Vector3& vec2) {
+		return vec1.x * vec2.y - vec2.x * vec1.y;
+	}
+
+	//2つの座標間の距離を求める関数
+	inline float GetLengthFromTwoPoint(tnl::Vector3& pos1, tnl::Vector3& pos2) {
+		auto defX = (pos2.x - pos1.x);
+		auto defY = (pos2.y - pos1.y);
+		return sqrtf((defX * defX) + (defY * defY));
+	}
+
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
 	int LoadGraphEx(std::string Gh);
@@ -146,8 +159,19 @@ public:
 
 	//当たり判定 短形同士
 	bool isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, tnl::Vector3& leftTop2, tnl::Vector3& rightBottom2);
-	//座標の回転
-	tnl::Vector3 RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos);
+	//座標の回転	args:回転させたい座標,向いている方向(ROTATEDIRに準ずる),中心座標(デフォルトでは原点)
+	tnl::Vector3 RotatePoint(tnl::Vector3& rotatePos, int dir, tnl::Vector3 centerPos = { 0,0,0 });
+	tnl::Vector3 RotatePoint(tnl::Vector3& rotatePos, float degree, tnl::Vector3 centerPos = { 0,0,0 });
+
+	//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ 左上,右上,左下,右下の順で入れること,args2:判定する点座標
+	bool isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Vector3& hitPoint);
+
+
+	//2つの座標から中心座標を求める関数 args1:座標1,args2:座標2
+	tnl::Vector3 GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos);
+
+	//点から線分中の最近点を求める関数
+	tnl::Vector3 GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB);
 
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();

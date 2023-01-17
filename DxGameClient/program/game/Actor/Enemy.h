@@ -15,8 +15,8 @@ class GameManager;
 class Enemy : public Actor {
 public:
 
-	//Enemy(tnl::Vector3 SpawnPos);
-	Enemy(tnl::Vector3 SpawnPos, double attackRange, std::vector<int>& ghs, int type);
+	Enemy(tnl::Vector3 SpawnPos, std::shared_ptr<ActorData>& data, std::vector<int>& ghs, int type);
+
 	~Enemy();
 
 	int createEnemy = 0;
@@ -26,6 +26,12 @@ public:
 	void Draw(Camera* camera)override;
 
 	void Init()override;
+
+	void SetCircleSize(tnl::Vector3& size);
+
+	inline float GetCircleSize() {
+		return circleSize;
+	}
 
 private:
 	int img_Ghost = 0;
@@ -39,7 +45,12 @@ private:
 	unsigned int ChangedColor();
 
 	GameManager* gManager = nullptr;
+
+	//“–‚½‚è”»’è—p‚Ì”¼Œa
+	float circleSize = 0.0f;
+
 private:
 	void SearchBox(tnl::Vector3 SpawnPos, double atackRange);
 	void EnemyMove();
+
 };

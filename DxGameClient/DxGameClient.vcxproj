@@ -162,6 +162,7 @@
     <ClInclude Include="program\game\Actor\DummyPlayer.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
+    <ClInclude Include="program\game\Animation.h" />
     <ClInclude Include="program\game\BattleLogic.h" />
     <ClInclude Include="program\game\ChatBase.h" />
     <ClInclude Include="program\game\Connect.h" />
@@ -249,6 +250,7 @@
     <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
     <ClCompile Include="program\game\Actor\Player.cpp" />
+    <ClCompile Include="program\game\Animation.cpp" />
     <ClCompile Include="program\game\BattleLogic.cpp" />
     <ClCompile Include="program\game\ChatBase.cpp" />
     <ClCompile Include="program\game\Connect.cpp" />
