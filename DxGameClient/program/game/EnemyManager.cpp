@@ -106,13 +106,15 @@ void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
 void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	
+	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, 0);
 
 	SetEnemyList(newEnemy);
 	spawntiming = false;
 	intervalCount = 0;
 	createCount++;
-	//tnl::DebugTrace("エネミー生成された：%d\n", createCount);
+
+	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
 }
 
 void EnemyManager::Update(float deltatime)

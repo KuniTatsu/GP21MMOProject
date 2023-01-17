@@ -15,6 +15,7 @@ public:
 
 	Enemy(tnl::Vector3 SpawnPos);
 	Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed, int type);
+	Enemy(tnl::Vector3 SpawnPos, std::shared_ptr<ActorData>& data);
 	~Enemy();
 
 	int createEnemy = 0;

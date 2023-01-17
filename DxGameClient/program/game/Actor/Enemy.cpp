@@ -22,6 +22,26 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defe
 
 }
 
+Enemy::Enemy(tnl::Vector3 SpawnPos, std::shared_ptr<ActorData>& data, int type)
+{
+	drawPos = SpawnPos;
+	gManager = GameManager::GetInstance();
+	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
+
+	myData = std::make_shared<ActorData>();
+	myData->SetAllStatus(data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+
+	auto& attribute = data->GetAttribute();
+
+	myData->SetAttribute(attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5]);
+
+
+	auto rManager = ResourceManager::GetInstance();
+	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+
+	SetCircleSize(hoge[type]);
+}
+
 Enemy::~Enemy()
 {
 

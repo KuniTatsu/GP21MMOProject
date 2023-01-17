@@ -34,6 +34,11 @@ void Actor::SetActorData(double attackRange, float attack, float defence, float 
 	myData->SetAllStatus(attackRange, attack, defence, moveSpeed);
 }
 
+void Actor::SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
+{
+	myData->SetAttribute(STR, VIT, INT, MID, SPD, DEX);
+}
+
 void Actor::MoveUp()
 {
 	//ローカルポジションの移動
@@ -132,6 +137,9 @@ void Actor::DefaultAttack()
 		//攻撃範囲をプレイヤーの正面方向に向けて薙ぎ払う
 		//左上, 右上, 左下, 右下の順で格納(回転済みの当たり判定座標)
 		auto boxPos = GetMeleeAttackBox();
+
+		//攻撃アニメーションの生成
+
 
 		//敵のリストのソート　プレイヤーに近い順
 		auto eManager = EnemyManager::GetInstance();

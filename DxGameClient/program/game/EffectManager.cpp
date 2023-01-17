@@ -2,6 +2,8 @@
 #include"ResourceManager.h"
 #include"Effect.h"
 
+
+EffectManager* EffectManager::instance = nullptr;
 EffectManager* EffectManager::GetInstance()
 {
 	if (!instance) {

@@ -48,6 +48,8 @@ public:
 	}
 	void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
 
+	void SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+
 	//type�̎擾
 	inline int GetActorType() {
 		return actorType;
