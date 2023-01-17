@@ -52,7 +52,7 @@ void Inventory::DrawInventory(int x, int y)
 {
 	int i = 0;
 
-	
+
 
 for (auto item : inventoryList) {
 	//装備アイテムなら
@@ -146,6 +146,113 @@ void Inventory::SetCursorNum(int MoveNum)
 	selectCursor += MoveNum;
 	if (selectCursor < 0)selectCursor = 0;
 
+}
+
+
+*/
+
+
+/*
+
+void GameManager::AddItemToInventory(const int ItemId, std::vector<Inventory*>& Inventories,
+	int& InventoryNum)
+{
+	//今のinventoryの持つアイテム配列がいっぱいなら
+	if (Inventories[InventoryNum]->inventoryList.size() >= 10) {
+		//if (sharedInventories[inventoryNum]->inventoryList.size() >= 10) {
+
+			//新しくinventoryのインスタンスを生成する
+		Inventory* newInventory = new Inventory(InventoryNum + 1);
+		//inventory配列に登録
+		Inventories.emplace_back(newInventory);
+
+		//登録するinventoryを更新する
+		InventoryNum++;
+	}
+	Item* item = iManager->GetItemData(ItemId);
+	//装備アイテムだったら
+	if (item->getItemData(1) >= 2) {
+		equipItem* eItem = (equipItem*)item;
+		//整数データの取得
+		std::vector<int> intData = eItem->GetAllIntData();
+		//文字列データの取得
+		std::vector<std::string> stringData = item->GetAllStringData();
+
+		//装備アイテムを生成 生成時にステータスをランダムに変更
+		equipItem* newItem = new equipItem(intData[0], intData[1], stringData[0], intData[2], intData[3], intData[4],
+			stringData[1], intData[5], intData[6], stringData[2], intData[7], intData[8], intData[9], intData[10], 0);
+		//インベントリ追加
+		Inventories[InventoryNum]->AddInventory(newItem);
+	}
+	else {
+		std::vector<int> intData = item->GetAllIntData();
+		std::vector<std::string> stringData = item->GetAllStringData();
+
+		Item* newItem = new Item(intData[0], intData[1], stringData[0], intData[2], intData[3], intData[4], intData[5], stringData[1], stringData[2]);
+
+		Inventories[InventoryNum]->AddInventory(newItem);
+
+	}
+
+}
+
+void GameManager::PopItemFromInventory(const int NowInventoryId)
+{
+	//今の位置の配列番号を取得
+	int selectNum = inventories[NowInventoryId]->GetCursorNum();
+	//表示中のインベントリを取得
+	auto itr = inventories[NowInventoryId]->inventoryList.begin();
+
+	//選択されたアイテムまでイテレータ移動
+	for (int i = 0; i < selectNum; ++i) {
+		itr++;
+	}
+	//アイテムを消去
+	delete((*itr));
+	itr = inventories[NowInventoryId]->inventoryList.erase(itr);
+	//カーソルの位置をひとつ上に移動
+	inventories[NowInventoryId]->SetCursorNum(-1);
+
+	//popするアイテムがいる場所=今いるインベントリが最後のインベントリではない場合
+	if (NowInventoryId != inventoryNum) {
+		int checkInventoryNum = NowInventoryId;
+		while (1) {
+			if (inventories[checkInventoryNum + 1]->inventoryList.empty())break;
+
+			//if (sharedInventories[checkInventoryNum + 1]->inventoryList.empty())break;
+
+		//次のページの最初のアイテムをコピーして消したアイテムのリストの末尾に加える
+			auto item = inventories[checkInventoryNum + 1]->inventoryList.begin();
+
+			//アイテム追加
+			inventories[checkInventoryNum]->inventoryList.emplace_back((*item));
+
+			//次のページの最初のアイテムをpopする
+			inventories[checkInventoryNum + 1]->inventoryList.pop_front();
+
+			//最後のインベントリページにたどり着いたらbreak
+			if (checkInventoryNum + 1 == inventoryNum)break;
+			checkInventoryNum++;
+		}
+	}
+	//最初のインベントリ内なら
+	else {
+		//インベントリ内のアイテム数を1減らす
+		inventories[NowInventoryId]->SetItemNum(-1);
+	}
+	//空のインベントリを消す処理
+	if (inventories[inventoryNum]->inventoryList.empty()) {
+		if (inventoryNum != 0) {
+			delete inventories[inventoryNum];
+			inventories[inventoryNum] = nullptr;
+			inventories.pop_back();
+			inventoryNum--;
+			isDeleteInventory = true;
+		}
+	}
+	if (isDeleteInventory)return;
+	//カーソルの位置を一番上にリセット
+	if (inventories[NowInventoryId]->inventoryList.empty())inventories[NowInventoryId]->CursorReset();
 }
 
 

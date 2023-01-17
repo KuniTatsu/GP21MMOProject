@@ -80,3 +80,17 @@ private:
 
 
 */
+
+
+//インベントリを使うところ
+/*
+
+/インベントリにアイテムを追加する関数
+	//アイテムId,追加するインベントリ,現在のインベントリ番号
+	void AddItemToInventory(const int ItemId, std::vector<Inventory*>& Inventories, int& InventoryNum);
+
+	//インベントリからアイテムを削除する関数
+	void PopItemFromInventory(const int NowInventoryId);
+
+
+*/
