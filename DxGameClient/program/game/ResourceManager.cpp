@@ -80,6 +80,7 @@ ResourceManager::ResourceManager()
 	effectGhs.resize(5);
 
 	LoadResouce(static_cast<int>(RESOUCETYPE::PLAYER));
+	LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
 }
 
 ResourceManager::~ResourceManager()

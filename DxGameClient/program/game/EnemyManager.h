@@ -33,7 +33,7 @@ private:
 	//生成回数
 	int createCount = 0;
 	//生成制限
-	int spawnLimit = 20;
+	int spawnLimit = 5;
 	//インターバルのカウント開始Flag
 	bool spawntiming = false;
 	//生成するまでのインターバルをカウント
@@ -54,7 +54,7 @@ public:
 	void Destory();
 
 	/*エネミー種類*/
-	enum class EnemyType {
+	enum class EnemyType : uint32_t {
 		GHOST,
 		SLIME,
 		GOBLIN,

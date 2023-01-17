@@ -189,6 +189,7 @@ public:
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
+
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
@@ -244,6 +245,5 @@ public:
 	//マウス座標の取得
 	tnl::Vector3 GetMousePos();
 
-	
 
 };

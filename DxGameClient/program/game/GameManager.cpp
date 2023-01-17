@@ -312,6 +312,9 @@ tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rot
 	return tnl::Vector3();
 }
 
+
+//------------------------------------------------------------------------------------------------
+//Map
 void GameManager::SetStayMap()
 {
 	lastStayMap = GetPlayerOnMap();
@@ -379,7 +382,9 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 
 	return nearMap;
 }
+//------------------------------------------------------------------------------------------------
 
+//develop_fukushi
 //プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
@@ -487,7 +492,7 @@ bool GameManager::CheckIsThereInUUID(std::string UUID)
 	}
 	return ret;
 }
-void GameManager::MoveDummyInUUID(float x, float y, int dir, std::string UUID)
+void GameManager::MoveDummyInUUID(float x, float y, int dir,std::string UUID)
 {
 	for (auto& other : otherPlayers) {
 
@@ -564,6 +569,7 @@ void GameManager::Update(float delta_time) {
 
 		connect = std::make_shared<Connect>();
 		uiEditor = std::make_shared<UIEditor>();
+		
 
 		uiEditor->Init();
 
@@ -577,10 +583,11 @@ void GameManager::Update(float delta_time) {
 		player->SetIsCreatedDummy();
 
 		//test用Dummy生成
-		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
 
 		init = true;
 	}
+
 	GetMousePoint(&mousePosX, &mousePosY);
 	/*tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");*/
@@ -590,7 +597,6 @@ void GameManager::Update(float delta_time) {
 	}*/
 
 	deltaTime = delta_time;
-
 
 	sManager->Update(delta_time);
 	sManager->Draw();

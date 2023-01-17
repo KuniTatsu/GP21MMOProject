@@ -9,12 +9,14 @@ class GameManager;
 //gManager->GetVectorToPlayerをつかってプレイヤーへの方向ベクトルを取得し、自分の持つmoveSpeedを掛けた値が1フレーム内に移動する移動量
 //Move関数を新しく作り、その中にその値を取得するコードを実装し、移動させる
 //move関数はupdateの中で呼ぶorgameManagerのupdateでリストから呼ぶ
+//Enemyのコンストラクタにグラフィックスハンドルint型で引数に持ってくる
+//std::vector<int>の参照を引数に持つ
 
 class Enemy : public Actor {
 public:
 
 	//Enemy(tnl::Vector3 SpawnPos);
-	Enemy(tnl::Vector3 SpawnPos,double attackRange, float attack, float defence, float speed);
+	Enemy(tnl::Vector3 SpawnPos, double attackRange, std::vector<int>& ghs, int type);
 	~Enemy();
 
 	int createEnemy = 0;
@@ -27,11 +29,17 @@ public:
 
 private:
 	int img_Ghost = 0;
+	bool onFollowToPlayer = false;
 
-	unsigned int ChangedColor(bool atack);
+	std::vector<int>myAnimationGh;
+
+	/*移動スピード*/
+	float SPEED = 0;
+
+	unsigned int ChangedColor();
 
 	GameManager* gManager = nullptr;
 private:
-	void SearchCircle(int SpawnPosX,int SpawnPosY, double atackRange);
-	//void Move();
+	void SearchBox(tnl::Vector3 SpawnPos, double atackRange);
+	void EnemyMove();
 };
