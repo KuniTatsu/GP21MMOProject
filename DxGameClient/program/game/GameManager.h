@@ -233,7 +233,7 @@ public:
 	bool CheckIsThereInUUID(std::string UUID);
 
 	//UUIDと合致するDummyPlayerを動かす関数
-	void MoveDummyInUUID(float x, float y, std::string UUID);
+	void MoveDummyInUUID(float x, float y, int dir,std::string UUID);
 
 
 	//四角形のマウスクリック感知

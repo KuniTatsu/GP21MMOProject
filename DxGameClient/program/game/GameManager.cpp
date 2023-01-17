@@ -465,7 +465,7 @@ bool GameManager::CreateDummyPlayer(std::string json)
 	posY = static_cast<float>(pJson["PlayerposY"].number_value());
 
 	ghNum = pJson["Playergh"].int_value();
-	UUID = pJson["PlayerUUID"].string_value();
+	UUID = pJson["UUID"].string_value();
 
 	//すでに存在しないかチェック
 	if (CheckIsThereInUUID(UUID))return false;
@@ -492,13 +492,13 @@ bool GameManager::CheckIsThereInUUID(std::string UUID)
 	}
 	return ret;
 }
-void GameManager::MoveDummyInUUID(float x, float y, std::string UUID)
+void GameManager::MoveDummyInUUID(float x, float y, int dir, std::string UUID)
 {
 	for (auto& other : otherPlayers) {
 
 		auto bufUUID = other->GetUUID();
 		if (UUID == bufUUID) {
-			other->UpdatePosition(x, y);
+			other->UpdatePosition(x, y,dir);
 			break;
 		}
 	}

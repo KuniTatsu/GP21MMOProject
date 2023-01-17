@@ -24,7 +24,7 @@ public:
 	void SetGh(std::string ghPass);
 
 	//他プレイヤーの描画座標をサーバーから受け取り更新する関数
-	void UpdatePosition(float posX, float posY);
+	void UpdatePosition(float posX, float posYint, int dir );
 	//UUID取得
 	const inline std::string GetUUID() {
 		return myUUID;
