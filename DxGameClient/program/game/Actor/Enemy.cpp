@@ -5,14 +5,16 @@
 #include<time.h>
 #include<random>
 
-Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange, float attack, float defence, float speed)
+Enemy::Enemy(tnl::Vector3 SpawnPos, double attackRange,std::vector<int>& ghs, int type)
 {
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
 
 	myData = std::make_shared<ActorData>();
-	myData->SetAllStatus(attackRange, attack, defence, speed);
+	//myData->SetAllStatus(attackRange);
+
+	myAnimationGh = ghs;
 }
 
 Enemy::~Enemy()
@@ -32,9 +34,9 @@ void Enemy::SearchBox(tnl::Vector3 SpawnPos, double atackRange)
 	//õ“G”ÍˆÍ
 	int range = (static_cast<int>(atackRange) * gManager->CHIPWIDTH);
 	float halfChipSize = gManager->CHIPHEIGHT >> 1;
-	tnl::Vector3 rangeMax = SpawnPos + tnl::Vector3(range,range,0) + tnl::Vector3(halfChipSize, halfChipSize,0);
+	tnl::Vector3 rangeMax = SpawnPos + tnl::Vector3(range, range, 0) + tnl::Vector3(halfChipSize, halfChipSize, 0);
 	tnl::Vector3 rangeMin = SpawnPos - tnl::Vector3(range, range, 0) - tnl::Vector3(halfChipSize, halfChipSize, 0);
-	
+
 	//--------------------------------------------------------------------------------------------------------------
 	//Debug—p
 	//’Tõ”ÍˆÍ‚ÉƒvƒŒƒCƒ„‚ª‚Í‚¢‚Á‚½‚ç”ÍˆÍBOX‚ªÔ‚­‚È‚é
@@ -42,12 +44,12 @@ void Enemy::SearchBox(tnl::Vector3 SpawnPos, double atackRange)
 	int y1 = static_cast<int>(SpawnPos.y) - range;
 	int x2 = static_cast<int>(SpawnPos.x) + range;
 	int y2 = static_cast<int>(SpawnPos.y) + range;
-	DrawBox(x1, y1, x2, y2,ChangedColor(), false);
+	DrawBox(x1, y1, x2, y2, ChangedColor(), false);
 	//--------------------------------------------------------------------------------------------------------------
 
 	//“G‚ÆƒvƒŒƒCƒ„‚Ì‹——£+ƒJƒƒ‰‚ÌˆÊ’uC³
-	tnl::Vector3 serchRangePos = gManager->GetVectorToPlayer(SpawnPos) + 
-									tnl::Vector3((gManager->SCREEN_WIDTH >> 1), (gManager->SCREEN_HEIGHT >> 1),0);
+	tnl::Vector3 serchRangePos = gManager->GetVectorToPlayer(SpawnPos) +
+		tnl::Vector3((gManager->SCREEN_WIDTH >> 1), (gManager->SCREEN_HEIGHT >> 1), 0);
 
 	//ˆÊ’uÀ•W‚É‚æ‚éõ“G
 	if (rangeMax.x > serchRangePos.x && rangeMin.x < serchRangePos.x
@@ -90,10 +92,10 @@ void Enemy::Draw(Camera* camera)
 
 	//if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))x++;
 	if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))drawPos.x++;
-	
+
 	/*õ“GŠÖ”*/
 	SearchBox(tnl::Vector3(x, y, 0), myData->GetAttackRange());
-	
+
 	DrawRotaGraphF(x, y, 1.0f, 0, img_Ghost, true);
 }
 

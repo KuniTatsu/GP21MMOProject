@@ -6,10 +6,12 @@
 #include"../Actor/Enemy.h"
 #include"../Actor/DummyPlayer.h"
 #include"../UI/UIManager.h"
+#include"../ResourceManager.h"
 
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
+	rManager = ResourceManager::GetInstance();
 	eManager = EnemyManager::GetInstance();
 }
 

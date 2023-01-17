@@ -4,6 +4,7 @@
 #include"Actor/Enemy.h"
 #include"Actor/ActorData.h"
 #include"GameManager.h"
+#include"ResourceManager.h"
 #include<time.h>
 #include<random>
 
@@ -84,8 +85,11 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, 3, data->GetAttack(), data->GetDefence(), 4);
 
+	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+
+	auto newEnemy = std::make_shared<Enemy>(posEnemy, 3.0, animList[type], static_cast<int>(EnemyType::GHOST));
+	
 	SetEnemyList(newEnemy);
 	spawntiming = false;
 	intervalCount = 0;
