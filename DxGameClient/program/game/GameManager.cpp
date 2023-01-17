@@ -492,7 +492,7 @@ bool GameManager::CheckIsThereInUUID(std::string UUID)
 	}
 	return ret;
 }
-void GameManager::MoveDummyInUUID(float x, float y, int dir, std::string UUID)
+void GameManager::MoveDummyInUUID(float x, float y, int dir,std::string UUID)
 {
 	for (auto& other : otherPlayers) {
 

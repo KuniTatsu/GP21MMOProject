@@ -245,6 +245,5 @@ public:
 	//マウス座標の取得
 	tnl::Vector3 GetMousePos();
 
-	
 
 };
