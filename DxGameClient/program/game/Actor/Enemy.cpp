@@ -47,9 +47,9 @@ void Enemy::SetCircleSize(tnl::Vector3& size)
 	else circleSize = size.y;
 }
 
-void Enemy::Update()
-{
-}
+//void Enemy::Update()
+//{
+//}
 
 /*エネミー索敵範囲（四角）*/
 void Enemy::SearchBox(tnl::Vector3 SpawnPos, double atackRange)

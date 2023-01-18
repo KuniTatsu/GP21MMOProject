@@ -68,7 +68,7 @@ public:
 	std::shared_ptr<ActorData> GetEnemyData(int type);
 
 	//Enemyスポーン範囲検索
-	void SpawnEnemy(tnl::Vector3& PlayerPos);
+	//void SpawnEnemy(tnl::Vector3& PlayerPos);
 
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {

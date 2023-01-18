@@ -67,13 +67,12 @@
     <ClCompile Include="program\game\SpecialSkillEffect.cpp" />
     <ClCompile Include="program\game\Talent.cpp" />
     <ClCompile Include="program\game\TalentManager.cpp" />
-
     <ClCompile Include="program\game\Animation.cpp" />
     <ClCompile Include="program\game\UI\Graphic.cpp" />
     <ClCompile Include="program\game\UI\GraphicUI.cpp" />
     <ClCompile Include="program\game\UI\UIEditor.cpp" />
     <ClCompile Include="program\game\UI\UIManager.cpp" />
-
+    <ClCompile Include="program\game\Inventory.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -150,7 +149,7 @@
     <ClInclude Include="program\game\UI\GraphicUI.h" />
     <ClInclude Include="program\game\UI\UIEditor.h" />
     <ClInclude Include="program\game\UI\UIManager.h" />
-
+    <ClInclude Include="program\game\Inventory.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

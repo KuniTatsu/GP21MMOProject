@@ -33,9 +33,9 @@ void EnemyManager::LoadEnemyMaster()
 
 
 	//debug—p -–{—ˆ‚Ícsv‚©‚ç“Ç‚ÝŽæ‚Á‚Ä“ü‚ê‚é’l
-
+	auto data = GetEnemyData(3);
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
-	auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, 3.0, animList[0],0);
+	auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, 3, animList[0],0);
 	enemyMaster.emplace_back(newEnemy);
 
 }
@@ -98,11 +98,10 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 	
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, 0);
-
 	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList,0);
 
 	SetEnemyList(newEnemy);
 	spawntiming = false;

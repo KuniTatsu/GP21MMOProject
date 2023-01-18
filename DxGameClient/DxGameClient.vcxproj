@@ -171,6 +171,7 @@
     <ClInclude Include="program\game\EnemyManager.h" />
     <ClInclude Include="program\game\EnemySpawnManager.h" />
     <ClInclude Include="program\game\GameManager.h" />
+    <ClInclude Include="program\game\Inventory.h" />
     <ClInclude Include="program\game\Item\EquipItem.h" />
     <ClInclude Include="program\game\Item\Item.h" />
     <ClInclude Include="program\game\Item\ItemManager.h" />
@@ -259,6 +260,7 @@
     <ClCompile Include="program\game\EnemyManager.cpp" />
     <ClCompile Include="program\game\EnemySpawnManager.cpp" />
     <ClCompile Include="program\game\GameManager.cpp" />
+    <ClCompile Include="program\game\Inventory.cpp" />
     <ClCompile Include="program\game\Item\EquipItem.cpp" />
     <ClCompile Include="program\game\Item\Item.cpp" />
     <ClCompile Include="program\game\Item\ItemManager.cpp" />
