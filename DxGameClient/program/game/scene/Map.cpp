@@ -72,12 +72,12 @@ void Map::DrawMap(Camera* camera)
 	for (auto h : mapChips) {
 		for (auto w : h) {
 			if (1 == w) {
-				DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-					y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_grass, true);
+				DrawRotaGraph(x - static_cast<int>(camera->pos.x) + (GameManager::SCREEN_WIDTH >> 1),
+					y - static_cast<int>(camera->pos.y) + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_grass, true);
 			}
 			if (2 == w) {
-				DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-					y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0, 0, img_mapchip_grass_line, true);
+				DrawRotaGraph(x - static_cast<int>(camera->pos.x) + (GameManager::SCREEN_WIDTH >> 1),
+					y - static_cast<int>(camera->pos.y) + (GameManager::SCREEN_HEIGHT >> 1), 1.0, 0, img_mapchip_grass_line, true);
 			}
 			x += gManager->CHIPWIDTH;
 		}

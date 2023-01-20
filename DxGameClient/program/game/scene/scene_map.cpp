@@ -12,7 +12,7 @@ Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
 	rManager = ResourceManager::GetInstance();
-	eManager = EnemyManager::GetInstance();
+	//eManager = EnemyManager::GetInstance();
 }
 
 Scene_Map::~Scene_Map()
@@ -26,7 +26,7 @@ void Scene_Map::initialzie()
 	//マップの生成
 	gManager->CreateMap();
 	//エネミーの生成
-	eManager->GetInstance();
+	//eManager->GetInstance();
 
 	//playerの初期マップを登録
 	gManager->SetStayMap();
@@ -41,13 +41,10 @@ void Scene_Map::update(float delta_time)
 	/*Player操作*/
 	player->Update();
 
-	//listの中のenemyすべてに対して、playerとの距離が一定以下ならplayerの方に移動させる
-	//gManager->enemyMove();
-
 	/*Enemy生成*/
-	eManager->SpawnEnemy(player->GetPos());
+	//eManager->SpawnEnemy(player->GetPos());
 	/*Enemy動作*/
-	eManager->Update(delta_time);
+	//eManager->Update(delta_time);
 	/*カメラ操作*/
 	camera.pos += (player->GetPos() - camera.pos) * 0.1f;
 
@@ -90,7 +87,7 @@ void Scene_Map::render()
 
 	/*エネミーの描画*/
 	if (eManager != nullptr) {
-		eManager->Draw(&camera);
+		//eManager->Draw(&camera);
 	}
 
 	/*Playerの描画*/

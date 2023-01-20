@@ -30,12 +30,18 @@ EnemyManager::~EnemyManager()
 void EnemyManager::LoadEnemyMaster()
 {
 	//enemyCsvを読み込む処理を書く //必要なカラム attackRange,attack,defence,moveSpeed
-
+	for (auto enemylist : EnemyList) {
+		enemylist->SetActorData(0, 0, 0, 0);
+	}
 
 	//debug用 -本来はcsvから読み取って入れる値
-	auto data = GetEnemyData(3);
+	auto data = GetEnemyData(0);
+	
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
-	auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, 3, animList[0],0);
+	
+	//auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, data, animList[0], 0);
+	auto newEnemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, data, animList[0], 0);
+	
 	enemyMaster.emplace_back(newEnemy);
 
 }
@@ -97,11 +103,10 @@ void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
 void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
-	
 	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList,0);
+	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[1], 0);
 
 	SetEnemyList(newEnemy);
 	spawntiming = false;

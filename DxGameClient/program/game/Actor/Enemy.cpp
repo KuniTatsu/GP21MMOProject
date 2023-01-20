@@ -112,10 +112,7 @@ void Enemy::Draw(Camera* camera)
 {
 	auto x = static_cast<int>(drawPos.x) - camera->pos.x + (gManager->SCREEN_WIDTH >> 1);
 	auto y = static_cast<int>(drawPos.y) - camera->pos.y + (gManager->SCREEN_HEIGHT >> 1);
-
-	//if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))x++;
-	if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))drawPos.x++;
-
+	
 	/*õ“GŠÖ”*/
 	SearchBox(tnl::Vector3(x, y, 0), myData->GetAttackRange());
 

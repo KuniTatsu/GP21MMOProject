@@ -2,9 +2,14 @@
 #include<memory>
 #include<list>
 
+class GameManager;
 class Item;
 
 class Inventory {
+private:
+
+	GameManager* gManager = nullptr;
+
 public:
 	Inventory(int MyInventorynum);
 	~Inventory();
@@ -12,15 +17,15 @@ public:
 	//std::shared_ptr<Item>inventory[10] = { nullptr,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr };
 
 	////内部にItemを10個もつlist
-	//std::list<std::shared_ptr<Item>> inventoryItemList;
+	std::list<std::shared_ptr<Item>> inventoryItemList;
 
 	//インベントリ内のアイテム数を取得する関数
 	inline int GetItemCount() {
-		//return inventoryItemList.size();
+		return inventoryItemList.size();
 	}
 
 	//インベントリにアイテムを追加する関数
-	//void AddInventory(Item* item);
+	void AddInventory(std::shared_ptr<Item> item);
 	//void AddSharedInventory(std::shared_ptr<Item>item);
 	//
 	//カーソルを上下に動かす関数
