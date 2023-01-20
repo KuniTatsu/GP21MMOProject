@@ -3,7 +3,6 @@
 #include<functional>
 #include<vector>
 #include<memory>
-
 #include"../../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
@@ -43,10 +42,10 @@ public:
 		localPos = Pos;
 	}
 	//actorDataの取得
-	inline std::shared_ptr<ActorData>GetActorData() {
+	inline const std::shared_ptr<ActorData>GetActorData() {
 		return myData;
 	}
-	void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
+	void SetActorData(float attack, float defence, float moveSpeed);
 
 	void SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
 
@@ -68,6 +67,11 @@ public:
 		return static_cast<int>(myExDir);
 	}
 
+	void SetCircleSize(tnl::Vector3& size);
+
+	inline float GetCircleSize() {
+		return circleSize;
+	}
 
 
 	//*******純粋仮想関数 継承先で実装************//
@@ -115,6 +119,9 @@ protected:
 
 	bool isLive = true;
 
+	//当たり判定用の半径
+	float circleSize = 0.0f;
+
 	//方向
 	enum class DIR {
 		UP,
@@ -159,6 +166,9 @@ protected:
 	//向いている方向の距離のオフセット 上,右,下,左
 	const tnl::Vector3 VECOFFSET[4] = { tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0) };
 
+	//アニメーションするgh 本来はこっちを使う
+	std::vector<int>ghs;
+
 
 	//このクラス内でしか使わない関数はここに書く
 private:
@@ -176,6 +186,9 @@ private:
 
 	//向いている方向の任意座標を取得する関数
 	tnl::Vector3 GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& distance);
+
+	//ある座標と、線分との最近点との一番近い点を求める関数
+	tnl::Vector3 GetNearestPoint(tnl::Vector3& Pos, std::vector<tnl::Vector3>& boxPos);
 
 	//継承先で使う関数かつprivateなものはここに書く
 protected:

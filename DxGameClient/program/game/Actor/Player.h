@@ -6,7 +6,7 @@ class Talent;
 class Player :public Actor
 {
 public:
-	Player(int startX, int startY);
+	Player(int startX, int startY,int type);
 	~Player();
 
 	void Update()override;

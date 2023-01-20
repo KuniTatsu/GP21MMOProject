@@ -4,6 +4,8 @@
 #include"Camera.h"
 #include"../EnemyManager.h"
 #include"Enemy.h"
+#include"Player.h"
+#include"../BattleLogic.h"
 
 
 Actor::Actor()
@@ -29,14 +31,20 @@ std::vector<tnl::Vector3> Actor::GetCharaEdgePos()
 	return ret;
 }
 
-void Actor::SetActorData(double attackRange, float attack, float defence, float moveSpeed)
+void Actor::SetActorData(float attack, float defence, float moveSpeed)
 {
-	myData->SetAllStatus(attackRange, attack, defence, moveSpeed);
+	myData->SetAllStatus(attack, defence, moveSpeed);
 }
 
-	void Actor::SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
+void Actor::SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
 {
 	myData->SetAttribute(STR, VIT, INT, MID, SPD, DEX);
+}
+
+void Actor::SetCircleSize(tnl::Vector3& size)
+{
+	if (size.x >= size.y)circleSize = size.x;
+	else circleSize = size.y;
 }
 
 void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
@@ -51,7 +59,6 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 	if (drawGh == -1) {
 		int hoge = 0;
 	}
-
 }
 
 void Actor::MoveUp()
@@ -86,6 +93,31 @@ tnl::Vector3 Actor::GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& dista
 	tnl::Vector3 fixDistance = distance * thisOffset;
 
 	return myPos + fixDistance;
+}
+tnl::Vector3 Actor::GetNearestPoint(tnl::Vector3& Pos, std::vector<tnl::Vector3>& boxPos)
+{
+	std::vector<tnl::Vector3> nearPoses;
+
+	nearPoses.emplace_back(gManager->GetNearestPointLine(Pos, boxPos[0], boxPos[1]));
+	nearPoses.emplace_back(gManager->GetNearestPointLine(Pos, boxPos[1], boxPos[2]));
+	nearPoses.emplace_back(gManager->GetNearestPointLine(Pos, boxPos[2], boxPos[3]));
+	nearPoses.emplace_back(gManager->GetNearestPointLine(Pos, boxPos[3], boxPos[0]));
+
+	std::vector<float>distances;
+
+	distances.emplace_back(gManager->GetLengthFromTwoPoint(Pos, nearPoses[0]));
+	distances.emplace_back(gManager->GetLengthFromTwoPoint(Pos, nearPoses[1]));
+	distances.emplace_back(gManager->GetLengthFromTwoPoint(Pos, nearPoses[2]));
+	distances.emplace_back(gManager->GetLengthFromTwoPoint(Pos, nearPoses[3]));
+
+	int mostNearNum = 0;
+
+	for (int i = 1; i < 4; ++i) {
+		if (distances[mostNearNum] > distances[i]) {
+			mostNearNum = i;
+		}
+	}
+	return nearPoses[mostNearNum];
 }
 uint32_t Actor::GetExDir(float x, float y)
 {
@@ -179,6 +211,12 @@ void Actor::SetExDir(float x, float y)
 //通常攻撃関数
 void Actor::DefaultAttack()
 {
+	//攻撃者
+	std::shared_ptr<Actor> attackActor = shared_from_this();
+	//防衛者
+	std::vector<std::shared_ptr<Actor>> defendActor;
+	defendActor.clear();
+
 	//攻撃タイプを取得するによって発生する攻撃を変化させる
 	if (myType == ATTACKTYPE::MELEE) {
 		//攻撃範囲をプレイヤーの正面方向に向けて薙ぎ払う
@@ -187,71 +225,78 @@ void Actor::DefaultAttack()
 
 		//攻撃アニメーションの生成
 
-
-		//敵のリストのソート　プレイヤーに近い順
-		auto eManager = EnemyManager::GetInstance();
-		eManager->SortEnemyList(drawPos);
-
-		auto& list = eManager->GetEnemyList();
-
 		bool isHit = false;
 
-		for (auto& enemy : list) {
-			//敵の座標
-			auto& pos = enemy->GetPos();
+		//攻撃者がプレイヤーの場合
+		if (actorType == 0) {
 
-			std::vector<tnl::Vector3> nearPoses;
+			//敵のリストのソート　プレイヤーに近い順
+			auto eManager = EnemyManager::GetInstance();
+			eManager->SortEnemyList(drawPos);
 
-			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[0], boxPos[1]));
-			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[1], boxPos[2]));
-			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[2], boxPos[3]));
-			nearPoses.emplace_back(gManager->GetNearestPointLine(pos, boxPos[3], boxPos[0]));
+			auto& list = eManager->GetEnemyList();
 
-			std::vector<float>distances;
+			for (auto& enemy : list) {
+				//敵の座標
+				auto& pos = enemy->GetPos();
+				//判定用の一番近い点を求める
+				tnl::Vector3 mostNear = GetNearestPoint(pos, boxPos);
 
-			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[0]));
-			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[1]));
-			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[2]));
-			distances.emplace_back(gManager->GetLengthFromTwoPoint(pos, nearPoses[3]));
+				//一番近い点と敵の当たり判定の円の中心との距離を求める
+				float pointToCircleCenter = gManager->GetLengthFromTwoPoint(mostNear, pos);
+				//この距離が敵の当たり判定の半径より小さいなら当たっている
+				if (enemy->GetCircleSize() > pointToCircleCenter)isHit = true;
 
-			int mostNearNum = 0;
-
-			for (int i = 1; i < 4; ++i) {
-				if (distances[mostNearNum] > distances[i]) {
-					mostNearNum = i;
+				//内包している場合の判定
+				if (gManager->isHitRotateBox(boxPos, pos))isHit = true;
+				//当たっている場合ダメージ判定対象に入れる
+				if (isHit) {
+					defendActor.emplace_back(enemy);
+					continue;
+					//bool successAttack = BattleLogic::GetInstance()->IsSuccessAttack();
 				}
+				//当たっていないキャラが来たらそれ以降も当たっていないのでやめる
+				break;
 			}
-			tnl::Vector3 mostNear = nearPoses[mostNearNum];
+		}
+		//enemyが攻撃者の場合
+		else {
+			auto& player = GameManager::GetInstance()->GetPlayer();
+			auto& pos = player->GetPos();
+
+			//判定用の一番近い点を求める
+			tnl::Vector3 mostNear = GetNearestPoint(pos, boxPos);
 
 			//一番近い点と敵の当たり判定の円の中心との距離を求める
 			float pointToCircleCenter = gManager->GetLengthFromTwoPoint(mostNear, pos);
 			//この距離が敵の当たり判定の半径より小さいなら当たっている
-			if (enemy->GetCircleSize() > pointToCircleCenter)isHit = true;
+			if (player->GetCircleSize() > pointToCircleCenter)isHit = true;
 
 			//内包している場合の判定
 			if (gManager->isHitRotateBox(boxPos, pos))isHit = true;
-			//当たっている場合のダメージ判定
-			if (isHit) {
+			//当たっている場合ダメージ判定対象に入れる
+			if (isHit)defendActor.emplace_back(player);
 
-			}
-
-			//当たっていないキャラが来たらそれ以降も当たっていないのでやめる
-			break;
+			//bool successAttack = BattleLogic::GetInstance()->IsSuccessAttack();
 		}
-
-
-		//その点と範囲の4つの点のベクトルとの外積を取り、一つでも負があれば当たってない
-
-		//上で求めた向いている方向への四角形の範囲で当たり判定を取る
-		//同時に攻撃アニメーションを生成し、描画する
-		//範囲内にenemyがいるかどうか判定する
-		//当たってないなら処理を終える
-
 	}
 	else if (myType == ATTACKTYPE::RANGE) {
 
 	}
 
+	auto attackData = attackActor->GetActorData();
+
+	for (auto& defender : defendActor) {
+		auto defendData = defender->GetActorData();
+
+		auto battleLogic = BattleLogic::GetInstance();
+
+		//ダメージ判定
+		bool successAttack = battleLogic->IsSuccessAttack(attackData, defendData, static_cast<int>(myType));
+
+		float damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
+		defendData->UpdateHp((damage * (-1)));
+	}
 
 
 }

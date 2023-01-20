@@ -8,19 +8,20 @@
 
 
 
-Enemy::Enemy(tnl::Vector3 SpawnPos, std::shared_ptr<ActorData>& data, std::vector<int>& ghs, int type)
+Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type)
 {
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
 
 	myData = std::make_shared<ActorData>();
-	myData->SetAllStatus(data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	myData->SetAllStatus( data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	myData->SetAttackRange(data->GetAttackRange());
 
 	auto& attribute = data->GetAttribute();
 
 	myData->SetAttribute(attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5]);
-
+	myData->CalcMainStatus();
 
 	auto rManager = ResourceManager::GetInstance();
 	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
@@ -39,16 +40,6 @@ Enemy::~Enemy()
 void Enemy::Init()
 {
 
-}
-
-void Enemy::SetCircleSize(tnl::Vector3& size)
-{
-	if (size.x >= size.y)circleSize = size.x;
-	else circleSize = size.y;
-}
-
-void Enemy::Update()
-{
 }
 
 /*エネミー索敵範囲（四角）*/

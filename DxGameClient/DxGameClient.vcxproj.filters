@@ -34,7 +34,6 @@
     <ClCompile Include="program\game\SceneManager.cpp" />
     <ClCompile Include="program\game\scene\scene_map.cpp" />
     <ClCompile Include="program\game\scene\scene_title.cpp" />
-    <ClCompile Include="program\library\json11.cpp" />
     <ClCompile Include="program\library\tnl_font_texture.cpp" />
     <ClCompile Include="program\library\tnl_input.cpp" />
     <ClCompile Include="program\library\tnl_intersect.cpp" />
@@ -67,13 +66,11 @@
     <ClCompile Include="program\game\SpecialSkillEffect.cpp" />
     <ClCompile Include="program\game\Talent.cpp" />
     <ClCompile Include="program\game\TalentManager.cpp" />
-
     <ClCompile Include="program\game\Animation.cpp" />
     <ClCompile Include="program\game\UI\Graphic.cpp" />
     <ClCompile Include="program\game\UI\GraphicUI.cpp" />
     <ClCompile Include="program\game\UI\UIEditor.cpp" />
     <ClCompile Include="program\game\UI\UIManager.cpp" />
-
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -104,7 +101,6 @@
     <ClInclude Include="program\game\scene\scene_base.h" />
     <ClInclude Include="program\game\scene\scene_map.h" />
     <ClInclude Include="program\game\scene\scene_title.h" />
-    <ClInclude Include="program\library\json11.hpp" />
     <ClInclude Include="program\library\picojson.h" />
     <ClInclude Include="program\library\stb_image.h" />
     <ClInclude Include="program\library\tnl_flyweight_map.h" />
@@ -150,7 +146,6 @@
     <ClInclude Include="program\game\UI\GraphicUI.h" />
     <ClInclude Include="program\game\UI\UIEditor.h" />
     <ClInclude Include="program\game\UI\UIManager.h" />
-
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

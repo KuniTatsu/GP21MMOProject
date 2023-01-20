@@ -64,6 +64,9 @@ public:
 	/*エネミーリスト*/
 	std::list<std::shared_ptr<Enemy>> EnemyList;
 
+	//エネミースポーンウェイト
+	std::vector<int>EnemySpawnWeight;
+
 	//Enemyデータ取得
 	std::shared_ptr<ActorData> GetEnemyData(int type);
 
@@ -79,9 +82,6 @@ public:
 	}
 
 	void SortEnemyList(tnl::Vector3& playerPos);
-
-	//Enemyスポーン範囲検索
-	void SpawnEnemy(tnl::Vector3& PlayerPos);
 
 	/*エネミー生成関数*/
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);
