@@ -3,8 +3,9 @@
 #include"Camera.h"
 #include"../Talent.h"
 #include"../TalentManager.h"
+#include"../ResourceManager.h"
 
-Player::Player(int startX, int startY)
+Player::Player(int startX, int startY, int type)
 {
 	drawPos.x = static_cast<float>(startX);
 	drawPos.y = static_cast<float>(startY);
@@ -12,7 +13,14 @@ Player::Player(int startX, int startY)
 
 	testGh = gManager->LoadGraphEx("graphics/test.png");
 
+	auto rManager = ResourceManager::GetInstance();
+	ghs = rManager->GetCharaVectorAtGhNum(type);
+
 	SetTalent();
+
+	auto& hoge = ResourceManager::GetInstance()->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::PLAYER));
+
+	SetCircleSize(hoge[type]);
 
 }
 

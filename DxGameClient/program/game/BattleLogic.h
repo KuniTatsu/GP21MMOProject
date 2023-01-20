@@ -12,16 +12,20 @@ public:
 
 
 	//ダメージ計算 args1:攻撃力 args2:防御力 args3:職レベル合計 args4:基礎ダメージ デフォルトは通常攻撃の値 args5:最終補正
-	float CalcDefaultDamage(float attack, float defence, int level, float coreDamage = 50.0f, float fixRatio = 1.0f);
+	float CalcDefaultDamage(float attack, float defence, int level, bool isSuccess, float coreDamage = 50.0f, float fixRatio = 1.0f);
 
 	//有効な攻撃かどうか判定する関数
-	bool isSuccessAttack(std::shared_ptr<ActorData>& AttackerData, std::shared_ptr<ActorData>& defenderData);
+	bool IsSuccessAttack(const std::shared_ptr<ActorData> AttackerData, const std::shared_ptr<ActorData> DefenderData, int attackType);
 
-	
-	
+
+
 
 public:
-
+	enum class ATTACKTYPE :uint32_t {
+		MELEE,
+		RANGE,
+		MAX
+	};
 
 private:
 
@@ -29,7 +33,11 @@ private:
 	~BattleLogic();
 
 	//有効率計算
-	float calcSuccessRatio(std::shared_ptr<ActorData>& AttackerData, std::shared_ptr<ActorData>& defenderData);
+	float CalcSuccessRatio(const std::shared_ptr<ActorData> AttackerData, const std::shared_ptr<ActorData> DefenderData);
+
+	//攻撃強制成功判定
+	bool IsForceSuccessAttack(const std::shared_ptr<ActorData> AttackerData, const std::shared_ptr<ActorData> DefenderData, int attackType);
+
 
 private:
 	static BattleLogic* instance;

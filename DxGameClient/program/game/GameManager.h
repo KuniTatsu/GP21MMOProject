@@ -63,7 +63,7 @@ public:
 	static constexpr int SCREEN_HEIGHT = 768;
 
 	//一チャンクの一辺のチップ数
-	const int MAPSIZE = 35.0;
+	const int MAPSIZE = 35;
 	//一チップの大きさ
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
@@ -176,6 +176,10 @@ public:
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
 
+	inline std::shared_ptr<Player>& GetPlayer() {
+		return player;
+	}
+
 	//Map新規生成
 	bool CreateMap();
 
@@ -222,8 +226,10 @@ public:
 	}
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 
-	//メルセンヌ・ツイスターを採用した正規分布ランダム関数
-	int GerRandomNumInWeight(const std::vector<int>WeightList);
+	//メルセンヌ・ツイスターを採用した正規分布ランダム関数(ウェイトを考慮)
+	int GerRandomNumInWeight(const std::vector<int>& WeightList);
+	//メルセンヌ・ツイスターを採用した正規分布ランダム関数(1~100)
+	bool CheckRandomNumberInOdds(const float maxOdds);
 
 
 	//tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
@@ -257,7 +263,7 @@ public:
 	bool CheckIsThereInUUID(std::string UUID);
 
 	//UUIDと合致するDummyPlayerを動かす関数
-	void MoveDummyInUUID(float x, float y, int dir,std::string UUID);
+	void MoveDummyInUUID(float x, float y, int dir, std::string UUID);
 
 
 	//四角形のマウスクリック感知

@@ -33,8 +33,7 @@ public:
 private:
 	////描画するgh
 	//int gh = 0;
-	//アニメーションするgh 本来はこっちを使う
-	std::vector<int>ghs;
+	
 
 	std::string myUUID="";
 

@@ -121,7 +121,7 @@ void GameManager::LoadDivGraphEx(const std::string gh, const int allNum, const i
 
 std::shared_ptr<Player> GameManager::CreatePlayer()
 {
-	player = std::make_shared<Player>(10, 10);
+	player = std::make_shared<Player>(10, 10, 0);
 	return player;
 }
 
@@ -487,7 +487,7 @@ int GameManager::GetRandBetweenNum(int num1, int num2)
 }
 
 
-int GameManager::GerRandomNumInWeight(const std::vector<int> WeightList)
+int GameManager::GerRandomNumInWeight(const std::vector<int>& WeightList)
 {
 	// 非決定的な乱数生成器->初期シードに使う
 	std::random_device rnd;
@@ -521,6 +521,24 @@ int GameManager::GerRandomNumInWeight(const std::vector<int> WeightList)
 		rand -= WeightList[i];
 	}
 	return selected;
+}
+
+bool GameManager::CheckRandomNumberInOdds(const float maxOdds)
+{
+	// 非決定的な乱数生成器->初期シードに使う
+	std::random_device rnd;
+	//ランダムな数を求めるための関数名を決める
+	//メルセンヌ・ツイスタの32ビット版、引数は初期シード
+	std::mt19937 GetRandom(rnd());
+
+	//一定範囲の一様分布乱数取得
+	std::uniform_int_distribution<> Weight(0, 100);
+	//レアリティをランダムで決める
+	int rand = Weight(GetRandom);
+
+	if (static_cast<float>(rand) <= maxOdds)return true;
+
+	return false;
 }
 
 bool GameManager::CreateDummyPlayer(std::string json)
@@ -575,13 +593,13 @@ bool GameManager::CheckIsThereInUUID(std::string UUID)
 	}
 	return ret;
 }
-void GameManager::MoveDummyInUUID(float x, float y, int dir,std::string UUID)
+void GameManager::MoveDummyInUUID(float x, float y, int dir, std::string UUID)
 {
 	for (auto& other : otherPlayers) {
 
 		auto bufUUID = other->GetUUID();
 		if (UUID == bufUUID) {
-			other->UpdatePosition(x, y,dir);
+			other->UpdatePosition(x, y, dir);
 			break;
 		}
 	}
@@ -652,7 +670,7 @@ void GameManager::Update(float delta_time) {
 
 		connect = std::make_shared<Connect>();
 		uiEditor = std::make_shared<UIEditor>();
-		
+
 
 		uiEditor->Init();
 
