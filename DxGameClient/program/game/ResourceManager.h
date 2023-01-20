@@ -16,6 +16,10 @@ public:
 	std::vector< std::vector<int>>& GetAnimVector(int type);
 	std::vector<int>& GetGraphicVector(int type);
 
+	std::vector<tnl::Vector3>& GetGraphicSize(int type);
+
+	std::vector<int>& GetCharaVectorAtGhNum(int graphicNum);
+
 public:
 	enum class RESOUCETYPE :uint32_t {
 		PLAYER,
@@ -36,7 +40,10 @@ private:
 
 
 	void LoadGraphicCsv(std::string pass, std::vector<int>& putInVector);
-	void LoadAnimGraphicCsv(std::string pass, std::vector< std::vector<int>>& putInVector);
+	void LoadAnimGraphicCsv(std::string pass, std::vector< std::vector<int>>& putInVector,int type);
+
+	void SetGraphicSize(int type, int width, int height);
+
 
 private:
 	static ResourceManager* instance;
@@ -53,6 +60,9 @@ private:
 	std::vector<int>jobGhs;
 	std::vector<int>talentGhs;
 	std::vector<int>skillGhs;
+
+	//‰æ‘œ‚Ìx,y•ûŒü‚Ì‘å‚«‚³
+	std::vector<std::vector<tnl::Vector3>> graphicSizes;
 
 };
 

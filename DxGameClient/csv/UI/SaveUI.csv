@@ -1,0 +1,4 @@
+id,frameGhPass,type 0:split,1:normal,allNum,widthNum,heightNum,widthSize,heightSize,leftTopPos.x,leftTopPos.y,FrameWidth,FrameHeight,ingraphicsPass
+0,graphics/FrameBlack.png,0,9,3,3,16,16,200,200,400,300,none
+1,graphics/FrameWhite.png,0,9,3,3,16,16,210,210,180,40,none
+2,graphics/UI/testNoEdit.png,1,1,1,1,800,300,200,500,800,300,none

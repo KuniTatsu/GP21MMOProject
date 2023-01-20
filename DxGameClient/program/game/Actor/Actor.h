@@ -3,6 +3,7 @@
 #include<functional>
 #include<vector>
 #include<memory>
+
 #include"../../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
@@ -45,7 +46,29 @@ public:
 	inline std::shared_ptr<ActorData>GetActorData() {
 		return myData;
 	}
-	 void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
+	void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
+
+	void SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+
+	//typeの取得
+	inline int GetActorType() {
+		return actorType;
+	}
+	inline void SetActorType(int type) {
+		if (type > 1)return;
+		if (type == actorType)return;
+		actorType = type;
+	}
+
+	//キャラ画像の四点の座標を求める関数 左上,右上,左下,右下
+	std::vector<tnl::Vector3> GetCharaEdgePos();
+
+	//向いている向きの取得
+	inline int GetDir() {
+		return static_cast<int>(myExDir);
+	}
+
+
 
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
@@ -62,6 +85,13 @@ protected:
 	//ローカル座標
 	tnl::Vector3 localPos;
 
+	//test
+	std::vector<tnl::Vector3> bufPos;
+
+	//プレイヤーか敵か
+	int actorType = 0;//デフォルトはプレイヤー
+
+
 	//キャラクター画像の幅 初期値はプレイヤーの基本の大きさ
 	//横幅
 	float width = 32.0f;
@@ -70,6 +100,16 @@ protected:
 
 	//画像ハンドル
 	int gh = 0;
+
+	//アニメーション関係
+	//アニメーション切替速度
+	const int actSpeed = 20;
+	//実際に今描画中のグラフィックハンドル
+	int drawGh = 0;
+	//現在の切り替えタイマー
+	int actWait = actSpeed;
+	//描画するアニメーション配列のインデックス番号
+	int actIndex = 0;
 
 	GameManager* gManager = nullptr;
 
@@ -84,8 +124,9 @@ protected:
 		MAX
 	};
 
-	//方向 8方向バージョン 回転を前提
-	enum class EXDIR:uint32_t {
+
+	//方向 8方向バージョン 回転を前提　こっちを使うこと
+	enum class EXDIR :uint32_t {
 		LEFTTOP,
 		LEFT,
 		LEFTBOTTOM,
@@ -116,7 +157,7 @@ protected:
 	std::shared_ptr<ActorData> myData = nullptr;
 
 	//向いている方向の距離のオフセット 上,右,下,左
-	const tnl::Vector3 VECOFFSET[4] = {tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0)};
+	const tnl::Vector3 VECOFFSET[4] = { tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0) };
 
 
 	//このクラス内でしか使わない関数はここに書く
@@ -144,12 +185,19 @@ protected:
 	//XとYから方向を返す関数
 	uint32_t GetExDir(float x, float y);
 
+	void SetExDirFromInt(int dir);
+
 	//XとYから自分の向いている方向を変更する関数
 	void SetExDir(float x, float y);
 
 	//基本攻撃関数	
 	void DefaultAttack();
-	
+
+	//基本攻撃の近接タイプの範囲を計算する関数 左上,右上,左下,右下の順
+	std::vector<tnl::Vector3>GetMeleeAttackBox();
+	//アニメーション更新関数
+	void Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed = 20);
+
 
 };
 
