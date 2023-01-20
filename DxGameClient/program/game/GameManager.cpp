@@ -413,11 +413,13 @@ void GameManager::Update(float delta_time) {
 
 	if (!init) {
 		sManager = SceneManager::GetInstance();
-		connect = std::make_shared<Connect>();
+		/*connect = std::make_shared<Connect>();
 
 		if (chat == nullptr) {
 			chat = new ChatBase();
-		}
+		}*/
+
+
 		//チャット受け取り用スレッド作成
 		//std::thread hoge(&GameManager::Accept, &instance);
 		//acceptThread = std::thread(& GameManager::Accept, & instance);
@@ -427,7 +429,8 @@ void GameManager::Update(float delta_time) {
 
 		//std::thread hoge([this] {GameManager::Accept(); });
 		//acceptThread = std::move(hoge);
-		acceptThread = std::thread([this] {GameManager::Accept(); });
+
+		//acceptThread = std::thread([this] {GameManager::Accept(); });
 
 		//auto id = acceptThread.get_id();
 
@@ -449,8 +452,8 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	chat->Update();
-	chat->Draw();
+	/*chat->Update();
+	chat->Draw();*/
 
 }
 
