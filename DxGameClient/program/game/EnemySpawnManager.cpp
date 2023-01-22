@@ -27,9 +27,6 @@ void EnemySpawnManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	//プレイヤーからの最大距離の絶対値
 	maxPos = PlayerPos + tnl::Vector3{ 200,200,0 };
 
-	/*beta用範囲縮小*/
-	//maxPos = PlayerPos + tnl::Vector3{ 100,100,0 };
-
 	//20~200の間でランダムな数値を取得する
 	x = randomRange(static_cast<int>(minPos.x), static_cast<int>(maxPos.x));
 	y = randomRange(static_cast<int>(minPos.y), static_cast<int>(maxPos.y));

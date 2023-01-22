@@ -668,7 +668,7 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		//connect = std::make_shared<Connect>();
+		connect = std::make_shared<Connect>();
 		uiEditor = std::make_shared<UIEditor>();
 
 
@@ -681,7 +681,7 @@ void GameManager::Update(float delta_time) {
 		//acceptThread = std::thread([this] {GameManager::Accept(); });
 		//SendPlayerInfoToServer();
 		////Dummy¶¬Š®—¹
-		player->SetIsCreatedDummy();
+		//player->SetIsCreatedDummy();
 
 		//test—pDummy¶¬
 		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
@@ -697,7 +697,7 @@ void GameManager::Update(float delta_time) {
 		chat = new ChatBase();
 	}*/
 
-	//deltaTime = delta_time;
+	deltaTime = delta_time;
 
 	sManager->Update(delta_time);
 	sManager->Draw();

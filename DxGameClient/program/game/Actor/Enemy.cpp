@@ -15,7 +15,7 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
 
 	myData = std::make_shared<ActorData>();
-	myData->SetAllStatus( data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	//myData->SetAllStatus( data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
 
 	auto& attribute = data->GetAttribute();

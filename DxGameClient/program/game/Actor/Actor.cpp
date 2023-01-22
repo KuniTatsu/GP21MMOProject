@@ -297,8 +297,6 @@ void Actor::DefaultAttack()
 		float damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
 		defendData->UpdateHp((damage * (-1)));
 	}
-
-
 }
 //向いている方向の当たり判定の四角形の四点を取得する関数 左上,右上,左下,右下の順で格納する
 std::vector<tnl::Vector3> Actor::GetMeleeAttackBox()

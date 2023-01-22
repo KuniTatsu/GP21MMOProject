@@ -127,7 +127,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[1], 0);
+	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[1], 0);
 
 	//	Enemy(tnl::Vector3 SpawnPos, std::shared_ptr<ActorData>& data, std::vector<int>& ghs, int type);
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], 0);
