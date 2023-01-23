@@ -140,7 +140,7 @@ void Player::Move()
 		//Œü‚«•ÏX
 		SetExDir(fixMoveX, fixMoveY);
 
-		//gManager->SendPlayerInfoToServer();
+		gManager->SendPlayerInfoToServer();
 	}
 
 	//gManager->SetStayMap();

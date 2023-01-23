@@ -26,7 +26,9 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	auto rManager = ResourceManager::GetInstance();
 	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
-	SetCircleSize(hoge[type]);
+	//release_fukushi 
+	// この関数によってゲームが起動しないためいったんコメントアウト、後に戻す
+	//SetCircleSize(hoge[type]);
 
 	myAnimationGh = ghs;
 

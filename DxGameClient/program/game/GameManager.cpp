@@ -674,17 +674,17 @@ void GameManager::Update(float delta_time) {
 
 		uiEditor->Init();
 
-		/*if (chat == nullptr) {
+		if (chat == nullptr) {
 			chat = new ChatBase();
-		}*/
+		}
 
-		//acceptThread = std::thread([this] {GameManager::Accept(); });
-		//SendPlayerInfoToServer();
-		////Dummy¶¬Š®—¹
-		//player->SetIsCreatedDummy();
+		acceptThread = std::thread([this] {GameManager::Accept(); });
+		SendPlayerInfoToServer();
+		//Dummy¶¬Š®—¹
+		player->SetIsCreatedDummy();
 
 		//test—pDummy¶¬
-		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
 
 		init = true;
 	}
@@ -693,17 +693,14 @@ void GameManager::Update(float delta_time) {
 	/*tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");*/
 
-	/*if (chat == nullptr) {
-		chat = new ChatBase();
-	}*/
 
 	deltaTime = delta_time;
 
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	/*chat->Update();
-	chat->Draw();*/
+	chat->Update();
+	chat->Draw();
 
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {

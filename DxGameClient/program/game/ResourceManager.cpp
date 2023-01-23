@@ -87,7 +87,10 @@ ResourceManager::ResourceManager()
 	effectGhs.resize(5);
 
 	LoadResouce(static_cast<int>(RESOUCETYPE::PLAYER));
-	LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
+
+	//release_fukushi 
+	// この関数によってゲームが起動しないためいったんコメントアウト、後に戻す
+	//LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
 }
 
 ResourceManager::~ResourceManager()
