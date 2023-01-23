@@ -125,6 +125,47 @@ const std::string Connect::GetServerMessage()
 	std::string err;
 	auto hoge = json11::Json::parse(getMessage, err);
 
+	if (!hoge["chara_0"].is_null()) {
+
+		for (int i = 0; i < 10; ++i) {
+
+			if (hoge.object_items().size() < i)break;
+
+			std::string buf = "chara_";
+			buf += std::to_string(i);
+
+			auto map = hoge[buf].object_items();
+
+			/*auto hogehoge = map["UUID"].string_value();*/
+
+			//各種ステータスの入れ物を用意
+			float posX = 0.0f;
+			float posY = 0.0f;
+			int dir = 0;
+			float HP = 0.0f;
+			int ghNum = 0;
+			std::string UUID = "";
+
+			//中身を代入
+			posX = static_cast<float>(map["posX"].number_value());
+			posY = static_cast<float>(map["posY"].number_value());
+			dir = map["dir"].int_value();
+			HP = static_cast<float>(map["startHP"].number_value());
+
+			//debug
+			HP = 1250;
+
+			ghNum = map["Playergh"].int_value();
+			UUID = map["UUID"].string_value();
+
+
+			gManager->CreateDummyPlayer(posX, posY, UUID, dir, HP, ghNum);
+		}
+		return "";
+	}
+
+
+
 	//プレイヤーのサーバー退出系の情報処理
 	if (hoge["ExitPlayerUUID"].string_value() != "") {
 		std::string message = "";
@@ -170,14 +211,24 @@ const std::string Connect::GetServerMessage()
 		return "";
 	}
 
+	//フィールドにドロップしたアイテムの処理
+	if (hoge["dropItemId"].string_value() != "") {
+
+	}
+
 	//UUIDを含むメッセージかどうか判定 含まないならチャットメッセージなのでそのまま帰す
 	if (hoge["UUID"].string_value() == "")return getMessage;
 
 	//UUIDを含むならプレイヤーの情報なのでそっちの処理に進む
-	 
-	 if(hoge[""])
-	
-	
+
+	//フィールドにドロップしたアイテムの処理
+	if (hoge["PlayerMoveHP"].string_value() != "") {
+		auto UUID = gManager->UTF8toSjis(hoge["UUID"].string_value());
+
+
+	}
+
+
 	//もしisCreatedが1ならダミーは作成済みなので位置座標更新関数を呼ぶ
 	if (hoge["isCreated"].int_value() == 1) {
 
@@ -255,7 +306,7 @@ void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
 	ws.write(net::buffer(fix));
 }
 
-void Connect::SendClientPlayerInfo(float x, float y, int dir, int isCreated, int ghNum, int isDebug)
+void Connect::SendClientPlayerInfo(float x, float y, int dir, float HP, int isCreated, int ghNum, int isDebug)
 {
 	//const std::string  text = playerName;
 	std::string UUID = "";
@@ -271,6 +322,7 @@ void Connect::SendClientPlayerInfo(float x, float y, int dir, int isCreated, int
 		{ "PlayerposY", y },
 		{ "PlayerUUID", UUID },
 		{"Dir",dir},
+		{"PlayerHP",HP},
 		{"IsCreated",isCreated},
 		{ "Playergh", ghNum },
 		});
@@ -280,6 +332,24 @@ void Connect::SendClientPlayerInfo(float x, float y, int dir, int isCreated, int
 	auto fix = gManager->SjistoUTF8(send);
 	ws.write(net::buffer(fix));
 
+}
+
+void Connect::SendClientPlayerInitInfo(float x, float y, float HP, int ghNum)
+{
+	std::string UUID = gManager->GetClientUUID();
+
+	Json obj = Json::object({
+		{ "InitPlayerposX", x },
+		{ "InitPlayerposY", y },
+		{ "InitPlayerHP",HP},
+		{ "PlayerUUID", UUID },
+		{"Playergh",ghNum},
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
 }
 
 void Connect::SendClientPlayerStatus(float moveHP)

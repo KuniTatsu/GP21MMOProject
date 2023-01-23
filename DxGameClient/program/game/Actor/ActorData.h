@@ -54,6 +54,14 @@ public:
 	inline void  UpdateHp(float moveHp) {
 		HP += moveHp;
 	}
+
+	inline void SetHP(float startHP) {
+		HP = startHP;
+	}
+
+	inline const float GetHP() {
+		return HP;
+	}
 	//攻撃力などの基本ステータスの計算と代入
 	void CalcMainStatus();
 

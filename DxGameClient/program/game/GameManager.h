@@ -249,6 +249,8 @@ public:
 	//サーバーから送られてきた他のプレイヤーの情報からDummyPlayerを生成し登録する関数
 	bool CreateDummyPlayer(std::string json);
 
+	bool CreateDummyPlayer(float posX, float posY, std::string UUID, int dir, float HP, int ghNum);
+
 	//プレイヤーの情報をサーバーに送る関数
 	void SendPlayerInfoToServer();
 
@@ -272,6 +274,8 @@ public:
 	//UUIDと合致するDummyPlayerを動かす関数
 	void MoveDummyInUUID(float x, float y, int dir, std::string UUID);
 
+	//UUIDと合致するDummyPlayerのHPを変動させる関数
+	void UpdateDummyHP(std::string UUID, float moveHP);
 
 	//四角形のマウスクリック感知
 	bool isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom);

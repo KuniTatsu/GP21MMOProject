@@ -15,10 +15,6 @@ void ActorData::SetAllStatus(float Attack, float Defence, float MoveSpeed)
 	moveSpeed = MoveSpeed;
 }
 
-	void ActorData::SetHP(float Hp)
-{
-	hp += Hp;
-}
 void ActorData::SetAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
 {
 	str = STR;

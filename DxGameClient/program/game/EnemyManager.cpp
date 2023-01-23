@@ -218,7 +218,10 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos)
 {
 	auto data = GetEnemyData(type);
-	auto newEnemy = std::make_shared<Enemy>(spawnPos, 3.0, data->GetAttack(), data->GetDefence(), data->GetMoveSpeed(), identId);
+
+	auto& ghs = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+
+	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], identId);
 	SetEnemyList(newEnemy);
 	createCount++;
 	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
