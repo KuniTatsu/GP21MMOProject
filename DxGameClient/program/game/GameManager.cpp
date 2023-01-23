@@ -14,6 +14,7 @@
 #include<random>
 #include"../json11.hpp"
 #include"UI/UIManager.h"
+#include"Actor/ActorData.h"
 
 
 GameManager* GameManager::instance = nullptr;
@@ -556,14 +557,18 @@ bool GameManager::CreateDummyPlayer(std::string json)
 	auto pJson = json11::Json::parse(fixMessage, err);
 
 	//各種ステータスの入れ物を用意
-	float posX = 0;
-	float posY = 0;
+	float posX = 0.0f;
+	float posY = 0.0f;
+	int dir = 0;
+	float HP = 0.0f;
 	int ghNum = 0;
 	std::string UUID = "";
 
 	//中身を代入
 	posX = static_cast<float>(pJson["PlayerposX"].number_value());
 	posY = static_cast<float>(pJson["PlayerposY"].number_value());
+	dir = pJson["dir"].int_value();
+	HP = static_cast<float>(pJson["startHP"].number_value());
 
 	ghNum = pJson["Playergh"].int_value();
 	UUID = pJson["UUID"].string_value();
@@ -571,7 +576,8 @@ bool GameManager::CreateDummyPlayer(std::string json)
 	//すでに存在しないかチェック
 	if (CheckIsThereInUUID(UUID))return false;
 
-	auto dummy = std::make_shared<DummyPlayer>(posX, posY, UUID, ghNum);
+	auto dummy = std::make_shared<DummyPlayer>(posX, posY, UUID, dir, HP, ghNum);
+
 	//Dummyプレイヤー生成成功
 	if (dummy != nullptr) {
 		otherPlayers.emplace_back(dummy);
@@ -580,6 +586,28 @@ bool GameManager::CreateDummyPlayer(std::string json)
 	//Dummyプレイヤー生成失敗
 	return false;
 }
+bool GameManager::CreateDummyPlayer(float posX, float posY, std::string UUID, int dir, float HP, int ghNum)
+{
+	//すでに存在しないかチェック
+	if (CheckIsThereInUUID(UUID))return false;
+
+	auto dummy = std::make_shared<DummyPlayer>(posX, posY, UUID, dir, HP, ghNum);
+
+	//Dummyプレイヤー生成成功
+	if (dummy != nullptr) {
+		otherPlayers.emplace_back(dummy);
+		return true;
+	}
+	//Dummyプレイヤー生成失敗
+	return false;
+}
+//bool GameManager::CreateDummyPlayer(json11::Json::object obj)
+//{
+//	//auto hogehoge = test["UUID"].string_value();
+//
+//
+//	return false;
+//}
 bool GameManager::CheckIsThereInUUID(std::string UUID)
 {
 	bool ret = false;
@@ -604,6 +632,9 @@ void GameManager::MoveDummyInUUID(float x, float y, int dir, std::string UUID)
 		}
 	}
 
+}
+void GameManager::UpdateDummyHP(std::string UUID, float moveHP)
+{
 }
 //他プレイヤーのリストからの削除
 void GameManager::PopOtherPlayerInUUID(std::string UUID)
@@ -638,13 +669,36 @@ void GameManager::SendPlayerInfoToServer()
 	const auto& pos = player->GetPos();
 	auto dir = player->GetDir();
 
+	auto& data = player->GetActorData();
+
+	auto type = player->GetActorType();
+
 	if (player->GetIsCreatedDummy()) {
 		//既にダミーが作られているならダミーの情報更新のための通信なので引数を1にする
-		connect->SendClientPlayerInfo(pos.x, pos.y, dir, 1);
+		connect->SendClientPlayerInfo(pos.x, pos.y, dir, data->GetHP(), 1);
 	}
 	else {
-		connect->SendClientPlayerInfo(pos.x, pos.y, dir);
+		connect->SendClientPlayerInfo(pos.x, pos.y, dir, data->GetHP());
+		connect->SendClientPlayerInitInfo(pos.x, pos.y, data->GetHP(),type);
 	}
+
+
+}
+
+void GameManager::SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
+{
+	connect->SendClientEnemyInfo(x, y, dir, identNum, type);
+}
+
+void GameManager::SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool isPlus)
+{
+	//HP減少だったら
+	if (!isPlus) {
+		float decreaseHP = moveHP * -1;
+		connect->SendClientEnemyStatus(identNum, decreaseHP);
+		return;
+	}
+	connect->SendClientEnemyStatus(identNum, moveHP);
 }
 
 bool GameManager::OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom)

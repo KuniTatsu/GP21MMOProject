@@ -4,6 +4,7 @@
 #include"../Talent.h"
 #include"../TalentManager.h"
 #include"../ResourceManager.h"
+#include"ActorData.h"
 
 Player::Player(int startX, int startY, int type)
 {
@@ -17,6 +18,11 @@ Player::Player(int startX, int startY, int type)
 	ghs = rManager->GetCharaVectorAtGhNum(type);
 
 	SetTalent();
+
+	myData = std::make_shared<ActorData>();
+
+	myData->SetAttribute(50, 50, 50, 50, 50, 50);
+	myData->CalcMainStatus();
 
 	auto& hoge = ResourceManager::GetInstance()->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::PLAYER));
 
@@ -67,8 +73,6 @@ void Player::Draw(Camera* camera)
 	/*DrawExtendGraph(boxX1, boxY1, boxX2, boxY2, testGh, true);*/
 	//左上、右上、右下、左下の頂点の座標 
 	DrawModiGraphF(boxX1, boxY1, boxX2, boxY2, boxX4, boxY4, boxX3, boxY3, testGh, true);
-	DrawRotaGraphF(x, y, 1, 0, gh, false);
-	
 
 }
 

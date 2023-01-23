@@ -48,6 +48,11 @@ void Scene_Map::update(float delta_time)
 	/*カメラ操作*/
 	camera.pos += (player->GetPos() - camera.pos) * 0.1f;
 
+	/*エネミーの描画*/
+	if (eManager != nullptr) {
+		eManager->Update(gManager->deltaTime);
+	}
+
 
 	auto uiManager = UIManager::GetInstance();
 	//メニュー描画切り替え //今後はシークエンスにして一番最初のシークエンスでのみ変更可能にする

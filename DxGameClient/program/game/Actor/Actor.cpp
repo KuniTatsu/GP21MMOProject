@@ -208,6 +208,38 @@ void Actor::SetExDir(float x, float y)
 		return;
 	}
 }
+void Actor::SetExDir(int dir)
+{
+	switch (dir)
+	{
+	case 0:
+		myExDir = EXDIR::LEFTTOP;
+		break;
+	case 1:
+		myExDir = EXDIR::LEFT;
+		break;
+	case 2:
+		myExDir = EXDIR::LEFTBOTTOM;
+		break;
+	case 3:
+		myExDir = EXDIR::BOTTOM;
+		break;
+	case 4:
+		myExDir = EXDIR::RIGHTBOTTOM;
+		break;
+	case 5:
+		myExDir = EXDIR::RIGHT;
+		break;
+	case 6:
+		myExDir = EXDIR::RIGHTTOP;
+		break;
+	case 7:
+		myExDir = EXDIR::TOP;
+		break;
+	default:
+		break;
+	}
+}
 //í èÌçUåÇä÷êî
 void Actor::DefaultAttack()
 {

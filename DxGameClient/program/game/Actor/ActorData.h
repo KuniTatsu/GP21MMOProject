@@ -54,6 +54,14 @@ public:
 	inline void  UpdateHp(float moveHp) {
 		HP += moveHp;
 	}
+
+	inline void SetHP(float startHP) {
+		HP = startHP;
+	}
+
+	inline const float GetHP() {
+		return HP;
+	}
 	//攻撃力などの基本ステータスの計算と代入
 	void CalcMainStatus();
 
@@ -71,7 +79,6 @@ public:
 
 private:
 
-
 private:
 
 	//通常攻撃の当たる距離(レンジ)基本値
@@ -88,6 +95,7 @@ private:
 	//移動スピード
 	float moveSpeed = 0.0f;
 
+	float hp = 0.0f;
 	//通常攻撃の当たる横幅  デフォルトはキャラ画像と同じ幅
 	float attackWidth = 32.0f;
 	//暫定でHP
