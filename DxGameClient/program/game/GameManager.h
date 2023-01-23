@@ -249,8 +249,17 @@ public:
 	//サーバーから送られてきた他のプレイヤーの情報からDummyPlayerを生成し登録する関数
 	bool CreateDummyPlayer(std::string json);
 
+	bool CreateDummyPlayer(float posX, float posY, std::string UUID, int dir, float HP, int ghNum);
+
 	//プレイヤーの情報をサーバーに送る関数
 	void SendPlayerInfoToServer();
+
+
+
+	//enemyの情報をサーバーに送る関数 args1:x座標 args2:y座標HP args3:方角(8方向) args4:識別番号 args5:敵のタイプ
+	void SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);
+	//enemyのHP変動をサーバーに送る関数 args1:識別番号 args2:変動HP args3:増加かどうか
+	void SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool isPlus = true);
 
 	//他のプレイヤーのリストを取得する関数
 	const inline std::list<std::shared_ptr<DummyPlayer>>& GetOtherPlayersList() {
@@ -265,6 +274,8 @@ public:
 	//UUIDと合致するDummyPlayerを動かす関数
 	void MoveDummyInUUID(float x, float y, int dir, std::string UUID);
 
+	//UUIDと合致するDummyPlayerのHPを変動させる関数
+	void UpdateDummyHP(std::string UUID, float moveHP);
 
 	//四角形のマウスクリック感知
 	bool isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom);

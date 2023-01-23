@@ -2,8 +2,9 @@
 #include"Camera.h"
 #include"../GameManager.h"
 #include"../ResourceManager.h"
+#include"ActorData.h"
 
-DummyPlayer::DummyPlayer(float posX, float posY, std::string UUID, int dir, int ghNum)
+DummyPlayer::DummyPlayer(float posX, float posY, std::string UUID, int dir, float HP, int ghNum)
 {
 	drawPos.x = posX;
 	drawPos.y = posY;
@@ -11,6 +12,9 @@ DummyPlayer::DummyPlayer(float posX, float posY, std::string UUID, int dir, int 
 	ghs = rManager->GetCharaVectorAtGhNum(ghNum);
 	myUUID = UUID;
 	SetExDirFromInt(dir);
+
+	myData = std::make_shared<ActorData>();
+	myData->SetHP(HP);
 }
 
 DummyPlayer::~DummyPlayer()

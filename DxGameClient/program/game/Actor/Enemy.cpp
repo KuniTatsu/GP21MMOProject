@@ -42,6 +42,28 @@ void Enemy::Init()
 
 }
 
+void Enemy::MoveEnemyFromServerInfo(float x, float y, int dir)
+{
+	if (drawPos.x != x) {
+		drawPos.x = x;
+	}
+	if (drawPos.y != y) {
+		drawPos.y = y;
+	}
+
+	//敵は上向きと下向きの画像がないので、それ以外なら向いている方向を変える
+	if (dir != static_cast<int>(EXDIR::BOTTOM) && dir != static_cast<int>(EXDIR::TOP)) {
+		//向いている向きが同じなら処理しない
+		if (dir == static_cast<int>(myExDir))return;
+		SetExDir(dir);
+	}
+}
+
+void Enemy::ChangeStatusFromServerInfo(float moveHP)
+{
+	myData->UpdateHp(moveHP);
+}
+
 /*エネミー索敵範囲（四角）*/
 void Enemy::SearchBox(tnl::Vector3 SpawnPos, double atackRange)
 {
@@ -94,6 +116,34 @@ void Enemy::EnemyMove() {
 
 void Enemy::Update()
 {
+	//debug
+	bool isMove = false;
+
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_W)) {
+		drawPos.y--;
+		myExDir = EXDIR::TOP;
+		isMove = true;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_A)) {
+		drawPos.x--;
+		myExDir = EXDIR::LEFT;
+		isMove = true;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_S)) {
+		drawPos.y++;
+		myExDir = EXDIR::BOTTOM;
+		isMove = true;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_D)) {
+		drawPos.x++;
+		myExDir = EXDIR::RIGHT;
+		isMove = true;
+	}
+
+	if (!isMove)return;
+
+	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
+
 	if (onFollowToPlayer) {
 		EnemyMove();
 	}

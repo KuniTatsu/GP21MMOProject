@@ -15,6 +15,7 @@ class GameManager;
 class Enemy : public Actor {
 public:
 
+
 	Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type);
 
 	~Enemy();
@@ -27,6 +28,14 @@ public:
 
 	void Init()override;
 
+	inline int GetIdentId() {
+		return identId;
+	}
+	//位置座標の同期
+	void MoveEnemyFromServerInfo(float x, float y, int dir);
+	//ステータスの同期
+	void ChangeStatusFromServerInfo(float moveHP);
+
 private:
 	int img_Ghost = 0;
 	bool onFollowToPlayer = false;
@@ -36,11 +45,15 @@ private:
 	/*移動スピード*/
 	float SPEED = 0;
 
+	int identId = -1;
+
 	unsigned int ChangedColor();
 
 	GameManager* gManager = nullptr;
 
 private:
+	//void Move();
+
 	void SearchBox(tnl::Vector3 SpawnPos, double atackRange);
 	void EnemyMove();
 
