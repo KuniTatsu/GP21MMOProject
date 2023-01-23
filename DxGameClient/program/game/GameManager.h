@@ -221,6 +221,8 @@ public:
 	//プレイヤーの情報をサーバーに送る関数
 	void SendPlayerInfoToServer();
 
+
+
 	//enemyの情報をサーバーに送る関数 args1:x座標 args2:y座標HP args3:方角(8方向) args4:識別番号 args5:敵のタイプ
 	void SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);
 	//enemyのHP変動をサーバーに送る関数 args1:識別番号 args2:変動HP args3:増加かどうか

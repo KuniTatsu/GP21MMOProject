@@ -23,8 +23,20 @@ public:
 	//ユーザー登録情報取得関数
 	void GetEntryUserId();
 
+	//アイテムのフィールドへのドロップ状況を共有する関数
+	void SendClientFieldItemInfo(float x, float y, int itemId);
+
 	//クライアントキャラクターの位置座標と画像ハンドル番号を送る関数
 	void SendClientPlayerInfo(float x, float y, int dir, int isCreated = 0, int ghNum = 0, int isDebug = 0);
+
+	//クライアントキャラクターのステータス変動の共有
+	void SendClientPlayerStatus(float moveHP);
+
+	//クライアントキャラクターの死亡状況の共有
+	void SendClientPlayerIsDead(int idDead = 1);
+
+	//クライアントキャラクターが発動した攻撃のエフェクトの座標とエフェクト番号を送る関数
+	void SendClientAttackEffectInfo(float x, float y, int effectNum, int dir = 0);
 
 	//エネミーの位置座標の共有
 	void SendClientEnemyInfo(float x, float y, int dir, int identificationNum,int type);

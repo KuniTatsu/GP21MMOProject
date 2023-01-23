@@ -139,7 +139,7 @@ const std::string Connect::GetServerMessage()
 	int aaa = hoge["EPosX"].int_value();
 
 	bool isnull = hoge["EPosX"].is_null();
-	if (hoge["EPosX"].is_null()!=true) {
+	if (hoge["EPosX"].is_null() != true) {
 
 		auto enemyManager = EnemyManager::GetInstance();
 
@@ -167,13 +167,17 @@ const std::string Connect::GetServerMessage()
 	if (hoge["isDead"].string_value() != "") {
 		auto enemyManager = EnemyManager::GetInstance();
 		int id = hoge["id"].int_value();
-
+		return "";
 	}
 
 	//UUIDを含むメッセージかどうか判定 含まないならチャットメッセージなのでそのまま帰す
 	if (hoge["UUID"].string_value() == "")return getMessage;
 
-	//UUIDを含むならプレイヤーの位置座標情報なのでそっちの処理に進む
+	//UUIDを含むならプレイヤーの情報なのでそっちの処理に進む
+	 
+	 if(hoge[""])
+	
+	
 	//もしisCreatedが1ならダミーは作成済みなので位置座標更新関数を呼ぶ
 	if (hoge["isCreated"].int_value() == 1) {
 
@@ -237,6 +241,20 @@ void Connect::GetEntryUserId()
 	}
 }
 
+void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
+{
+	Json obj = Json::object({
+		{ "FieldItemPosX", x },
+		{ "FieldItemPosY", y },
+		{ "ItemId",itemId},
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
+}
+
 void Connect::SendClientPlayerInfo(float x, float y, int dir, int isCreated, int ghNum, int isDebug)
 {
 	//const std::string  text = playerName;
@@ -262,6 +280,51 @@ void Connect::SendClientPlayerInfo(float x, float y, int dir, int isCreated, int
 	auto fix = gManager->SjistoUTF8(send);
 	ws.write(net::buffer(fix));
 
+}
+
+void Connect::SendClientPlayerStatus(float moveHP)
+{
+	std::string UUID = gManager->GetClientUUID();
+
+	Json obj = Json::object({
+		{"PlayerMoveHP",moveHP},
+		{ "PlayerUUID", UUID },
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
+}
+
+void Connect::SendClientPlayerIsDead(int idDead)
+{
+	std::string UUID = gManager->GetClientUUID();
+
+	Json obj = Json::object({
+		{"PlayerIsDead",idDead},
+		{ "PlayerUUID", UUID },
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
+}
+
+void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int dir)
+{
+	Json obj = Json::object({
+		{ "EffectPosX", x },
+		{ "EffectPosY", y },
+		{ "Dir",dir},
+		{ "EffectNum",effectNum},
+		});
+
+	std::string send = obj.dump();
+
+	auto fix = gManager->SjistoUTF8(send);
+	ws.write(net::buffer(fix));
 }
 
 void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationNum, int type)
