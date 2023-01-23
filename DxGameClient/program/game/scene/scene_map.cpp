@@ -6,10 +6,12 @@
 #include"../Actor/Enemy.h"
 #include"../Actor/DummyPlayer.h"
 #include"../UI/UIManager.h"
+#include"../ResourceManager.h"
 
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
+	rManager = ResourceManager::GetInstance();
 	eManager = EnemyManager::GetInstance();
 }
 
@@ -44,6 +46,8 @@ void Scene_Map::update(float delta_time)
 
 	/*Enemy¶¬*/
 	eManager->SpawnEnemy(player->GetPos());
+	/*Enemy“®ì*/
+	eManager->Update(delta_time);
 	/*ƒJƒƒ‰‘€ì*/
 	camera.pos += (player->GetPos() - camera.pos) * 0.1f;
 

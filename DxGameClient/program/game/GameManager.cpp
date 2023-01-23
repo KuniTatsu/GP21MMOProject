@@ -9,6 +9,7 @@
 #include<algorithm>
 #include"ChatBase.h"
 #include"Connect.h"
+#include<math.h>
 #include"UI/UIEditor.h"
 #include<random>
 #include"../json11.hpp"
@@ -91,6 +92,7 @@ void GameManager::Destroy() {
 	}
 }
 
+
 int GameManager::LoadGraphEx(std::string Gh)
 {
 	auto it = ghmap.find(Gh);
@@ -119,7 +121,7 @@ void GameManager::LoadDivGraphEx(const std::string gh, const int allNum, const i
 
 std::shared_ptr<Player> GameManager::CreatePlayer()
 {
-	player = std::make_shared<Player>(10, 10);
+	player = std::make_shared<Player>(10, 10, 0);
 	return player;
 }
 
@@ -296,22 +298,106 @@ bool GameManager::isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, t
 
 	return true;
 }
-
-tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos)
+//点座標のアフィン変換
+tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& rotatePos, int dir, tnl::Vector3 centerPos)
 {
-	/*
-	//左回転
-	float fixX = vec.x * radianX - vec.y * radianY;
-	float fixY = vec.x * radianY + vec.y * radianX;
+	//回転する角度を求める
+	float rotateDegree = ROTATEDEGREE[dir];
+	//回転に用いるラジアン角を求める
+	float radianX = std::cos(tnl::ToRadian(rotateDegree));
+	float radianY = std::sin(tnl::ToRadian(rotateDegree));
 
-	//右回転
-	float fixX = vec.x * radianX + vec.y * radianY;
-	float fixY = vec.x * radianY*(-1) + vec.y * radianX;
-	*/
+	//中心回転の場合の補正
+	float xFacter = centerPos.x - (centerPos.x * radianX) + (centerPos.y * radianY);
+	float yFacter = centerPos.y - (centerPos.x * radianY) - (centerPos.y * radianX);
 
-	return tnl::Vector3();
+	float testX = radianX * rotatePos.x - radianY * rotatePos.y + xFacter;
+	float testY = radianY * rotatePos.x + radianX * rotatePos.y + yFacter;
+	return tnl::Vector3(testX, testY, 0);
 }
 
+tnl::Vector3 GameManager::RotatePoint(tnl::Vector3& rotatePos, float degree, tnl::Vector3 centerPos)
+{
+	//回転に用いるラジアン角を求める
+	float radianX = std::cos(tnl::ToRadian(degree));
+	float radianY = std::sin(tnl::ToRadian(degree));
+
+
+	//中心回転の場合の補正
+	float xFacter = centerPos.x - (centerPos.x * radianX) + (centerPos.y * radianY);
+	float yFacter = centerPos.y - (centerPos.x * radianY) - (centerPos.y * radianX);
+
+	float testX = radianX * rotatePos.x - radianY * rotatePos.y + xFacter;
+	float testY = radianY * rotatePos.x + radianX * rotatePos.y + yFacter;
+	return tnl::Vector3(testX, testY, 0);
+}
+//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ 左上,右上,左下,右下の順で入れること,args2:判定する点座標
+bool GameManager::isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Vector3& hitPoint)
+{
+	bool ret = true;
+
+	//頂点座標4つのベクトルを作成(右回転)
+	tnl::Vector3 vec1 = { hitBoxPoint[1].x - hitBoxPoint[0].x,hitBoxPoint[1].y - hitBoxPoint[0].y,0 };
+	tnl::Vector3 vec2 = { hitBoxPoint[3].x - hitBoxPoint[1].x,hitBoxPoint[3].y - hitBoxPoint[1].y,0 };
+	tnl::Vector3 vec3 = { hitBoxPoint[2].x - hitBoxPoint[3].x,hitBoxPoint[2].y - hitBoxPoint[3].y,0 };
+	tnl::Vector3 vec4 = { hitBoxPoint[0].x - hitBoxPoint[2].x,hitBoxPoint[0].y - hitBoxPoint[2].y,0 };
+
+	std::vector<tnl::Vector3> boxVecs;
+	boxVecs.emplace_back(vec1);
+	boxVecs.emplace_back(vec2);
+	boxVecs.emplace_back(vec3);
+	boxVecs.emplace_back(vec4);
+
+	//各張点からのベクトルを作成
+	tnl::Vector3 pVec1 = { hitPoint.x - hitBoxPoint[0].x,hitPoint.y - hitBoxPoint[0].y,0 };
+	tnl::Vector3 pVec2 = { hitPoint.x - hitBoxPoint[1].x,hitPoint.y - hitBoxPoint[1].y,0 };
+	tnl::Vector3 pVec3 = { hitPoint.x - hitBoxPoint[3].x,hitPoint.y - hitBoxPoint[3].y,0 };
+	tnl::Vector3 pVec4 = { hitPoint.x - hitBoxPoint[2].x,hitPoint.y - hitBoxPoint[2].y,0 };
+
+	std::vector<tnl::Vector3> pointVecs;
+	pointVecs.emplace_back(pVec1);
+	pointVecs.emplace_back(pVec2);
+	pointVecs.emplace_back(pVec3);
+	pointVecs.emplace_back(pVec4);
+
+	//頂点へのベクトルと点へのベクトルの外積をとる
+	for (int i = 0; i < 4; ++i) {
+		float cross = GetCross(boxVecs[i], pointVecs[i]);
+		//一つでも負の数があれば点は内部にない=当たってない
+		if (cross < 0) {
+			ret = false;
+			break;
+		}
+	}
+	return ret;
+}
+
+tnl::Vector3 GameManager::GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos)
+{
+	return ((firstPos + secondPos) / 2);
+}
+
+tnl::Vector3 GameManager::GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB) {
+	tnl::Vector3 ab = linePointB - linePointA;
+	float t = tnl::Vector3::Dot(point - linePointA, ab);
+	if (t <= 0.0f) {
+		return linePointA;
+	}
+	else {
+		float denom = tnl::Vector3::Dot(ab, ab);
+		if (t >= denom) {
+			return linePointB;
+		}
+		else {
+			t /= denom;
+			return linePointA + (ab * t);
+		}
+	}
+}
+
+
+//------------------------------------------------------------------------------------------------
+//Map
 void GameManager::SetStayMap()
 {
 	lastStayMap = GetPlayerOnMap();
@@ -379,7 +465,9 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 
 	return nearMap;
 }
+//------------------------------------------------------------------------------------------------
 
+//develop_fukushi
 //プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
@@ -399,7 +487,7 @@ int GameManager::GetRandBetweenNum(int num1, int num2)
 }
 
 
-int GameManager::GerRandomNumInWeight(const std::vector<int> WeightList)
+int GameManager::GerRandomNumInWeight(const std::vector<int>& WeightList)
 {
 	// 非決定的な乱数生成器->初期シードに使う
 	std::random_device rnd;
@@ -433,6 +521,24 @@ int GameManager::GerRandomNumInWeight(const std::vector<int> WeightList)
 		rand -= WeightList[i];
 	}
 	return selected;
+}
+
+bool GameManager::CheckRandomNumberInOdds(const float maxOdds)
+{
+	// 非決定的な乱数生成器->初期シードに使う
+	std::random_device rnd;
+	//ランダムな数を求めるための関数名を決める
+	//メルセンヌ・ツイスタの32ビット版、引数は初期シード
+	std::mt19937 GetRandom(rnd());
+
+	//一定範囲の一様分布乱数取得
+	std::uniform_int_distribution<> Weight(0, 100);
+	//レアリティをランダムで決める
+	int rand = Weight(GetRandom);
+
+	if (static_cast<float>(rand) <= maxOdds)return true;
+
+	return false;
 }
 
 bool GameManager::CreateDummyPlayer(std::string json)
@@ -581,6 +687,7 @@ void GameManager::Update(float delta_time) {
 		connect = std::make_shared<Connect>();
 		uiEditor = std::make_shared<UIEditor>();
 
+
 		uiEditor->Init();
 
 		if (chat == nullptr) {
@@ -593,10 +700,11 @@ void GameManager::Update(float delta_time) {
 		player->SetIsCreatedDummy();
 
 		//test用Dummy生成
-		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
 
 		init = true;
 	}
+
 	GetMousePoint(&mousePosX, &mousePosY);
 	/*tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");*/
@@ -606,7 +714,6 @@ void GameManager::Update(float delta_time) {
 	}*/
 
 	deltaTime = delta_time;
-
 
 	sManager->Update(delta_time);
 	sManager->Draw();

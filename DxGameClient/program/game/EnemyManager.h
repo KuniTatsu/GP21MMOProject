@@ -34,6 +34,9 @@ private:
 	int createCount = 0;
 	//生成制限
 	const int SPAWNLIMIT = 20;
+
+	int spawnLimit = 5;
+
 	//インターバルのカウント開始Flag
 	bool spawntiming = false;
 	//生成するまでのインターバルをカウント
@@ -55,7 +58,7 @@ public:
 	void Destory();
 
 	/*エネミー種類*/
-	enum class EnemyType {
+	enum class EnemyType : uint32_t {
 		GHOST,
 		SLIME,
 		GOBLIN,
@@ -70,8 +73,14 @@ public:
 	//直近で死んだエネミーのリスト(蘇り処理のため一次保存) 最大10体
 	std::list<std::shared_ptr<Enemy>> recentDeadEnemyList;
 
+	//エネミースポーンウェイト
+	std::vector<int>EnemySpawnWeight;
+
 	//Enemyデータ取得
 	std::shared_ptr<ActorData> GetEnemyData(int type);
+
+	//Enemyスポーン範囲検索
+	void SpawnEnemy(tnl::Vector3& PlayerPos);
 
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
@@ -94,8 +103,7 @@ public:
 	//敵が生き返る系の実装があるかもしれないので0で生き返るように実装する余地を残す
 	void ShareEnemyDead(int identId, int isDead = 1);
 
-	//Enemyスポーン範囲検索
-	void SpawnEnemy(tnl::Vector3& PlayerPos);
+	void SortEnemyList(tnl::Vector3& playerPos);
 
 	/*エネミー生成関数*/
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);
