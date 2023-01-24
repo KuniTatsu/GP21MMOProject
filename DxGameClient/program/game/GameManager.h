@@ -254,7 +254,8 @@ public:
 	//プレイヤーの情報をサーバーに送る関数
 	void SendPlayerInfoToServer();
 
-
+	//enemyが生成された時にサーバーに登録する関数
+	void SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);
 
 	//enemyの情報をサーバーに送る関数 args1:x座標 args2:y座標HP args3:方角(8方向) args4:識別番号 args5:敵のタイプ
 	void SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);

@@ -12,7 +12,7 @@ public:
 
 
 	//ダメージ計算 args1:攻撃力 args2:防御力 args3:職レベル合計 args4:基礎ダメージ デフォルトは通常攻撃の値 args5:最終補正
-	float CalcDefaultDamage(float attack, float defence, int level, bool isSuccess, float coreDamage = 50.0f, float fixRatio = 1.0f);
+	double CalcDefaultDamage(float attack, float defence, int level, bool isSuccess, float coreDamage = 50.0f, float fixRatio = 1.0f);
 
 	//有効な攻撃かどうか判定する関数
 	bool IsSuccessAttack(const std::shared_ptr<ActorData> AttackerData, const std::shared_ptr<ActorData> DefenderData, int attackType);

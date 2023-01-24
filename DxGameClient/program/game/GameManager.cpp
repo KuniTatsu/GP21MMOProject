@@ -40,11 +40,9 @@ void GameManager::Accept()
 {
 	while (isEnd == false)
 	{
-
 		auto get = connect->GetServerMessage();
 		if (get == "")continue;
 		chat->SetGetMessage(get);
-
 	}
 }
 
@@ -81,8 +79,8 @@ void GameManager::Destroy() {
 
 	isEnd = true;
 	//acceptThread->join();
+	connect->SendExitServer();
 	acceptThread.join();
-
 
 	UIManager::GetInstance()->Destroy();
 	InitGraph();
@@ -685,6 +683,11 @@ void GameManager::SendPlayerInfoToServer()
 
 }
 
+void GameManager::SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
+{
+	connect->SendClientEnemyInitInfo(x, y, dir, identNum, type);
+}
+
 void GameManager::SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
 {
 	connect->SendClientEnemyInfo(x, y, dir, identNum, type);
@@ -733,6 +736,9 @@ void GameManager::Update(float delta_time) {
 		}
 
 		acceptThread = std::thread([this] {GameManager::Accept(); });
+		//enemyî•ñ–â‚¢‡‚¹
+		connect->GetServerEnemyInfo();
+		
 		SendPlayerInfoToServer();
 		//Dummy¶¬Š®—¹
 		player->SetIsCreatedDummy();

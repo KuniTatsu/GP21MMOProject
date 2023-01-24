@@ -51,8 +51,8 @@ public:
 		return level;
 	}
 
-	inline void  UpdateHp(float moveHp) {
-		HP += moveHp;
+	inline void  UpdateHp(double moveHp) {
+		HP += static_cast<float>(moveHp);
 	}
 
 	inline void SetHP(float startHP) {

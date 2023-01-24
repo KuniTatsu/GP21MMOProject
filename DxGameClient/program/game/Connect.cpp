@@ -125,14 +125,18 @@ const std::string Connect::GetServerMessage()
 	std::string err;
 	auto hoge = json11::Json::parse(getMessage, err);
 
+	//ログイン時に他のプレイヤーがいたときの処理
+	//ToDo:キャラ名も持ってきたい
 	if (!hoge["chara_0"].is_null()) {
 
 		for (int i = 0; i < 10; ++i) {
 
-			if (hoge.object_items().size() < i)break;
+			//if (hoge.object_items().size() < i)break;
 
 			std::string buf = "chara_";
 			buf += std::to_string(i);
+
+			if (hoge[buf].is_null())break;
 
 			auto map = hoge[buf].object_items();
 
@@ -160,6 +164,50 @@ const std::string Connect::GetServerMessage()
 
 
 			gManager->CreateDummyPlayer(posX, posY, UUID, dir, HP, ghNum);
+		}
+		return "";
+	}
+
+	if (!hoge["Enemy_0"].is_null()) {
+
+		const int LIMIT = EnemyManager::GetInstance()->GetLimitEnemySpawn();
+
+		for (int i = 0; i < LIMIT; ++i) {
+
+			//if (hoge.object_items().size() < i)break;
+
+			std::string buf = "Enemy_";
+			buf += std::to_string(i);
+
+			if (hoge[buf].is_null())break;
+
+			auto map = hoge[buf].object_items();
+
+			//各種ステータスの入れ物を用意
+			float posX = 0.0f;
+			float posY = 0.0f;
+			int dir = 0;
+			std::string identNum = "";
+			int type = 0;
+
+			//中身を代入
+			posX = static_cast<float>(map["posX"].number_value());
+			posY = static_cast<float>(map["posY"].number_value());
+			dir = map["dir"].int_value();
+			identNum = map["identId"].string_value();
+
+			//identNumを数字だけにする処理
+			std::string remove = "Enemy_";
+			for (char c : remove) {
+				identNum.erase(std::remove(identNum.begin(), identNum.end(), c), identNum.end());
+			}
+
+			type = map["type"].int_value();
+
+			auto eManager = EnemyManager::GetInstance();
+
+			tnl::Vector3 pos(posX, posY, 0);
+			eManager->CreateEnemyFromServer(type, std::stoi(identNum), pos);
 		}
 		return "";
 	}
@@ -221,7 +269,7 @@ const std::string Connect::GetServerMessage()
 
 	//UUIDを含むならプレイヤーの情報なのでそっちの処理に進む
 
-	//フィールドにドロップしたアイテムの処理
+	//他プレイヤーのHP変動処理
 	if (hoge["PlayerMoveHP"].string_value() != "") {
 		auto UUID = gManager->UTF8toSjis(hoge["UUID"].string_value());
 
@@ -257,8 +305,7 @@ void Connect::EntryServer(std::string playerName)
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
 }
 //UUIDを取得してiniファイルで出力
 void Connect::GetEntryUserId()
@@ -302,8 +349,7 @@ void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientPlayerInfo(float x, float y, int dir, float HP, int isCreated, int ghNum, int isDebug)
@@ -329,9 +375,7 @@ void Connect::SendClientPlayerInfo(float x, float y, int dir, float HP, int isCr
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
-
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientPlayerInitInfo(float x, float y, float HP, int ghNum)
@@ -348,8 +392,7 @@ void Connect::SendClientPlayerInitInfo(float x, float y, float HP, int ghNum)
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientPlayerStatus(float moveHP)
@@ -363,8 +406,7 @@ void Connect::SendClientPlayerStatus(float moveHP)
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientPlayerIsDead(int idDead)
@@ -378,8 +420,7 @@ void Connect::SendClientPlayerIsDead(int idDead)
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int dir)
@@ -393,8 +434,22 @@ void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int di
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
+}
+
+void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type)
+{
+	Json obj = Json::object({
+		{ "InitEnemyPosX", x },
+		{ "InitEnemyPosY", y },
+		{ "Dir",dir},
+		{ "identId",identificationNum},
+		{ "type",type},
+		});
+
+	std::string send = obj.dump();
+
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationNum, int type)
@@ -409,8 +464,7 @@ void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationN
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientEnemyStatus(int identificationNum, float moveHP)
@@ -422,8 +476,7 @@ void Connect::SendClientEnemyStatus(int identificationNum, float moveHP)
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientEnemyIsDead(int identificationNum, int isDead)
@@ -435,8 +488,18 @@ void Connect::SendClientEnemyIsDead(int identificationNum, int isDead)
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
-	ws.write(net::buffer(fix));
+	SendMessageToServer(send);
+}
+
+void Connect::GetServerEnemyInfo()
+{
+	Json obj = Json::object({
+		{ "GetEnemy", 1 },
+		});
+
+	std::string send = obj.dump();
+
+	SendMessageToServer(send);
 }
 
 void Connect::SendExitServer()
@@ -448,9 +511,12 @@ void Connect::SendExitServer()
 
 	std::string send = obj.dump();
 
-	auto fix = gManager->SjistoUTF8(send);
+	SendMessageToServer(send);
+}
+
+void Connect::SendMessageToServer(std::string message)
+{
+	auto fix = gManager->SjistoUTF8(message);
 	ws.write(net::buffer(fix));
-
-
 }
 

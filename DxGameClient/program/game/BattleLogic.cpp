@@ -14,16 +14,16 @@ BattleLogic* BattleLogic::GetInstance()
 	return instance;
 }
 
-float BattleLogic::CalcDefaultDamage(float attack, float defence, int level, bool isSuccess, float coreDamage, float fixRatio)
+double BattleLogic::CalcDefaultDamage(float attack, float defence, int level, bool isSuccess, float coreDamage, float fixRatio)
 {
 	//Šî‘bƒ_ƒ[ƒW=(((EƒŒƒxƒ‹‡Œv*2/5+2)*Šî‘bUŒ‚—Í*pUŒ‚—Í/e–hŒä—Íy)/50+2)*‚»‚Ì‘¼ÅI•â³
 
-	float damage = ((((((level * 2.0 / 5.0) + 2.0) * coreDamage * attack) / defence) / 50.0) + 2.0) * fixRatio;
+	double damage = ((((((level * 2.0 / 5.0) + 2.0) * coreDamage * attack) / defence) / 50.0) + 2.0) * fixRatio;
 
 	if (!isSuccess)damage /= 10;
 
 	//¬”‘æOˆÊ‚ğlÌŒÜ“ü
-	float fixDamage = std::round(damage * 100) / 100;
+	double fixDamage = std::round(damage * 100) / 100;
 
 	return fixDamage;
 }
@@ -78,7 +78,7 @@ float BattleLogic::CalcSuccessRatio(const std::shared_ptr<ActorData> AttackerDat
 	if (successRatio >= 100.0f)return successRatio;
 
 	//‘æ“ñ’iŠK SPD‚Ì”ä‚ğ‰Á‚¦‚é
-	float affectSPD = defendSPD / attackSPD;
+	float affectSPD = static_cast<float>(defendSPD / attackSPD);
 
 	//1.0‚æ‚è¬‚³‚¢‚©‘å‚«‚¢‚©‚Å•â³
 	if (affectSPD <= 1.0f)affectSPD *= 10.0f;
