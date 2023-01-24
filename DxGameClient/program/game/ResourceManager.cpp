@@ -42,6 +42,8 @@ std::vector<std::vector<int>>& ResourceManager::GetAnimVector(int type)
 	default:
 		break;
 	}
+
+	return error;
 }
 
 std::vector<int>& ResourceManager::GetGraphicVector(int type)
@@ -63,6 +65,7 @@ std::vector<int>& ResourceManager::GetGraphicVector(int type)
 	default:
 		break;
 	}
+	return error2;
 }
 
 std::vector<tnl::Vector3>& ResourceManager::GetGraphicSize(int type)
@@ -139,6 +142,6 @@ void ResourceManager::LoadAnimGraphicCsv(std::string pass, std::vector<std::vect
 
 void ResourceManager::SetGraphicSize(int type, int width, int height)
 {
-	graphicSizes[type].emplace_back(tnl::Vector3(width, height, 0));
+	graphicSizes[type].emplace_back(tnl::Vector3(static_cast<float>(width), static_cast<float>(height), 0));
 
 }

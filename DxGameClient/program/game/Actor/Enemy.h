@@ -15,8 +15,11 @@ class GameManager;
 class Enemy : public Actor {
 public:
 
-
+	//自クライアント用コンストラクタ
 	Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type);
+
+	//サーバーから情報をもってきて作る時用
+	Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type,int IdentId);
 
 	~Enemy();
 

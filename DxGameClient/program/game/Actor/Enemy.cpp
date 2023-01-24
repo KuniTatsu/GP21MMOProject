@@ -15,6 +15,29 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
 
 	myData = std::make_shared<ActorData>();
+	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	myData->SetAttackRange(data->GetAttackRange());
+
+	auto& attribute = data->GetAttribute();
+
+	myData->SetAttribute(attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5]);
+	myData->CalcMainStatus();
+
+	auto rManager = ResourceManager::GetInstance();
+	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
+
+	SetCircleSize(hoge[type]);
+
+	myAnimationGh = ghs;
+}
+
+Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type, int IdentId)
+{
+	drawPos = SpawnPos;
+	gManager = GameManager::GetInstance();
+	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
+
+	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus( data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
 
@@ -29,6 +52,8 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	SetCircleSize(hoge[type]);
 
 	myAnimationGh = ghs;
+
+	identId = IdentId;
 
 }
 

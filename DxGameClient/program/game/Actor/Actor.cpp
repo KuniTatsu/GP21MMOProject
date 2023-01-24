@@ -326,7 +326,7 @@ void Actor::DefaultAttack()
 		//ƒ_ƒ[ƒW”»’è
 		bool successAttack = battleLogic->IsSuccessAttack(attackData, defendData, static_cast<int>(myType));
 
-		float damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
+		double damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
 		defendData->UpdateHp((damage * (-1)));
 	}
 

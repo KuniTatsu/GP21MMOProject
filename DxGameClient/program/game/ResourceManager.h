@@ -64,5 +64,9 @@ private:
 	//‰æ‘œ‚Ìx,y•ûŒü‚Ì‘å‚«‚³
 	std::vector<std::vector<tnl::Vector3>> graphicSizes;
 
+	//ƒGƒ‰[—p
+	std::vector<std::vector<int>>error;
+	std::vector<int>error2;
+
 };
 

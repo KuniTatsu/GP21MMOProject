@@ -110,6 +110,11 @@ public:
 	//サーバーからの情報でのエネミー生成関数
 	void CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos);
 
+	//Enemyの生成上限を取得する関数
+	inline const int GetLimitEnemySpawn() {
+		return SPAWNLIMIT;
+	}
+
 	void Update(float deltatime);
 	void Draw(Camera* camera);
 };

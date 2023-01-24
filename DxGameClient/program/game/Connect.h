@@ -41,6 +41,9 @@ public:
 	//クライアントキャラクターが発動した攻撃のエフェクトの座標とエフェクト番号を送る関数
 	void SendClientAttackEffectInfo(float x, float y, int effectNum, int dir = 0);
 
+	//エネミーの初期情報のサーバー登録
+	void SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type);
+
 	//エネミーの位置座標の共有
 	void SendClientEnemyInfo(float x, float y, int dir, int identificationNum,int type);
 
@@ -50,9 +53,16 @@ public:
 	//エネミーの死亡状況の共有
 	void SendClientEnemyIsDead(int identificationNum, int isDead = 1);
 
+	//ログイン時のエネミー情報の問い合わせ
+	void GetServerEnemyInfo();
+
 
 	//自分がサーバーから抜けることを知らせる関数
 	void SendExitServer();
+
+private:
+	//サーバーにメッセージを送る処理
+	void SendMessageToServer(std::string message);
 
 private:
 
