@@ -63,7 +63,7 @@ public:
 	static constexpr int SCREEN_HEIGHT = 768;
 
 	//一チャンクの一辺のチップ数
-	const int MAPSIZE = 35.0;
+	const int MAPSIZE = 35;
 	//一チップの大きさ
 	const int CHIPWIDTH = 32;
 	const int CHIPHEIGHT = 32;
@@ -96,14 +96,14 @@ public:
 
 	//座標回転時に使用する回転角の配列(角度) 上方向を0度とする。(左は+90度とする)
 	const float ROTATEDEGREE[static_cast<uint32_t>(ROTATEDIR::MAX)] = {
-		45.0f,//左上
-		90.0f,//左
-		135.0f,//左下
-		180.0f,//下
-		225.0f,//右下
-		270.0f,//右
-		315.0f,//右上
-		360.0f//上
+		-45.0f,//左上
+		-90.0f,//左
+		-135.0f,//左下
+		-180.0f,//下
+		-225.0f,//右下
+		-270.0f,//右
+		-315.0f,//右上
+		-360.0f//上
 	};
 	//マウス座標
 	int mousePosX = 0;
@@ -132,6 +132,19 @@ public:
 		return tnl::Vector3(X / vecLength, Y / vecLength, 0);
 	}
 
+
+	//外積を取得する関数
+	float GetCross(tnl::Vector3& vec1, tnl::Vector3& vec2) {
+		return vec1.x * vec2.y - vec2.x * vec1.y;
+	}
+
+	//2つの座標間の距離を求める関数
+	inline float GetLengthFromTwoPoint(tnl::Vector3& pos1, tnl::Vector3& pos2) {
+		auto defX = (pos2.x - pos1.x);
+		auto defY = (pos2.y - pos1.y);
+		return sqrtf((defX * defX) + (defY * defY));
+	}
+
 	//画像を読み込んでmapに入れる関数
 	//すでにあるghならそれを返す
 	int LoadGraphEx(std::string Gh);
@@ -146,11 +159,26 @@ public:
 
 	//当たり判定 短形同士
 	bool isHitBox(tnl::Vector3& leftTop1, tnl::Vector3& rightBottom1, tnl::Vector3& leftTop2, tnl::Vector3& rightBottom2);
-	//座標の回転
-	tnl::Vector3 RotatePoint(tnl::Vector3& centerPos, tnl::Vector3& rotatePos);
+	//座標の回転	args:回転させたい座標,向いている方向(ROTATEDIRに準ずる),中心座標(デフォルトでは原点)
+	tnl::Vector3 RotatePoint(tnl::Vector3& rotatePos, int dir, tnl::Vector3 centerPos = { 0,0,0 });
+	tnl::Vector3 RotatePoint(tnl::Vector3& rotatePos, float degree, tnl::Vector3 centerPos = { 0,0,0 });
+
+	//当たり判定 回転体と点座標 args1:当たり判定範囲の頂点座標4つ 左上,右上,左下,右下の順で入れること,args2:判定する点座標
+	bool isHitRotateBox(std::vector<tnl::Vector3>& hitBoxPoint, tnl::Vector3& hitPoint);
+
+
+	//2つの座標から中心座標を求める関数 args1:座標1,args2:座標2
+	tnl::Vector3 GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& secondPos);
+
+	//点から線分中の最近点を求める関数
+	tnl::Vector3 GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB);
 
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
+
+	inline std::shared_ptr<Player>& GetPlayer() {
+		return player;
+	}
 
 	//Map新規生成
 	bool CreateMap();
@@ -189,6 +217,7 @@ public:
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
+
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);
 
@@ -197,8 +226,10 @@ public:
 	}
 	tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
 
-	//メルセンヌ・ツイスターを採用した正規分布ランダム関数
-	int GerRandomNumInWeight(const std::vector<int>WeightList);
+	//メルセンヌ・ツイスターを採用した正規分布ランダム関数(ウェイトを考慮)
+	int GerRandomNumInWeight(const std::vector<int>& WeightList);
+	//メルセンヌ・ツイスターを採用した正規分布ランダム関数(1~100)
+	bool CheckRandomNumberInOdds(const float maxOdds);
 
 
 	//tnl::Vector3 GetVectorToPlayer(tnl::Vector3& enemyPos);
@@ -218,8 +249,18 @@ public:
 	//サーバーから送られてきた他のプレイヤーの情報からDummyPlayerを生成し登録する関数
 	bool CreateDummyPlayer(std::string json);
 
+	bool CreateDummyPlayer(float posX, float posY, std::string UUID, int dir, float HP, int ghNum);
+
 	//プレイヤーの情報をサーバーに送る関数
 	void SendPlayerInfoToServer();
+
+	//enemyが生成された時にサーバーに登録する関数
+	void SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);
+
+	//enemyの情報をサーバーに送る関数 args1:x座標 args2:y座標HP args3:方角(8方向) args4:識別番号 args5:敵のタイプ
+	void SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);
+	//enemyのHP変動をサーバーに送る関数 args1:識別番号 args2:変動HP args3:増加かどうか
+	void SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool isPlus = true);
 
 	//他のプレイヤーのリストを取得する関数
 	const inline std::list<std::shared_ptr<DummyPlayer>>& GetOtherPlayersList() {
@@ -232,8 +273,10 @@ public:
 	bool CheckIsThereInUUID(std::string UUID);
 
 	//UUIDと合致するDummyPlayerを動かす関数
-	void MoveDummyInUUID(float x, float y, int dir,std::string UUID);
+	void MoveDummyInUUID(float x, float y, int dir, std::string UUID);
 
+	//UUIDと合致するDummyPlayerのHPを変動させる関数
+	void UpdateDummyHP(std::string UUID, float moveHP);
 
 	//四角形のマウスクリック感知
 	bool isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
@@ -244,6 +287,5 @@ public:
 	//マウス座標の取得
 	tnl::Vector3 GetMousePos();
 
-	
 
 };

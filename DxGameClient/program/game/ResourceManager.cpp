@@ -17,7 +17,7 @@ void ResourceManager::LoadResouce(int type)
 		type == static_cast<uint32_t>(RESOUCETYPE::ENEMY) ||
 		type == static_cast<uint32_t>(RESOUCETYPE::EFFECT))
 	{
-		LoadAnimGraphicCsv(loadCsvPasses[type], GetAnimVector(type));
+		LoadAnimGraphicCsv(loadCsvPasses[type], GetAnimVector(type), type);
 	}
 	else
 	{
@@ -42,6 +42,8 @@ std::vector<std::vector<int>>& ResourceManager::GetAnimVector(int type)
 	default:
 		break;
 	}
+
+	return error;
 }
 
 std::vector<int>& ResourceManager::GetGraphicVector(int type)
@@ -63,6 +65,12 @@ std::vector<int>& ResourceManager::GetGraphicVector(int type)
 	default:
 		break;
 	}
+	return error2;
+}
+
+std::vector<tnl::Vector3>& ResourceManager::GetGraphicSize(int type)
+{
+	return graphicSizes[type];
 }
 
 std::vector<int>& ResourceManager::GetCharaVectorAtGhNum(int graphicNum)
@@ -73,6 +81,8 @@ std::vector<int>& ResourceManager::GetCharaVectorAtGhNum(int graphicNum)
 ResourceManager::ResourceManager()
 {
 	gManager = GameManager::GetInstance();
+
+	graphicSizes.resize(static_cast<int>(RESOUCETYPE::MAX));
 	SetLoadCsvPass();
 
 	playerGhs.resize(5);
@@ -80,6 +90,7 @@ ResourceManager::ResourceManager()
 	effectGhs.resize(5);
 
 	LoadResouce(static_cast<int>(RESOUCETYPE::PLAYER));
+	LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
 }
 
 ResourceManager::~ResourceManager()
@@ -110,7 +121,7 @@ void ResourceManager::LoadGraphicCsv(std::string pass, std::vector<int>& putInVe
 	}
 }
 
-void ResourceManager::LoadAnimGraphicCsv(std::string pass, std::vector<std::vector<int>>& putInVector)
+void ResourceManager::LoadAnimGraphicCsv(std::string pass, std::vector<std::vector<int>>& putInVector, int type)
 {
 	//引数のURLで指定されたCSVファイルの中身を文字列として取得する
 	auto loadCsv = tnl::LoadCsv(pass);
@@ -122,7 +133,15 @@ void ResourceManager::LoadAnimGraphicCsv(std::string pass, std::vector<std::vect
 		int widthSize = std::stoi(loadCsv[i][5]);
 		int heightSize = std::stoi(loadCsv[i][6]);
 
+		SetGraphicSize(type, widthSize, heightSize);
+
 		//取得した文字列の画像パスで画像データを生成する
 		gManager->LoadDivGraphEx(loadCsv[i][1], allNum, widthNum, heightNum, widthSize, heightSize, putInVector[i - 1]);
 	}
+}
+
+void ResourceManager::SetGraphicSize(int type, int width, int height)
+{
+	graphicSizes[type].emplace_back(tnl::Vector3(static_cast<float>(width), static_cast<float>(height), 0));
+
 }

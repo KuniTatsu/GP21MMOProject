@@ -21,8 +21,8 @@ public:
 		return isLive;
 	}
 	//死亡判定セット関数
-	inline void	SetIsLive() {
-		isLive = false;
+	inline void	SetIsLive(bool IsLive) {
+		isLive = IsLive;
 	}
 
 	//描画座標の取得
@@ -42,16 +42,37 @@ public:
 		localPos = Pos;
 	}
 	//actorDataの取得
-	inline std::shared_ptr<ActorData>GetActorData() {
+	inline const std::shared_ptr<ActorData>GetActorData() {
 		return myData;
 	}
-	void SetActorData(double attackRange, float attack, float defence, float moveSpeed);
+	void SetActorData(float attack, float defence, float moveSpeed);
+
+	void SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+
+	//typeの取得
+	inline int GetActorType() {
+		return actorType;
+	}
+	inline void SetActorType(int type) {
+		if (type > 1)return;
+		if (type == actorType)return;
+		actorType = type;
+	}
+
+	//キャラ画像の四点の座標を求める関数 左上,右上,左下,右下
+	std::vector<tnl::Vector3> GetCharaEdgePos();
 
 	//向いている向きの取得
 	inline int GetDir() {
 		return static_cast<int>(myExDir);
 	}
-	
+
+	void SetCircleSize(tnl::Vector3& size);
+
+	inline float GetCircleSize() {
+		return circleSize;
+	}
+
 
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
@@ -67,6 +88,13 @@ protected:
 
 	//ローカル座標
 	tnl::Vector3 localPos;
+
+	//test
+	std::vector<tnl::Vector3> bufPos;
+
+	//プレイヤーか敵か
+	int actorType = 0;//デフォルトはプレイヤー
+
 
 	//キャラクター画像の幅 初期値はプレイヤーの基本の大きさ
 	//横幅
@@ -91,6 +119,9 @@ protected:
 
 	bool isLive = true;
 
+	//当たり判定用の半径
+	float circleSize = 0.0f;
+
 	//方向
 	enum class DIR {
 		UP,
@@ -100,7 +131,8 @@ protected:
 		MAX
 	};
 
-	//方向 8方向バージョン 回転を前提
+
+	//方向 8方向バージョン 回転を前提　こっちを使うこと
 	enum class EXDIR :uint32_t {
 		LEFTTOP,
 		LEFT,
@@ -134,6 +166,10 @@ protected:
 	//向いている方向の距離のオフセット 上,右,下,左
 	const tnl::Vector3 VECOFFSET[4] = { tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0) };
 
+	//アニメーションするgh 本来はこっちを使う
+	std::vector<int>ghs;
+
+
 	//このクラス内でしか使わない関数はここに書く
 private:
 	//移動関数 上下左右
@@ -151,6 +187,9 @@ private:
 	//向いている方向の任意座標を取得する関数
 	tnl::Vector3 GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& distance);
 
+	//ある座標と、線分との最近点との一番近い点を求める関数
+	tnl::Vector3 GetNearestPoint(tnl::Vector3& Pos, std::vector<tnl::Vector3>& boxPos);
+
 	//継承先で使う関数かつprivateなものはここに書く
 protected:
 	//移動関数のポインタ配列
@@ -164,9 +203,14 @@ protected:
 	//XとYから自分の向いている方向を変更する関数
 	void SetExDir(float x, float y);
 
+	//引数から向いている方向を変更する関数
+	void SetExDir(int dir);
+
 	//基本攻撃関数	
 	void DefaultAttack();
 
+	//基本攻撃の近接タイプの範囲を計算する関数 左上,右上,左下,右下の順
+	std::vector<tnl::Vector3>GetMeleeAttackBox();
 	//アニメーション更新関数
 	void Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed = 20);
 

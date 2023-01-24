@@ -6,10 +6,12 @@
 #include"../Actor/Enemy.h"
 #include"../Actor/DummyPlayer.h"
 #include"../UI/UIManager.h"
+#include"../ResourceManager.h"
 
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
+	rManager = ResourceManager::GetInstance();
 	eManager = EnemyManager::GetInstance();
 }
 
@@ -44,8 +46,15 @@ void Scene_Map::update(float delta_time)
 
 	/*Enemy生成*/
 	eManager->SpawnEnemy(player->GetPos());
+	/*Enemy動作*/
+	eManager->Update(delta_time);
 	/*カメラ操作*/
 	camera.pos += (player->GetPos() - camera.pos) * 0.1f;
+
+	/*エネミーの描画*/
+	if (eManager != nullptr) {
+		eManager->Update(gManager->deltaTime);
+	}
 
 
 	auto uiManager = UIManager::GetInstance();

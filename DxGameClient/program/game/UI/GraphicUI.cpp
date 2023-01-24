@@ -114,7 +114,7 @@ void GraphicUI::Draw()
 	DrawFrame();
 	//âÊëúÇ™Ç»ÇØÇÍÇŒï`âÊÇµÇ»Ç¢
 	if (drawUIGh == -1)return;
-	DrawRotaGraph(centerPos.x, centerPos.y, 0.98, 0, drawUIGh, true);
+	DrawRotaGraphF(centerPos.x, centerPos.y, 0.98, 0, drawUIGh, true);
 }
 tnl::Vector3& GraphicUI::GetLeftTopPos()
 {
@@ -164,23 +164,23 @@ void GraphicUI::DrawFrame()
 {
 	//ï™äÑâÊëúÇ≈ÇÕÇ»Ç¢èÍçáÇÕÇªÇÃÇ‹Ç‹ï`âÊÇ∑ÇÈ
 	if (frameGh.empty()) {
-		DrawRotaGraph(centerPos.x, centerPos.y, 1, 0, buttonGh, true);
+		DrawRotaGraphF(centerPos.x, centerPos.y, 1, 0, buttonGh, true);
 		return;
 	}
 	//ògÇÃè„íiÇÃï`âÊ
-	DrawGraph(pos.x, pos.y, frameGh[0], true);
-	DrawExtendGraph(pos.x + splitLength, pos.y, pos.x + width - splitLength, pos.y + splitLength, frameGh[1], true);
-	DrawGraph(pos.x + width - splitLength, pos.y, frameGh[2], true);
+	DrawGraphF(pos.x, pos.y, frameGh[0], true);
+	DrawExtendGraphF(pos.x + splitLength, pos.y, pos.x + width - splitLength, pos.y + splitLength, frameGh[1], true);
+	DrawGraphF(pos.x + width - splitLength, pos.y, frameGh[2], true);
 
 	//ògÇÃíÜíiÇÃï`âÊ
-	DrawExtendGraph(pos.x, pos.y + splitLength, pos.x + splitLength, pos.y + height - splitLength, frameGh[3], true);
-	DrawExtendGraph(pos.x + splitLength, pos.y + splitLength, pos.x + width - splitLength, pos.y + height - splitLength, frameGh[4], true);
-	DrawExtendGraph(pos.x + width - splitLength, pos.y + splitLength, pos.x + width, pos.y + height - splitLength, frameGh[5], true);
+	DrawExtendGraphF(pos.x, pos.y + splitLength, pos.x + splitLength, pos.y + height - splitLength, frameGh[3], true);
+	DrawExtendGraphF(pos.x + splitLength, pos.y + splitLength, pos.x + width - splitLength, pos.y + height - splitLength, frameGh[4], true);
+	DrawExtendGraphF(pos.x + width - splitLength, pos.y + splitLength, pos.x + width, pos.y + height - splitLength, frameGh[5], true);
 
 	//ògÇÃâ∫íiÇÃï`âÊ
-	DrawGraph(pos.x, pos.y + height - splitLength, frameGh[6], true);
-	DrawExtendGraph(pos.x + splitLength, pos.y + height - splitLength, pos.x + width - splitLength, pos.y + height, frameGh[7], true);
-	DrawGraph(pos.x + width - splitLength, pos.y + height - splitLength, frameGh[8], true);
+	DrawGraphF(pos.x, pos.y + height - splitLength, frameGh[6], true);
+	DrawExtendGraphF(pos.x + splitLength, pos.y + height - splitLength, pos.x + width - splitLength, pos.y + height, frameGh[7], true);
+	DrawGraphF(pos.x + width - splitLength, pos.y + height - splitLength, frameGh[8], true);
 }
 
 //------------GraphicUIçÏê¨ópÉfÅ[É^ÉNÉâÉX----------------

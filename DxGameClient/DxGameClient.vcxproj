@@ -162,6 +162,7 @@
     <ClInclude Include="program\game\Actor\DummyPlayer.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
+    <ClInclude Include="program\game\Animation.h" />
     <ClInclude Include="program\game\BattleLogic.h" />
     <ClInclude Include="program\game\ChatBase.h" />
     <ClInclude Include="program\game\Connect.h" />
@@ -194,7 +195,6 @@
     <ClInclude Include="program\game\UI\UIEditor.h" />
     <ClInclude Include="program\game\UI\UIManager.h" />
     <ClInclude Include="program\json11.hpp" />
-    <ClInclude Include="program\library\json11.hpp" />
     <ClInclude Include="program\library\picojson.h" />
     <ClInclude Include="program\library\stb_image.h" />
     <ClInclude Include="program\library\tnl_flyweight_map.h" />
@@ -249,6 +249,7 @@
     <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
     <ClCompile Include="program\game\Actor\Player.cpp" />
+    <ClCompile Include="program\game\Animation.cpp" />
     <ClCompile Include="program\game\BattleLogic.cpp" />
     <ClCompile Include="program\game\ChatBase.cpp" />
     <ClCompile Include="program\game\Connect.cpp" />
@@ -279,7 +280,6 @@
     <ClCompile Include="program\game\UI\UIEditor.cpp" />
     <ClCompile Include="program\game\UI\UIManager.cpp" />
     <ClCompile Include="program\json11.cpp" />
-    <ClCompile Include="program\library\json11.cpp" />
     <ClCompile Include="program\library\tnl_font_texture.cpp" />
     <ClCompile Include="program\library\tnl_input.cpp" />
     <ClCompile Include="program\library\tnl_intersect.cpp" />
