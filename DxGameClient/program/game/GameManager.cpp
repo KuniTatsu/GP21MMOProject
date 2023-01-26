@@ -20,6 +20,9 @@
 GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
 
+/*fukushi_デバック用*/
+//#define DEBUG_OFF
+
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
 GameManager::GameManager() {
@@ -465,8 +468,6 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 //------------------------------------------------------------------------------------------------
-
-//develop_fukushi
 //プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
@@ -725,17 +726,21 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
+#ifdef DEBUG_OFF
 		connect = std::make_shared<Connect>();
+#endif
 		uiEditor = std::make_shared<UIEditor>();
 
 
 		uiEditor->Init();
 
+#ifdef DEBUG_OFF
 		if (chat == nullptr) {
 			chat = new ChatBase();
 		}
 
 		acceptThread = std::thread([this] {GameManager::Accept(); });
+
 		//enemy情報問い合せ
 		connect->GetServerEnemyInfo();
 		
@@ -744,7 +749,8 @@ void GameManager::Update(float delta_time) {
 		player->SetIsCreatedDummy();
 
 		//test用Dummy生成
-		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+#endif
 
 		init = true;
 	}
@@ -753,18 +759,21 @@ void GameManager::Update(float delta_time) {
 	/*tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");*/
 
-	/*if (chat == nullptr) {
+#ifdef DEBUG_OFF
+	if (chat == nullptr) {
 		chat = new ChatBase();
-	}*/
+	}
+#endif
 
 	deltaTime = delta_time;
 
 	sManager->Update(delta_time);
 	sManager->Draw();
 
+#ifdef DEBUG_OFF
 	chat->Update();
 	chat->Draw();
-
+#endif
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
 		uiEditor->ChangeEnable();

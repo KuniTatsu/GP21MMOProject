@@ -41,9 +41,6 @@ void Scene_Map::update(float delta_time)
 	/*Player操作*/
 	player->Update();
 
-	//listの中のenemyすべてに対して、playerとの距離が一定以下ならplayerの方に移動させる
-	//gManager->enemyMove();
-
 	/*Enemy生成*/
 	eManager->SpawnEnemy(player->GetPos());
 	/*Enemy動作*/
@@ -105,6 +102,7 @@ void Scene_Map::render()
 	SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");
 
+#ifdef DEBUG_OFF
 	/*他のプレイヤーの描画*/
 	auto& others = gManager->GetOtherPlayersList();
 	if (!others.empty()) {
@@ -113,5 +111,7 @@ void Scene_Map::render()
 		}
 	}
 
+
 	UIManager::GetInstance()->Draw();
+#endif
 }
