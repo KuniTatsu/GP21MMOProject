@@ -71,6 +71,8 @@
     <ClCompile Include="program\game\UI\GraphicUI.cpp" />
     <ClCompile Include="program\game\UI\UIEditor.cpp" />
     <ClCompile Include="program\game\UI\UIManager.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\SupportNPC.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -146,6 +148,8 @@
     <ClInclude Include="program\game\UI\GraphicUI.h" />
     <ClInclude Include="program\game\UI\UIEditor.h" />
     <ClInclude Include="program\game\UI\UIManager.h" />
+    <ClInclude Include="program\game\Actor\NPC\NPC.h" />
+    <ClInclude Include="program\game\Actor\NPC\SupportNPC.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">
@@ -227,9 +231,6 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="program\game\scene\scene_title.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="program\library\json11.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="program\library\tnl_font_texture.cpp">

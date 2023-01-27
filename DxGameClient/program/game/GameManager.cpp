@@ -725,23 +725,28 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		connect = std::make_shared<Connect>();
+		//connect = std::make_shared<Connect>();
 		uiEditor = std::make_shared<UIEditor>();
 
 
 		uiEditor->Init();
 
-		if (chat == nullptr) {
+		/*if (chat == nullptr) {
 			chat = new ChatBase();
-		}
+		}*/
 
+		/*
 		acceptThread = std::thread([this] {GameManager::Accept(); });
+
+
 		//enemyî•ñ–â‚¢‡‚¹
 		connect->GetServerEnemyInfo();
 		
 		SendPlayerInfoToServer();
 		//Dummy¶¬Š®—¹
 		player->SetIsCreatedDummy();
+
+		*/
 
 		//test—pDummy¶¬
 		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
@@ -762,8 +767,8 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	chat->Update();
-	chat->Draw();
+	/*chat->Update();
+	chat->Draw();*/
 
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {

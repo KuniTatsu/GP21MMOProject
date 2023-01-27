@@ -161,6 +161,8 @@
     <ClInclude Include="program\game\Actor\Camera.h" />
     <ClInclude Include="program\game\Actor\DummyPlayer.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
+    <ClInclude Include="program\game\Actor\NPC\NPC.h" />
+    <ClInclude Include="program\game\Actor\NPC\SupportNPC.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\Animation.h" />
     <ClInclude Include="program\game\BattleLogic.h" />
@@ -248,6 +250,8 @@
     <ClCompile Include="program\game\Actor\ActorData.cpp" />
     <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\SupportNPC.cpp" />
     <ClCompile Include="program\game\Actor\Player.cpp" />
     <ClCompile Include="program\game\Animation.cpp" />
     <ClCompile Include="program\game\BattleLogic.cpp" />
