@@ -62,16 +62,16 @@ void Scene_Map::update(float delta_time)
 	//debug
 	if (uiManager->GetCanDraw()) {
 		if (tnl::Input::IsKeyDownTrigger(eKeys::KB_1)) {
-			uiManager->ChangeDrawUI(0);
+			uiManager->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), 0);
 		}
 		else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_2)) {
-			uiManager->ChangeDrawUI(1);
+			uiManager->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), 1);
 		}
 		else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_3)) {
-			uiManager->ChangeDrawUI(2);
+			uiManager->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), 2);
 		}
 		else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_4)) {
-			uiManager->ChangeDrawUI(3);
+			uiManager->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), 3);
 		}
 	}
 

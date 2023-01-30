@@ -736,10 +736,13 @@ void GameManager::Update(float delta_time) {
 
 #ifdef DEBUG_OFF
 		if (chat == nullptr) {
+
 			chat = new ChatBase();
 		}
 
+		
 		acceptThread = std::thread([this] {GameManager::Accept(); });
+
 
 		//enemyî•ñ–â‚¢‡‚¹
 		connect->GetServerEnemyInfo();
@@ -747,6 +750,8 @@ void GameManager::Update(float delta_time) {
 		SendPlayerInfoToServer();
 		//Dummy¶¬Š®—¹
 		player->SetIsCreatedDummy();
+
+		
 
 		//test—pDummy¶¬
 		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
