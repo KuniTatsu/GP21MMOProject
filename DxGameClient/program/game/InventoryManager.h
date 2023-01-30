@@ -22,7 +22,7 @@ private:
 	
 	std::vector<std::shared_ptr<Inventory>>inventories;
 	bool isDeleteInventory = false;
-	const int inventoryLastNum = 30;
+	int inventoryLastNum = 30;
 
 public:
 

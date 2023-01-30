@@ -125,7 +125,7 @@ void Inventory::DrawNeedCoin(int x, int y)
 	//文字サイズ変更
 	SetFontSize(25);
 	DrawStringEx(x + 10, y + 10, -1, "購入必要コイン:%d", needCoin);
-	DrawStringEx(x + 10, y + 60, -1, "所持コイン:%d", gManager->player->GetHaveCoin());
+	DrawStringEx(x + 10, y + 60, -1, "所持コイン:%d", /*gManager->player->GetHaveCoin()*/0);
 	//文字サイズ変更
 	SetFontSize(16);
 }
