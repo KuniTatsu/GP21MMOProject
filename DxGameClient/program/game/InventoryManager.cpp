@@ -53,7 +53,7 @@ void InventoryManager::AddItemToInventory(const int ItemId, std::vector<std::sha
 
 	int type = item->GetItemType();
 
-	//データを取得して、装備アイテムを生成し、インベントリに追加する
+	//データを取得して、アイテムを生成し、インベントリに追加する
 	auto item = iManager->CreateItem(ItemId, type);
 
 	//インベントリ追加
@@ -113,6 +113,8 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 			inventories[inventoryLastNum] = nullptr;
 			inventories.pop_back();
 			inventoryLastNum--;
+			
+			//fukushi_isDelteteInventoryがfalesになる場合の処理がどこかで必要
 			isDeleteInventory = true;
 		}
 	}

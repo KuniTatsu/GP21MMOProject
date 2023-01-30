@@ -29,10 +29,13 @@ public:
 
 private:
 	int hp = 0;
+	bool isEquiped = false;
 
 public:
 	
-	bool GetIsEquiped();
+	inline bool GetIsEquiped() {
+		return isEquiped;
+	}
 	void DrawEquipItemStatus(int x, int y, int GetSubId);
 	int GetSubId();
 };

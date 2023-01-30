@@ -7,20 +7,10 @@ class ItemManager;
 class Item;
 
 class Inventory {
-private:
-
-	GameManager* gManager = nullptr;
-	ItemManager* iManager = nullptr;
-
-
 public:
+
 	Inventory(int MyInventorynum);
 	~Inventory();
-
-	std::shared_ptr<Item>inventory[10] = { nullptr,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr };
-
-	////内部にItemを10個もつlist
-	std::list<std::shared_ptr<Item>> inventoryItemList;
 
 	//インベントリ内のアイテム数を取得する関数
 	inline int GetItemCount() {
@@ -30,7 +20,7 @@ public:
 	//インベントリにアイテムを追加する関数
 	void AddInventory(std::shared_ptr<Item> item);
 	//void AddSharedInventory(std::shared_ptr<Item>item);
-	//
+	
 	//カーソルを上下に動かす関数
 	void CursorMove();
 	//カーソルを一番上に戻す関数
@@ -56,8 +46,18 @@ public:
 		itemNum += num;
 	}
 
+public:
+
+	std::shared_ptr<Item>inventory[10] = { nullptr,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr };
+
+	////内部にItemを10個もつlist
+	std::list<std::shared_ptr<Item>> inventoryItemList;
 
 private:
+
+	GameManager* gManager = nullptr;
+	ItemManager* iManager = nullptr;
+
 	//選択中のアイテムを指すカーソルの位置
 	int selectCursor = 0;
 	//カーソルgh
@@ -68,4 +68,7 @@ private:
 	int itemNum = 0;
 	//インベントリ番号
 	int myInventoryNum = 0;
+
+
+
 };

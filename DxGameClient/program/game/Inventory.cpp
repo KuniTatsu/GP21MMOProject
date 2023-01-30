@@ -9,7 +9,7 @@ Inventory::Inventory(int MyInventorynum)
 {
 	gManager = GameManager::GetInstance();
 	iManager = ItemManager::GetInstance();
-	
+
 	selectItemBackGh = gManager->LoadGraphEx("graphics/FrameWhite.png");
 	myInventoryNum = myInventoryNum + 1;
 }
@@ -47,18 +47,21 @@ void Inventory::DrawInventory(const int x, const int y)
 	int i = 0;
 
 	for (auto item : inventoryItemList) {
+		//アイテム名の描画
+
 		//装備アイテムなら
-		if (item->getItemData(1) >= 2) {
-			//auto eItem = static_cast<std::shared_ptr<EquipItem>>(item);
+		if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::EQUIP)) {
 			auto eItem = std::shared_ptr<EquipItem>();
-			//装備中のアイテムなら'E'を頭に描画する
-			if (eItem->GetIsEquiped())DrawStringEx(x + 40, y + 10 + 30 * i, -1, "[E]");
-			//アイテム名の描画
-			DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->getItemName().c_str());
+			//装備アイテムかつ装備するなら'E'を頭に描画する
+			if (eItem->GetIsEquiped()) {
+				//アイテム名の描画
+				DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
+			}
 		}
-		else {
+		else
+		{
 			//アイテム名の描画
-			DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->getItemName().c_str());
+			DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
 		}
 		++i;
 	}
@@ -81,8 +84,7 @@ void Inventory::DrawItemDesc(int x, int y)
 		}
 		itr++;
 	}
-	(*itr)->DrawItemStringData(x, y);
-	inventory[selectCursor]->DrawItemData(x, y);
+	//inventory[selectCursor]->DrawItemData(x, y);
 }
 
 void Inventory::DrawEquipItemStatus(const int x, const int y)
@@ -96,10 +98,11 @@ void Inventory::DrawEquipItemStatus(const int x, const int y)
 		itr++;
 	}
 	//装備アイテムならデータを取得して描画する
-	if ((*itr)->getItemData(1) >= 2) {
-		//auto item = static_cast<std::shared_ptr<EquipItem>>((*itr));
-		auto eItem = std::shared_ptr<EquipItem>();
-		eItem->DrawEquipItemStatus(x, y, eItem->GetSubId());
+	for (auto item : inventoryItemList) {
+		if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::EQUIP)) {
+			auto eItem = std::shared_ptr<EquipItem>();
+			eItem->DrawEquipItemStatus(x, y, eItem->GetSubId());
+		}
 	}
 }
 
@@ -113,14 +116,15 @@ void Inventory::DrawNeedCoin(int x, int y)
 		}
 		itr++;
 	}
+
 	int needCoin = 0;
-	if ((*itr)->getItemData(1) >= 2) {
-		//auto item = static_cast<EquipItem*>((*itr));
-		//needCoin = item->getItemData(10);
-		needCoin = (*itr)->getItemData(10);
-	}
-	else {
-		needCoin = (*itr)->getItemData(5);
+	for (auto item : inventoryItemList) {
+		if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::EQUIP)) {
+			//needCoin = (*itr)->getItemData(10);
+		}
+		else {
+			//needCoin = (*itr)->getItemData(5);
+		}
 	}
 	//文字サイズ変更
 	SetFontSize(25);

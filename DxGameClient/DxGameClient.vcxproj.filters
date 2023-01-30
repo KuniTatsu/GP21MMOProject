@@ -75,6 +75,7 @@
     <ClCompile Include="program\game\InventoryManager.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
     <ClCompile Include="program\game\Actor\NPC\SupportNPC.cpp" />
+    <ClCompile Include="program\game\Item\ConsumeItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -154,6 +155,7 @@
     <ClInclude Include="program\game\InventoryManager.h" />
     <ClInclude Include="program\game\Actor\NPC\NPC.h" />
     <ClInclude Include="program\game\Actor\NPC\SupportNPC.h" />
+    <ClInclude Include="program\game\Item\ConsumeItem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">
