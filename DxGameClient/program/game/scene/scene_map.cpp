@@ -57,7 +57,7 @@ void Scene_Map::update(float delta_time)
 	auto uiManager = UIManager::GetInstance();
 	//メニュー描画切り替え //今後はシークエンスにして一番最初のシークエンスでのみ変更可能にする
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
-		uiManager->ChangeCanDrawUI();
+		uiManager->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::MENU));
 	}
 	//debug
 	if (uiManager->GetCanDraw()) {

@@ -1,18 +1,19 @@
 #include "Item.h"
 
-Item::Item(int itemId, std::string itemName, int itemStr, int itemVit, int itemInt, int itemMin, int itemSpd, int itemDex)
+Item::Item()
 {
 	//‘ã“ü
-	id = itemId;
+	/*id = itemId;
 	name = itemName;
 	str = itemStr;
 	vit = itemVit;
 	inteli = itemInt;
 	min = itemMin;
 	spd = itemSpd;
-	dex = itemDex;
+	dex = itemDex;*/
 }
 
-Item::~Item()
+void Item::DrawItemData(int x, int y)
 {
+
 }

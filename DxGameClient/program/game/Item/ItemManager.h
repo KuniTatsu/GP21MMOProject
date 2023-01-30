@@ -28,7 +28,7 @@ public:
 	std::list<std::shared_ptr<Item>> itemList;
 	
 	void CreateItem(int itemId, std::string itemName, int itemStr, int itemVit, int itemInt, int itemMin, int itemSpd, int itemDex);
-	void DrawItemStringData(int x, int y);
+	//void DrawItemStringData(int x, int y);
 	
 	std::vector<std::string>GetAllStringData();
 	std::vector<int>GetAllIntData();

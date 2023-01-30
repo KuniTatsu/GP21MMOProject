@@ -10,8 +10,9 @@
 class Item
 {
 public:
-	Item(int itemId, std::string itemName, int itemStr, int itemVit, int itemInt, int itemMin, int itemSpd, int itemDex);
-	~Item();
+	Item();
+	//~Item();
+	virtual ~Item() {}
 
 private:
 
@@ -28,15 +29,14 @@ private:
 public:
 
 	inline int getItemData(int type) {
-
+		return 0;
 	}
 	inline std::string getItemName() {
-
+		return "";
 	}
 	inline std::string DrawItemStringData(int x, int y) {
-
+		return "";
 	}
 	void DrawItemData(int x, int y);
 	
 };
-

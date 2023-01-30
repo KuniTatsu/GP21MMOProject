@@ -24,7 +24,7 @@ public:
 
 	//インベントリ内のアイテム数を取得する関数
 	inline int GetItemCount() {
-		return inventoryItemList.size();
+		return static_cast<int>(inventoryItemList.size());
 	}
 
 	//インベントリにアイテムを追加する関数

@@ -23,3 +23,17 @@ void ItemManager::CreateItem(int itemId, std::string itemName, int itemStr, int 
 {
 
 }
+
+std::vector<std::string> ItemManager::GetAllStringData()
+{
+	return std::vector<std::string>();
+}
+
+std::vector<int> ItemManager::GetAllIntData()
+{
+	return std::vector<int>();
+}
+
+int ItemManager::GetItemData(int id) {
+	return 0;
+}

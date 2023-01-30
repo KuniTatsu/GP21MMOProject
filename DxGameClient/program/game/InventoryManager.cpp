@@ -125,7 +125,7 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 	//‹ó‚ÌƒCƒ“ƒxƒ“ƒgƒŠ‚ðÁ‚·ˆ—
 	if (inventories[inventoryLastNum]->inventoryItemList.empty()) {
 		if (inventoryLastNum != 0) {
-			delete inventories[inventoryLastNum];
+		//	delete inventories[inventoryLastNum];
 			inventories[inventoryLastNum] = nullptr;
 			inventories.pop_back();
 			inventoryLastNum--;
