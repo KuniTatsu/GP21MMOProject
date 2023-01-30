@@ -6,13 +6,29 @@
 
 #pragma once
 #include<string>
+#include<vector>
+#include<memory>
 
 class Item
 {
 public:
+
 	Item();
-	//~Item();
+
 	virtual ~Item() {}
+
+	inline int GetItemId() {
+		return id;
+	}
+
+	inline int GetItemType() {
+		return itemType;
+	}
+	std::vector<int>& GetAllIntData();
+
+	inline std::string GetItemName() {
+		return name;
+	}
 
 private:
 
@@ -22,21 +38,18 @@ private:
 	int str = 0;
 	int vit = 0;
 	int inteli = 0;
-	int min = 0;
+	int mid = 0;
 	int spd = 0;
 	int dex = 0;
 
-public:
+	int itemType = 0;
 
-	inline int getItemData(int type) {
-		return 0;
-	}
-	inline std::string getItemName() {
-		return "";
-	}
-	inline std::string DrawItemStringData(int x, int y) {
-		return "";
-	}
-	void DrawItemData(int x, int y);
-	
+	std::vector<int> intData;
+
+private:
+
+	void SetIntData();
+
+
+
 };

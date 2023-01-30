@@ -1,6 +1,5 @@
 #pragma once
 #include"Item.h"
-#include<vector>
 #include<memory>
 
 /*
@@ -16,14 +15,23 @@
 class EquipItem : public Item
 {
 public:
-	EquipItem();
+	/*id = itemId;
+	name = itemName;
+	HP
+	str = itemStr;
+	vit = itemVit;
+	inteli = itemInt;
+	min = itemMin;
+	spd = itemSpd;
+	dex = itemDex;*/
+	EquipItem(int ID,std::string Name,float HP,int STR,int VIT,int INT,int MID,int SPD,int DEX);
 	~EquipItem();
 
 private:
-
+	int hp = 0;
 
 public:
-	std::vector<int> GetAllIntData();
+	
 	bool GetIsEquiped();
 	void DrawEquipItemStatus(int x, int y, int GetSubId);
 	int GetSubId();

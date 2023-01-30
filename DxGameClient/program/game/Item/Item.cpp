@@ -11,9 +11,21 @@ Item::Item()
 	min = itemMin;
 	spd = itemSpd;
 	dex = itemDex;*/
+
+	intData.clear();
 }
 
-void Item::DrawItemData(int x, int y)
+std::vector<int>& Item::GetAllIntData()
 {
+	return intData;
+}
 
+void Item::SetIntData()
+{
+	intData.emplace_back(str);
+	intData.emplace_back(vit);
+	intData.emplace_back(inteli);
+	intData.emplace_back(mid);
+	intData.emplace_back(spd);
+	intData.emplace_back(dex);
 }

@@ -5,14 +5,10 @@ EquipItem::EquipItem() {
 
 }
 
-EquipItem::~EquipItem()
+EquipItem::EquipItem(int ID, std::string Name, float HP, int STR, int VIT, int INT, int MID, int SPD, int DEX)
 {
 }
 
-std::vector<int> EquipItem::GetAllIntData()
-{
-	return std::vector<int>();
-}
 
 bool EquipItem::GetIsEquiped()
 {
