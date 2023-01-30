@@ -256,6 +256,8 @@ const std::string Connect::GetServerMessage()
 	if (hoge["isDead"].string_value() != "") {
 		auto enemyManager = EnemyManager::GetInstance();
 		int id = hoge["id"].int_value();
+
+		enemyManager->ShareEnemyDead(id);
 		return "";
 	}
 
