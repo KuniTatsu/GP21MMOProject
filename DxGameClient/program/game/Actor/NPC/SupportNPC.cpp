@@ -1,5 +1,6 @@
 #include "SupportNPC.h"
 #include"../../GameManager.h"
+#include"../../UI/UIManager.h"
 
 SupportNPC::SupportNPC(float x, float y, float distance) :NPC(x, y)
 {
@@ -64,10 +65,12 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 {
 	if (mainSequence.isStart()) {
 		cursorNum = 0;
+		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
 	}
 	//‹ß‚­‚Éplayer‚ª‚¢‚È‚©‚Á‚½‚ç–³Ž‹‚·‚é
 	if (!isNearPlayer) {
 		cursorNum = 0;
+		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
 		ChangeSequence(SEQUENCE::WAIT);
 		return false;
 	}
@@ -82,11 +85,12 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 
 	//€–Ú‚ðŒˆ’è
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
-		
+
 		ChangeSequence(SEQUENCE::HINT);
 	}
 	//‰ï˜b‚ð‚â‚ß‚é
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
+		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
 		ChangeSequence(SEQUENCE::WAIT);
 	}
 	return true;
@@ -98,6 +102,7 @@ bool SupportNPC::SeqHint(const float DeltaTime)
 	if (!isNearPlayer) {
 
 		cursorNum = 0;
+		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
 		ChangeSequence(SEQUENCE::WAIT);
 		return false;
 	}
