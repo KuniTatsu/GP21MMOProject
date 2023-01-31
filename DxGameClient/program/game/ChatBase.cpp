@@ -54,33 +54,23 @@ ChatBase::ChatBase()
 	gManager = GameManager::GetInstance();
 
 	connect = new Connect();
-	//サーバーに接続
-	int result = connect->ConnectServer();
+	////サーバーに接続
+	//int result = connect->ConnectServer();
 
 	
 	if (!init) {
 
 		//string name = SjistoUTF8("プレイヤー1");
 
-		connect->EntryServer("プレイヤー1");
+		/*connect->EntryServer("プレイヤー1");
 
-		connect->GetEntryUserId();
+		connect->GetEntryUserId();*/
 
 		init = true;
 	}
 
 
 	const string test = "こんにちは";
-
-	/*Json obj = Json::object({
-		{ "chat", test },
-		});
-
-	std::string hogehoge = obj.dump();*/
-
-
-	//string utf = gManager->SjistoUTF8(test);
-
 
 	//メッセージを送信
 	connect->SendClientMessage(test);
@@ -96,6 +86,7 @@ ChatBase::ChatBase()
 
 ChatBase::~ChatBase()
 {
+	delete connect;
 	DeleteKeyInput(g_InputHandle);
 }
 

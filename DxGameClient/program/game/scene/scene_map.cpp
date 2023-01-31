@@ -21,6 +21,9 @@ Scene_Map::~Scene_Map()
 
 void Scene_Map::initialzie()
 {
+	//チャット接続
+	gManager->CreateChat();
+
 	//プレイヤーの生成
 	player = gManager->CreatePlayer();
 	//マップの生成
@@ -30,6 +33,15 @@ void Scene_Map::initialzie()
 
 	//playerの初期マップを登録
 	gManager->SetStayMap();
+
+
+	//Player情報のサーバーへの送信
+	gManager->SendPlayerInfoToServer();
+	//Dummy生成完了
+	player->SetIsCreatedDummy();
+
+	//エネミー取得
+	gManager->GetServerEnemyInfo();
 
 	///*Playerの生成*/
 	//player->Draw(&camera);

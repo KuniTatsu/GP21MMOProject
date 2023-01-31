@@ -48,7 +48,7 @@ SceneManager::SceneManager()
 {
 	imgBlack = LoadGraph("graphics/black.bmp");
 	//nowScene = new SceneTitle();
-	nowScene = new Scene_Map();
+	nowScene = new SceneTitle();
 
 	nowScene->initialzie();
 }

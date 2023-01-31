@@ -181,6 +181,7 @@
     <ClInclude Include="program\game\Map.h" />
     <ClInclude Include="program\game\ResourceManager.h" />
     <ClInclude Include="program\game\SceneManager.h" />
+    <ClInclude Include="program\game\scene\LoginScene.h" />
     <ClInclude Include="program\game\scene\Map.h" />
     <ClInclude Include="program\game\scene\scene_base.h" />
     <ClInclude Include="program\game\scene\scene_map.h" />
@@ -267,6 +268,7 @@
     <ClCompile Include="program\game\main.cpp" />
     <ClCompile Include="program\game\ResourceManager.cpp" />
     <ClCompile Include="program\game\SceneManager.cpp" />
+    <ClCompile Include="program\game\scene\LoginScene.cpp" />
     <ClCompile Include="program\game\scene\Map.cpp" />
     <ClCompile Include="program\game\scene\scene_map.cpp" />
     <ClCompile Include="program\game\scene\scene_title.cpp" />

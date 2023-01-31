@@ -7,6 +7,7 @@ class Player :public Actor
 {
 public:
 	Player(int startX, int startY,int type);
+	Player(int startX, int startY, double HP,int ghNum);
 	~Player();
 
 	void Update()override;
@@ -30,6 +31,8 @@ public:
 	inline void	SetIsCreatedDummy() {
 		isCreatedDummy = true;
 	}
+
+	void SetAttributeFromServer(int STR, int VIT, int INT, int MID, int SPD, int DEX);
 
 	void SetTalent();
 

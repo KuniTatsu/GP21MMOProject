@@ -56,3 +56,14 @@ void ActorData::CalcMainStatus()
 
 	HP = vit * 20 + str * 5;
 }
+
+void ActorData::CalcDefaultStatus()
+{
+	attack = str * 20 + dex * 5;
+	mgAttack = intelligence * 20 + mid * 5;
+
+	defence = vit * 20 + spd * 5;
+	mgDefence = mid * 20 + spd * 5;
+
+	moveSpeed = spd * 3 - str * 2;
+}
