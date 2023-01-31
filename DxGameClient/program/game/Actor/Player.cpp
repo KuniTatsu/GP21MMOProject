@@ -85,6 +85,7 @@ void Player::Draw(Camera* camera)
 	DrawRotaGraphF(x, y, 1, 0, gh, false);
 
 	if (bufPos.empty())return;
+
 	//test 当たり判定の範囲を画像で描画
 	float boxX1 = bufPos[0].x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
 	float boxY1 = bufPos[0].y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
@@ -103,7 +104,6 @@ void Player::Draw(Camera* camera)
 	/*DrawExtendGraph(boxX1, boxY1, boxX2, boxY2, testGh, true);*/
 	//左上、右上、右下、左下の頂点の座標 
 	DrawModiGraphF(boxX1, boxY1, boxX2, boxY2, boxX4, boxY4, boxX3, boxY3, testGh, true);
-
 }
 
 void Player::Init()
@@ -178,7 +178,9 @@ void Player::Move()
 		//向き変更
 		SetExDir(fixMoveX, fixMoveY);
 
+#ifdef DEBUG_OFF
 		gManager->SendPlayerInfoToServer();
+#endif
 	}
 
 	//gManager->SetStayMap();

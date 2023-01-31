@@ -20,6 +20,9 @@
 GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
 
+/*fukushi_デバック用*/
+//#define DEBUG_OFF
+
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
 GameManager::GameManager() {
@@ -471,8 +474,6 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 //------------------------------------------------------------------------------------------------
-
-//develop_fukushi
 //プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
@@ -798,34 +799,40 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
+
+#ifdef DEBUG_OFF
 		connect = std::make_shared<Connect>();
-
-
+#endif
 		uiEditor = std::make_shared<UIEditor>();
-		uiEditor->Init();
 
+		uiEditor->Init();
 
 		init = true;
 	}
 
 	GetMousePoint(&mousePosX, &mousePosY);
 
+
 	deltaTime = delta_time;
 
 	sManager->Update(delta_time);
 	sManager->Draw();
 
+#ifdef DEBUG_OFF
 	if (chat) {
 		chat->Update();
 		chat->Draw();
-
 	}
-	//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
-	//	uiEditor->ChangeEnable();
-	//}
+#endif
 
-	//uiEditor->Update();
-	//uiEditor->Draw();
+
+
+//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
+//	uiEditor->ChangeEnable();
+//}
+
+//uiEditor->Update();
+//uiEditor->Draw();
 
 
 }
