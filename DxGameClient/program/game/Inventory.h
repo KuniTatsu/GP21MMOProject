@@ -48,7 +48,7 @@ public:
 
 public:
 
-	std::shared_ptr<Item>inventory[10] = { nullptr,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr };
+	//std::shared_ptr<Item>inventory[10] = { nullptr,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr };
 
 	////“à•”‚ÉItem‚ð10ŒÂ‚à‚Âlist
 	std::list<std::shared_ptr<Item>> inventoryItemList;

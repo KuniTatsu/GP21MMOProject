@@ -18,6 +18,7 @@ Inventory::~Inventory()
 {
 }
 
+/*インベントリの追加*/
 void Inventory::AddInventory(std::shared_ptr<Item> item)
 {
 	if (inventoryItemList.size() == 10)return;
@@ -25,6 +26,7 @@ void Inventory::AddInventory(std::shared_ptr<Item> item)
 	itemNum++;
 }
 
+/*カーソルの動き（key版）*/
 void Inventory::CursorMove()
 {
 	if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_UP)) {
@@ -32,10 +34,12 @@ void Inventory::CursorMove()
 		selectCursor = (selectCursor + (itemNum - 1)) % itemNum;
 	}
 	else if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_DOWN)) {
-
+		itemNum = GetItemCount();
+		selectCursor = (selectCursor + 1) % itemNum;
 	}
 }
 
+/*カーソル、初期値移動*/
 void Inventory::CursorReset()
 {
 	selectCursor = 0;
@@ -52,8 +56,12 @@ void Inventory::DrawInventory(const int x, const int y)
 		//装備アイテムなら
 		if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::EQUIP)) {
 			auto eItem = std::shared_ptr<EquipItem>();
-			//装備アイテムかつ装備するなら'E'を頭に描画する
+			
 			if (eItem->GetIsEquiped()) {
+				//装備アイテムかつ装備するなら'E'を頭に描画する
+				if (eItem->GetIsEquiped()) {
+					DrawStringEx(x + 40, y + 10 + 30 * i, -1, "[E]");
+				}
 				//アイテム名の描画
 				DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
 			}
@@ -87,6 +95,7 @@ void Inventory::DrawItemDesc(int x, int y)
 	//inventory[selectCursor]->DrawItemData(x, y);
 }
 
+/*装備アイテムの説明描画*/
 void Inventory::DrawEquipItemStatus(const int x, const int y)
 {
 	if (inventoryItemList.empty())return;
@@ -106,6 +115,7 @@ void Inventory::DrawEquipItemStatus(const int x, const int y)
 	}
 }
 
+/*必要コインの描画*/
 void Inventory::DrawNeedCoin(int x, int y)
 {
 	if (inventoryItemList.empty())return;
@@ -129,7 +139,7 @@ void Inventory::DrawNeedCoin(int x, int y)
 	//文字サイズ変更
 	SetFontSize(25);
 	DrawStringEx(x + 10, y + 10, -1, "購入必要コイン:%d", needCoin);
-	DrawStringEx(x + 10, y + 60, -1, "所持コイン:%d", /*gManager->player->GetHaveCoin()*/0);
+	DrawStringEx(x + 10, y + 60, -1, "所持コイン:%d", 0);
 	//文字サイズ変更
 	SetFontSize(16);
 }

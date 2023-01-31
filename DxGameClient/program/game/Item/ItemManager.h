@@ -25,9 +25,8 @@ public:
 
 private:
 
-	//std::vector<std::shared_ptr<Item>>itemMaster;
+	/*アイテム[装備or消費][ステータス]*/
 	std::vector<std::vector<std::shared_ptr<Item>>>itemMaster;
-
 
 public:
 	/*アイテムリスト*/

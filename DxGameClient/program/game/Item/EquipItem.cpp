@@ -9,11 +9,15 @@ EquipItem::EquipItem(int ID, std::string Name, float HP, int STR, int VIT, int I
 {
 }
 
-
-bool EquipItem::GetIsEquiped()
+EquipItem::~EquipItem()
 {
-	return false;
 }
+
+
+//bool EquipItem::GetIsEquiped()
+//{
+//	return false;
+//}
 
 void EquipItem::DrawEquipItemStatus(int x, int y, int GetSubId)
 {

@@ -2,7 +2,7 @@
 #include "Inventory.h"
 #include"Item/ItemManager.h"
 #include"Item/EquipItem.h"
-#include<string>
+//#include<string>
 
 InventoryManager* InventoryManager::instance = nullptr;
 
@@ -34,32 +34,33 @@ void InventoryManager::Destory()
 }
 
 
-
+/*インベントリにアイテム追加*/
 void InventoryManager::AddItemToInventory(const int ItemId, std::vector<std::shared_ptr<Inventory>>& Inventories, int& InventoryNum)
 {
 	//今のinventoryの持つアイテム配列がいっぱいなら
 	if (Inventories[InventoryNum]->inventoryItemList.size() >= 10) {
-		//if (sharedInventories[inventoryNum]->inventoryList.size() >= 10) {
-			//新しくinventoryのインスタンスを生成する
+		//新しくinventoryのインスタンスを生成する
 		auto newInventory = std::make_shared<Inventory>(InventoryNum + 1);
-		//Inventory* newInventory = new Inventory(InventoryNum + 1);
-
+		
 		//inventory配列に登録
 		Inventories.emplace_back(newInventory);
+		
 		//登録するinventoryを更新する
 		InventoryNum++;
 	}
 	auto item = iManager->GetItemFromId(ItemId);
-
+	
 	int type = item->GetItemType();
 
 	//データを取得して、アイテムを生成し、インベントリに追加する
-	auto item = iManager->CreateItem(ItemId, type);
+	auto createItem = iManager->CreateItem(ItemId, type);
 
 	//インベントリ追加
-	Inventories[InventoryNum]->AddInventory(item);
+	Inventories[InventoryNum]->AddInventory(createItem);
+
 }
 
+/*インベントリにあるアイテムを使用orトレードなど*/
 void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 {
 	//今の位置の配列番号を取得
@@ -74,11 +75,11 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 	}
 
 	//アイテムを消去
-	//delete((*itr));
 	itr = inventories[NowInventoryId]->inventoryItemList.erase(itr);
 
 	//カーソルの位置をひとつ上に移動
 	inventories[NowInventoryId]->SetCursorNum(-1);
+	
 	//popするアイテムがいる場所=今いるインベントリが最後のインベントリではない場合
 	if (NowInventoryId != inventoryLastNum) {
 		int checkInventoryNum = NowInventoryId;
@@ -113,7 +114,7 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 			inventories[inventoryLastNum] = nullptr;
 			inventories.pop_back();
 			inventoryLastNum--;
-			
+
 			//fukushi_isDelteteInventoryがfalesになる場合の処理がどこかで必要
 			isDeleteInventory = true;
 		}
@@ -122,5 +123,7 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 	if (isDeleteInventory)return;
 
 	//カーソルの位置を一番上にリセット
-	if (inventories[NowInventoryId]->inventoryItemList.empty())inventories[NowInventoryId]->CursorReset();
+	if (inventories[NowInventoryId]->inventoryItemList.empty()) {
+		inventories[NowInventoryId]->CursorReset();
+	}
 }

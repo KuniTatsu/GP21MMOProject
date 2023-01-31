@@ -1,6 +1,7 @@
 #pragma once
 #include"Item.h"
-#include<memory>
+//#include<memory>
+//#include<string>
 
 /*
 装備アイテムのクラス
@@ -28,7 +29,7 @@ public:
 	~EquipItem();
 
 private:
-	int hp = 0;
+
 	bool isEquiped = false;
 
 public:
