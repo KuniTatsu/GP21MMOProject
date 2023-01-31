@@ -255,6 +255,11 @@ public:
 	inline std::string GetClientUUID() {
 		return clientUUID;
 	}
+	//connect取得
+	std::shared_ptr<Connect>GetConnection() {
+		if(connect)return connect;
+		return nullptr;
+	}
 
 	//サーバーに接続する関数
 	void ConnectServer();

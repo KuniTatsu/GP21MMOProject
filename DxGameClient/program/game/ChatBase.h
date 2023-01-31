@@ -1,6 +1,7 @@
 #pragma once
 #include<string>
 #include<vector>
+#include<memory>
 #include"../dxlib_ext/dxlib_ext.h"
 
 class GameManager;
@@ -76,6 +77,6 @@ private:
 
 	GameManager* gManager = nullptr;
 
-	Connect* connect = nullptr;
+	std::shared_ptr<Connect> connect = nullptr;
 
 };

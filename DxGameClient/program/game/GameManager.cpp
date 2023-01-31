@@ -800,36 +800,13 @@ void GameManager::Update(float delta_time) {
 
 		connect = std::make_shared<Connect>();
 
-		//ConnectServer();
 		uiEditor = std::make_shared<UIEditor>();
-
 		uiEditor->Init();
-
-		//if (chat == nullptr) {
-		//	chat = new ChatBase();
-		//}
-
-		/*acceptThread = std::thread([this] {GameManager::Accept(); });*/
-		////enemyî•ñ–â‚¢‡‚¹
-		//connect->GetServerEnemyInfo();
-
-		//SendPlayerInfoToServer();
-		////Dummy¶¬Š®—¹
-		//player->SetIsCreatedDummy();
-
-		//test—pDummy¶¬
-		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
 
 		init = true;
 	}
 
 	GetMousePoint(&mousePosX, &mousePosY);
-	/*tnl::DebugTrace("%d", num1);
-	tnl::DebugTrace("\n");*/
-
-	/*if (chat == nullptr) {
-		chat = new ChatBase();
-	}*/
 
 	deltaTime = delta_time;
 
@@ -840,12 +817,12 @@ void GameManager::Update(float delta_time) {
 		chat->Update();
 		chat->Draw();
 	}
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
-		uiEditor->ChangeEnable();
-	}
+	//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
+	//	uiEditor->ChangeEnable();
+	//}
 
-	uiEditor->Update();
-	uiEditor->Draw();
+	//uiEditor->Update();
+	//uiEditor->Draw();
 
 
 }
