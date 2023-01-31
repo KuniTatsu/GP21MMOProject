@@ -800,8 +800,10 @@ void GameManager::Update(float delta_time) {
 
 		connect = std::make_shared<Connect>();
 
+
 		uiEditor = std::make_shared<UIEditor>();
 		uiEditor->Init();
+
 
 		init = true;
 	}
@@ -816,6 +818,7 @@ void GameManager::Update(float delta_time) {
 	if (chat) {
 		chat->Update();
 		chat->Draw();
+
 	}
 	//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
 	//	uiEditor->ChangeEnable();

@@ -25,39 +25,101 @@ void UIManager::Update()
 void UIManager::Draw()
 {
 	if (!canDrawUI)return;
-	if (makedUI[nowDrawUI].empty())return;
+	//UIの種類ごとに描画判定
+	for (int i = 0; i < static_cast<int>(UISERIES::MAX); ++i) {
 
-	for (auto ui : makedUI[nowDrawUI])
+		auto& vector = GetUIVector(i);
+		if (vector[NOWDRAWUIs[i]].empty())continue;
+
+		for (auto ui : vector[NOWDRAWUIs[i]])
+		{
+			ui->Draw();
+		}
+	}
+
+	/*if (makedMenuUI[nowDrawMenuUI].empty())return;
+
+	for (auto ui : makedMenuUI[nowDrawMenuUI])
 	{
 		ui->Draw();
-	}
+	}*/
 
 	//DRAWSEQUENCE[nowDrawUI](this);
 }
 
-void UIManager::ChangeDrawUI(int UINum)
+void UIManager::ChangeDrawUI(int MenuSeries, int UINum)
 {
-	if (UINum >= static_cast<int>(UI::MAX))return;
-	if (nowDrawUI == UINum)return;
-	nowDrawUI = UINum;
+	//選んだメニューシリーズの最大数より多ければ変更しない
+	if (UINum >= static_cast<int>(SERIESINNUM[MenuSeries]))return;
+
+	if (NOWDRAWUIs[MenuSeries] == UINum)return;
+
+	nowDrawMenuUI = UINum;
+	NOWDRAWUIs[MenuSeries] = UINum;
+}
+//外部からのUI配列の取得用
+const std::vector<std::vector<std::shared_ptr<GraphicUI>>>& UIManager::GetUI(int series)
+{
+	if (series >= static_cast<int>(UISERIES::MAX))return errorVec;
+
+	switch (series)
+	{
+	case static_cast<int>(UISERIES::MENU):
+		return makedMenuUI;
+		break;
+	case static_cast<int>(UISERIES::SUPNPC):
+		return makedSupNPCUI;
+		break;
+	case static_cast<int>(UISERIES::DISASSEMBLYNPC):
+		return makedDisassemblyNPCUI;
+		break;
+	case static_cast<int>(UISERIES::GUARDNPC):
+		return makedGuardNPCUI;
+		break;
+
+	default:
+		break;
+	}
+
+	return errorVec;
 }
 
 UIManager::UIManager()
 {
-	makedUI.resize(static_cast<int>(UI::MAX));
+	makedMenuUI.resize(static_cast<int>(MENUUI::MAX));
+	makedSupNPCUI.resize(static_cast<int>(SUPNPCUI::MAX));
+	makedDisassemblyNPCUI.resize(static_cast<int>(DISASSEMBLYNPCUI::MAX));
+	makedGuardNPCUI.resize(static_cast<int>(GUARDNPCUI::MAX));
 
 	//csvロード
-	for (int i = 0; i < static_cast<int>(UI::MAX); ++i) {
-		LoadUI(RELOADPASS[i], i);
+	//UIの種類ごとにロード Menu,Sup,Disassembly,guard
+	for (int i = 0; i < static_cast<int>(UISERIES::MAX); ++i) {
+
+		//結果を入れるベクターの参照を取得
+		auto& vector = GetUIVector(i);
+		//パスの取得
+		auto pass = GetLoadPass(i);
+
+		//種類の持つUIの個数で読み込む
+		for (int k = 0; k < SERIESINNUM[i]; ++k) {
+			LoadUI(pass[k], vector, k);
+		}
 	}
 }
 
 UIManager::~UIManager()
 {
-	makedUI.clear();
+	makedMenuUI.clear();
+
+	for (int i = 0; i < static_cast<int>(UISERIES::MAX); ++i) {
+
+		//結果を入れるベクターの参照を取得
+		auto& vector = GetUIVector(i);
+		vector.clear();
+	}
 }
 
-void UIManager::LoadUI(std::string Pass, int UIType)
+void UIManager::LoadUI(std::string Pass, std::vector<std::vector<std::shared_ptr<GraphicUI>>>& putInVector, int UIType)
 {
 	//CSV読み込み
 	auto loadUICsv = tnl::LoadCsv(Pass);
@@ -93,7 +155,7 @@ void UIManager::LoadUI(std::string Pass, int UIType)
 			auto newUI = std::make_shared<GraphicUI>(frameWidth, frameHeight, data, type);
 			newUI->ChangeLiveUI();
 			//vectorに登録
-			makedUI[UIType].emplace_back(newUI);
+			putInVector[UIType].emplace_back(newUI);
 			//次のループへ
 			continue;
 		}
@@ -102,15 +164,63 @@ void UIManager::LoadUI(std::string Pass, int UIType)
 			auto newUI = std::make_shared<GraphicUI>(frameWidth, frameHeight, data, type);
 			newUI->ChangeLiveUI();
 			//vectorに登録
-			makedUI[UIType].emplace_back(newUI);
+			putInVector[UIType].emplace_back(newUI);
 		}
 		else {
 			//GraphicUIクラスを生成(枠の中に画像がある場合
 			auto newUI = std::make_shared<GraphicUI>(frameWidth, frameHeight, loadUICsv[i][12], data, type);
 			newUI->ChangeLiveUI();
 			//vectorに登録
-			makedUI[UIType].emplace_back(newUI);
+			putInVector[UIType].emplace_back(newUI);
 		}
+	}
+}
+//ロード時の参照用
+std::vector<std::vector<std::shared_ptr<GraphicUI>>>& UIManager::GetUIVector(int series)
+{
+	if (series >= static_cast<int>(UISERIES::MAX))return errorVec;
+
+	switch (series)
+	{
+	case static_cast<int>(UISERIES::MENU):
+		return makedMenuUI;
+		break;
+	case static_cast<int>(UISERIES::SUPNPC):
+		return makedSupNPCUI;
+		break;
+	case static_cast<int>(UISERIES::DISASSEMBLYNPC):
+		return makedDisassemblyNPCUI;
+		break;
+	case static_cast<int>(UISERIES::GUARDNPC):
+		return makedGuardNPCUI;
+		break;
+
+	default:
+		break;
+	}
+
+	return errorVec;
+}
+
+const std::string* UIManager::GetLoadPass(int series)
+{
+	switch (series)
+	{
+	case static_cast<int>(UISERIES::MENU):
+		return MENUPASS;
+		break;
+	case static_cast<int>(UISERIES::SUPNPC):
+		return SUPNPCUIPASS;
+		break;
+	case static_cast<int>(UISERIES::DISASSEMBLYNPC):
+		return DISNOCUIPASS;
+		break;
+	case static_cast<int>(UISERIES::GUARDNPC):
+		return GUARDNPCUIPASS;
+		break;
+
+	default:
+		break;
 	}
 }
 
