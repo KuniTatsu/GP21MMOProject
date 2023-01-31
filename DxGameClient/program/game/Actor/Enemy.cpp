@@ -167,7 +167,9 @@ void Enemy::Update()
 
 	if (!isMove)return;
 
+#ifdef DEBUG_OFF
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
+#endif
 
 	if (onFollowToPlayer) {
 		EnemyMove();
