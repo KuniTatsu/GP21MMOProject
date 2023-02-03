@@ -54,5 +54,7 @@ void ActorData::CalcMainStatus()
 
 	moveSpeed = spd * 3 - str * 2;
 
+	if (moveSpeed < 0)moveSpeed = 1;
+
 	HP = vit * 20 + str * 5;
 }

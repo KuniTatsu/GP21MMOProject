@@ -33,7 +33,7 @@ private:
 //¶¬‰ñ”
 	int createCount = 0;
 	//¶¬§ŒÀ
-	const int SPAWNLIMIT = 5;
+	const int SPAWNLIMIT = 2;
 
 	int spawnLimit = 5;
 
