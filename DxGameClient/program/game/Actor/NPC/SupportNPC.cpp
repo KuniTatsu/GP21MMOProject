@@ -1,11 +1,24 @@
 #include "SupportNPC.h"
+#include"NPCSpeak.h"
 #include"../../GameManager.h"
 #include"../../UI/UIManager.h"
+#include"../../UI/GraphicUI.h"
+#include"../../ResourceManager.h"
+#include"../Camera.h"
+#include<math.h>
 
-SupportNPC::SupportNPC(float x, float y, float distance) :NPC(x, y)
+SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y)
 {
+	drawPos.x = x;
+	drawPos.y = y;
 
 	canHearDistance = distance;
+	//NPCの話す内容の読み込み
+	if (loadNPCHint()) {
+		maxPageNum = static_cast<int>(std::floor(npcSpeaks.size() / MAXDRAWNUM));
+	}
+	//NPCの見た目を設定
+	ghs = ResourceManager::GetInstance()->GetCharaVectorAtGhNum(ghNum);
 
 }
 
@@ -18,6 +31,19 @@ void SupportNPC::Update()
 	auto gManager = GameManager::GetInstance();
 	float deltaTime = gManager->deltaTime;
 	mainSequence.update(deltaTime);
+
+}
+
+void SupportNPC::Draw(Camera* camera)
+{
+	DrawRotaGraphF(drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1), drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1),
+						1, 0, ghs[10], true);
+	//シークエンスごとの描画
+	DRAWSEQUENCE[static_cast<uint32_t>(nowSequence)](this);
+}
+
+void SupportNPC::Init()
+{
 
 }
 
@@ -45,7 +71,15 @@ bool SupportNPC::CheckNearNPC(float PlayerX, float PlayerY)
 
 bool SupportNPC::loadNPCHint()
 {
-	return false;
+	bool ret = false;;
+
+	auto loadCsv = tnl::LoadCsv("csv/NpcText/hint.csv");
+
+	for (int i = 1; i < loadCsv.size(); ++i) {
+		CreateNpcSpeak(std::stoi(loadCsv[i][0]), loadCsv[i][1], loadCsv[i][2]);
+	}
+	if (IsCreatedNpcSpeak())ret = true;
+	return ret;
 }
 
 bool SupportNPC::SeqWait(const float DeltaTime)
@@ -65,7 +99,10 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 {
 	if (mainSequence.isStart()) {
 		cursorNum = 0;
+		//SUPNPCのUIを描画状態にする
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		//描画するUIをFirstMenuに変更
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::FIRSTMENU));
 	}
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer) {
@@ -77,10 +114,18 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 
 	//上下にカーソル移動をさせ、項目を選ぶ
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_DOWN)) {
-		cursorNum = (cursorNum + 1) % hint.size();
+		cursorNum = (cursorNum + 1) % MAXDRAWNUM;
 	}
 	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_UP)) {
-		cursorNum = (cursorNum + hint.size() - 1) % hint.size();
+		cursorNum = (cursorNum + MAXDRAWNUM - 1) % MAXDRAWNUM;
+	}
+
+	//hintのページ切り替え
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
+		nowDrawPage = (nowDrawPage + 1) % maxPageNum;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
+		nowDrawPage = (nowDrawPage + maxPageNum - 1) % maxPageNum;
 	}
 
 	//項目を決定
@@ -98,6 +143,11 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 
 bool SupportNPC::SeqHint(const float DeltaTime)
 {
+	if (mainSequence.isStart()) {
+		//描画するUIをhintに変更
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::HINT));
+	}
+
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer) {
 
@@ -115,16 +165,44 @@ bool SupportNPC::SeqHint(const float DeltaTime)
 	return false;
 }
 
+void SupportNPC::DrawWaitSequence()
+{
+}
+
 void SupportNPC::DrawFirstMenuSequence()
 {
+	tnl::Vector3 drawPos = {};
+
 	//hintの数だけメニューを出す
+	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
+	if (mainSequence.isStart()) {
+		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
 
+		//1番が文字を描画するUI枠なのでそこだけ取得する
+		auto& leftTopPos = firstMenuGraphics[1]->GetLeftTopPos();
+		drawPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y, 0);
+	}
 
-
+	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawPos);
 }
 
 void SupportNPC::DrawHintSequence()
 {
+	//選ばれたヒントの配列番号
+	int selectHint = 0;
+	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
+	if (mainSequence.isStart()) {
+		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
+
+		//2番が文字を描画するUI枠なのでそこだけ取得する
+		auto& leftTopPos = firstMenuGraphics[2]->GetLeftTopPos();
+		drawPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y, 0);
+
+		selectHint = nowDrawPage * MAXDRAWNUM + cursorNum;
+	}
+
+	DrawNpcText(selectHint, drawPos);
+
 }
 
 bool SupportNPC::ChangeSequence(SEQUENCE NextSeq)

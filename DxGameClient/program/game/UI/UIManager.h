@@ -47,6 +47,9 @@ public:
 	//UIの入れ物を取得する関数
 	const std::vector<std::vector<std::shared_ptr<GraphicUI>>>& GetUI(int series);
 
+	//現在描画中のUIを取得する関数
+	const std::vector<std::shared_ptr<GraphicUI>>& GetNowDrawGraphic(int series);
+
 public:
 	//どの機能のUIか
 	enum class UISERIES :uint32_t {
@@ -56,17 +59,6 @@ public:
 		GUARDNPC,
 		MAX
 	};
-
-private:
-	static UIManager* instance;
-
-	//現在表示中のUI番号の配列
-	std::vector<int> NOWDRAWUIs = { nowDrawMenuUI,nowDrawSupNPCUI,nowDrawDisassemblyNpcUI,nowDrawGuardNpcUI };
-
-
-	//機能ごとのUIの数の配列
-	const std::vector<int>SERIESINNUM = { static_cast<int>(MENUUI::MAX),static_cast<int>(SUPNPCUI::MAX),
-											static_cast<int>(DISASSEMBLYNPCUI::MAX),static_cast<int>(GUARDNPCUI::MAX) };
 
 	enum class MENUUI :uint32_t {
 		TOP,
@@ -94,6 +86,18 @@ private:
 		MAX
 	};
 
+private:
+	static UIManager* instance;
+
+	//現在表示中のUI番号の配列
+	std::vector<int> NOWDRAWUIs = { nowDrawMenuUI,nowDrawSupNPCUI,nowDrawDisassemblyNpcUI,nowDrawGuardNpcUI };
+
+
+	//機能ごとのUIの数の配列
+	const std::vector<int>SERIESINNUM = { static_cast<int>(MENUUI::MAX),static_cast<int>(SUPNPCUI::MAX),
+											static_cast<int>(DISASSEMBLYNPCUI::MAX),static_cast<int>(GUARDNPCUI::MAX) };
+
+	
 
 	//-----現在選択中のui番号-----
 	int nowDrawMenuUI = static_cast<int>(MENUUI::TOP);

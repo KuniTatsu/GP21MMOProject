@@ -162,6 +162,8 @@
     <ClInclude Include="program\game\Actor\DummyPlayer.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
     <ClInclude Include="program\game\Actor\NPC\NPC.h" />
+    <ClInclude Include="program\game\Actor\NPC\NPCManager.h" />
+    <ClInclude Include="program\game\Actor\NPC\NPCSpeak.h" />
     <ClInclude Include="program\game\Actor\NPC\SupportNPC.h" />
     <ClInclude Include="program\game\Actor\Player.h" />
     <ClInclude Include="program\game\Animation.h" />
@@ -251,6 +253,8 @@
     <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\NPCManager.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\NPCSpeak.cpp" />
     <ClCompile Include="program\game\Actor\NPC\SupportNPC.cpp" />
     <ClCompile Include="program\game\Actor\Player.cpp" />
     <ClCompile Include="program\game\Animation.cpp" />

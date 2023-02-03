@@ -7,6 +7,9 @@
 #include"../Actor/DummyPlayer.h"
 #include"../UI/UIManager.h"
 #include"../ResourceManager.h"
+#include"../Actor/NPC/SupportNPC.h"
+#include"../Actor/NPC/NPC.h"
+#include"../Actor/NPC/NPCManager.h"
 
 Scene_Map::Scene_Map()
 {
@@ -34,6 +37,9 @@ void Scene_Map::initialzie()
 	///*Playerの生成*/
 	//player->Draw(&camera);
 
+	//NPCの生成
+	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 50, 50, 0);
+
 }
 
 void Scene_Map::update(float delta_time)
@@ -56,11 +62,16 @@ void Scene_Map::update(float delta_time)
 		eManager->Update(gManager->deltaTime);
 	}
 
+	auto& npcList = NPCManager::GetInstance()->GetNPCList();
+	for (auto& npc : npcList) {
+		npc->Update();
+		npc->Draw(&camera);
+	}
 
 	auto uiManager = UIManager::GetInstance();
 	//メニュー描画切り替え //今後はシークエンスにして一番最初のシークエンスでのみ変更可能にする
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
-		uiManager->ChangeCanDrawUI();
+		uiManager->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::MENU));
 	}
 	//debug
 	if (uiManager->GetCanDraw()) {

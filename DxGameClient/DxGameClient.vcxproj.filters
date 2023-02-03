@@ -73,6 +73,8 @@
     <ClCompile Include="program\game\UI\UIManager.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
     <ClCompile Include="program\game\Actor\NPC\SupportNPC.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\NPCSpeak.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\NPCManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -150,6 +152,8 @@
     <ClInclude Include="program\game\UI\UIManager.h" />
     <ClInclude Include="program\game\Actor\NPC\NPC.h" />
     <ClInclude Include="program\game\Actor\NPC\SupportNPC.h" />
+    <ClInclude Include="program\game\Actor\NPC\NPCSpeak.h" />
+    <ClInclude Include="program\game\Actor\NPC\NPCManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

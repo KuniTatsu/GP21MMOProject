@@ -84,6 +84,11 @@ const std::vector<std::vector<std::shared_ptr<GraphicUI>>>& UIManager::GetUI(int
 	return errorVec;
 }
 
+const std::vector<std::shared_ptr<GraphicUI>>& UIManager::GetNowDrawGraphic(int series)
+{
+	return GetUI(series)[NOWDRAWUIs[series]];
+}
+
 UIManager::UIManager()
 {
 	makedMenuUI.resize(static_cast<int>(MENUUI::MAX));
