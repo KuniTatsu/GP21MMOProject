@@ -136,38 +136,18 @@ unsigned int Enemy::ChangedColor()
 
 void Enemy::EnemyMove() {
 
+	auto v = gManager->GetVectorToPlayer(drawPos);
+	auto s = myData->GetMoveSpeed();
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 }
 
 void Enemy::Update()
 {
-	//debug
-	bool isMove = false;
+	
 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_W)) {
-		drawPos.y--;
-		myExDir = EXDIR::TOP;
-		isMove = true;
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_A)) {
-		drawPos.x--;
-		myExDir = EXDIR::LEFT;
-		isMove = true;
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_S)) {
-		drawPos.y++;
-		myExDir = EXDIR::BOTTOM;
-		isMove = true;
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_D)) {
-		drawPos.x++;
-		myExDir = EXDIR::RIGHT;
-		isMove = true;
-	}
-
-	if (!isMove)return;
-
+#ifdef DEBUG_OFF
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
+#endif
 
 	if (onFollowToPlayer) {
 		EnemyMove();
@@ -179,9 +159,7 @@ void Enemy::Draw(Camera* camera)
 	auto x = static_cast<int>(drawPos.x) - camera->pos.x + (gManager->SCREEN_WIDTH >> 1);
 	auto y = static_cast<int>(drawPos.y) - camera->pos.y + (gManager->SCREEN_HEIGHT >> 1);
 
-	//if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))x++;
-	if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))drawPos.x++;
-
+	
 	/*õ“GŠÖ”*/
 	SearchBox(tnl::Vector3(x, y, 0), myData->GetAttackRange());
 

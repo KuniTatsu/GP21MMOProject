@@ -20,6 +20,9 @@
 GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
 
+/*fukushi_デバック用*/
+//#define DEBUG_OFF
+
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
 GameManager::GameManager() {
@@ -124,11 +127,13 @@ std::shared_ptr<Player> GameManager::CreatePlayer()
 	return player;
 }
 
+/*マップ生成関数*/
 bool GameManager::CreateMap()
 {
 	int hoge = 0;
 	if (Maps.empty()) {
-		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0));
+		/*ファーストマップ(村)*/
+		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0),static_cast<uint32_t>(Map::MAPTYPE::VILLAGE));
 		firstMap->test = hoge;
 
 		hoge++;
@@ -141,7 +146,7 @@ bool GameManager::CreateMap()
 			//nullだった場合の処理
 			//Mapを新しく生成する
 			tnl::Vector3 createMapCenter = firstMap->GetMapCenterPos() + MAPPOSOFFSET[i];
-			auto newMap = std::make_shared<Map>(createMapCenter);
+			auto newMap = std::make_shared<Map>(createMapCenter,static_cast<uint32_t>(Map::MAPTYPE::GRASS));
 			newMap->test = hoge;
 			hoge++;
 
@@ -178,7 +183,7 @@ bool GameManager::CreateMap()
 		//nullだった場合の処理
 		//Mapを新しく生成する
 		tnl::Vector3 createMapCenter = nowMap->GetMapCenterPos() + MAPPOSOFFSET[i];
-		auto newMap = std::make_shared<Map>(createMapCenter);
+		auto newMap = std::make_shared<Map>(createMapCenter,static_cast<uint32_t>(Map::MAPTYPE::GRASS));
 		newMap->test = hoge;
 		hoge++;
 
@@ -465,8 +470,6 @@ std::list<std::shared_ptr<Map>> GameManager::GetMapList()
 	return nearMap;
 }
 //------------------------------------------------------------------------------------------------
-
-//develop_fukushi
 //プレイヤーへの方向ベクトルの取得
 tnl::Vector3 GameManager::GetVectorToPlayer(tnl::Vector3& enemyPos)
 {
@@ -725,17 +728,21 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		//connect = std::make_shared<Connect>();
+#ifdef DEBUG_OFF
+		connect = std::make_shared<Connect>();
+#endif
 		uiEditor = std::make_shared<UIEditor>();
 
 
 		uiEditor->Init();
 
-		/*if (chat == nullptr) {
-			chat = new ChatBase();
-		}*/
+#ifdef DEBUG_OFF
+		if (chat == nullptr) {
 
-		/*
+			chat = new ChatBase();
+		}
+
+		
 		acceptThread = std::thread([this] {GameManager::Accept(); });
 
 
@@ -746,10 +753,11 @@ void GameManager::Update(float delta_time) {
 		//Dummy生成完了
 		player->SetIsCreatedDummy();
 
-		*/
+		
 
 		//test用Dummy生成
-		//connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
+#endif
 
 		init = true;
 	}
@@ -758,18 +766,21 @@ void GameManager::Update(float delta_time) {
 	/*tnl::DebugTrace("%d", num1);
 	tnl::DebugTrace("\n");*/
 
-	/*if (chat == nullptr) {
+#ifdef DEBUG_OFF
+	if (chat == nullptr) {
 		chat = new ChatBase();
-	}*/
+	}
+#endif
 
 	deltaTime = delta_time;
 
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-	/*chat->Update();
-	chat->Draw();*/
-
+#ifdef DEBUG_OFF
+	chat->Update();
+	chat->Draw();
+#endif
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
 		uiEditor->ChangeEnable();

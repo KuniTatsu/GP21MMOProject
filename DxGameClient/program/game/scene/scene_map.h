@@ -9,6 +9,7 @@ class CreateMap;
 class GameManager;
 class EnemyManager;
 class ResourceManager;
+class InventoryManager;
 
 class Scene_Map : public SceneBase {
 public:
@@ -28,6 +29,7 @@ private:
 	GameManager* gManager = nullptr;
 	EnemyManager* eManager = nullptr;
 	ResourceManager* rManager = nullptr;
+	InventoryManager* iManager = nullptr;
 
 	bool createChipRight = false;
 

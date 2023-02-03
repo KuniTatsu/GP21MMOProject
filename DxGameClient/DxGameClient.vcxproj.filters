@@ -71,10 +71,13 @@
     <ClCompile Include="program\game\UI\GraphicUI.cpp" />
     <ClCompile Include="program\game\UI\UIEditor.cpp" />
     <ClCompile Include="program\game\UI\UIManager.cpp" />
+    <ClCompile Include="program\game\Inventory.cpp" />
+    <ClCompile Include="program\game\InventoryManager.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
     <ClCompile Include="program\game\Actor\NPC\SupportNPC.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPCSpeak.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPCManager.cpp" />
+    <ClCompile Include="program\game\Item\ConsumeItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -150,10 +153,13 @@
     <ClInclude Include="program\game\UI\GraphicUI.h" />
     <ClInclude Include="program\game\UI\UIEditor.h" />
     <ClInclude Include="program\game\UI\UIManager.h" />
+    <ClInclude Include="program\game\Inventory.h" />
+    <ClInclude Include="program\game\InventoryManager.h" />
     <ClInclude Include="program\game\Actor\NPC\NPC.h" />
     <ClInclude Include="program\game\Actor\NPC\SupportNPC.h" />
     <ClInclude Include="program\game\Actor\NPC\NPCSpeak.h" />
     <ClInclude Include="program\game\Actor\NPC\NPCManager.h" />
+    <ClInclude Include="program\game\Item\ConsumeItem.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

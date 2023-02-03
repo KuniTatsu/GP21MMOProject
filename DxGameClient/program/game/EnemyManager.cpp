@@ -63,7 +63,7 @@ void EnemyManager::LoadEnemyMaster()
 		auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 		auto enemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, data, animList[i - 1], i - 1);
-
+		
 		enemyMaster.emplace_back(enemy);
 
 	}
@@ -182,7 +182,7 @@ void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
 		auto distance1 = gManager->GetLengthFromTwoPoint(playerPos, left->GetPos());
 		auto distance2 = gManager->GetLengthFromTwoPoint(playerPos, right->GetPos());
 
-		if (distance1 > distance2)return true;
+		if (distance1 < distance2)return true;
 		return false;
 		});
 }
@@ -192,8 +192,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 
-	//auto newEnemy = std::make_shared<Enemy>(posEnemy, data->GetAttackRange(), data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
-
+#ifdef DEBUG_OFF
 	//ŒÂ‘ÌŽ¯•Ê”Ô†‚ðŽæ“¾
 	int identId = SearchBlankEnemyNum();
 	//ŒÂ‘ÌŽ¯•Ê”Ô†‚ªƒGƒ‰[”Ô†‚È‚ç“G‚Ì¶¬‚ðs‚í‚È‚¢
@@ -203,9 +202,9 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	/*gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
 	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);*/
 
+#endif
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
-	//	Enemy(tnl::Vector3 SpawnPos, std::shared_ptr<ActorData>& data, std::vector<int>& ghs, int type);
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], 0);
 
 	SetEnemyList(newEnemy);

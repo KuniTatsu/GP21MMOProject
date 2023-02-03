@@ -10,12 +10,14 @@
 #include"../Actor/NPC/SupportNPC.h"
 #include"../Actor/NPC/NPC.h"
 #include"../Actor/NPC/NPCManager.h"
+#include"../InventoryManager.h"
 
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
 	rManager = ResourceManager::GetInstance();
 	eManager = EnemyManager::GetInstance();
+	iManager = InventoryManager::GetInstance();
 }
 
 Scene_Map::~Scene_Map()
@@ -46,9 +48,6 @@ void Scene_Map::update(float delta_time)
 {
 	/*Player操作*/
 	player->Update();
-
-	//listの中のenemyすべてに対して、playerとの距離が一定以下ならplayerの方に移動させる
-	//gManager->enemyMove();
 
 	/*Enemy生成*/
 	eManager->SpawnEnemy(player->GetPos());
@@ -89,8 +88,6 @@ void Scene_Map::update(float delta_time)
 		}
 	}
 
-
-
 	int test = static_cast<int>(player->GetPos().x);
 	if ((test % 64) == 0) {
 		createChipRight = true;
@@ -116,6 +113,7 @@ void Scene_Map::render()
 	SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");
 
+#ifdef DEBUG_OFF
 	/*他のプレイヤーの描画*/
 	auto& others = gManager->GetOtherPlayersList();
 	if (!others.empty()) {
@@ -124,5 +122,8 @@ void Scene_Map::render()
 		}
 	}
 
+#endif
+
 	UIManager::GetInstance()->Draw();
+
 }
