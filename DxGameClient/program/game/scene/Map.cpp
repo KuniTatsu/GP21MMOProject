@@ -141,7 +141,7 @@ void Map::DrawMap(Camera* camera)
 		for (auto h : mapChipsVillageGround) {
 			for (auto w : h) {
 				if (-1 != w) {
-					DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
 						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
 				x += gManager->CHIPWIDTH;
@@ -158,7 +158,7 @@ void Map::DrawMap(Camera* camera)
 		for (auto h : mapChipsVillageBack) {
 			for (auto w : h) {
 				if (-1 != w) {
-					DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
 						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
 				x += gManager->CHIPWIDTH;
@@ -175,7 +175,7 @@ void Map::DrawMap(Camera* camera)
 		for (auto h : mapChipsVillageMiddle) {
 			for (auto w : h) {
 				if (-1 != w) {
-					DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
 						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
 				x += gManager->CHIPWIDTH;
@@ -192,7 +192,7 @@ void Map::DrawMap(Camera* camera)
 		for (auto h : mapChipsVillageFront) {
 			for (auto w : h) {
 				if (-1 != w) {
-					DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
 						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
 				x += gManager->CHIPWIDTH;
@@ -210,8 +210,8 @@ void Map::DrawMap(Camera* camera)
 			for (auto w : h) {
 				if (-1 != w) {
 					int gh = img_mapchip_localmap[w];
-					DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
+					//DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+						//y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
 				x += gManager->CHIPWIDTH;
 			}
@@ -229,7 +229,7 @@ void Map::DrawMap(Camera* camera)
 		for (auto h : mapChips) {
 			for (auto w : h) {
 				if (0 == w) {
-					DrawRotaGraph(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
 						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_grass, true);
 				}
 				x += gManager->CHIPWIDTH;

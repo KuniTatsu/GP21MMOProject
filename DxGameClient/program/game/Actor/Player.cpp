@@ -21,7 +21,7 @@ Player::Player(int startX, int startY, int type)
 
 	myData = std::make_shared<ActorData>();
 
-	myData->SetAttribute(50, 50, 50, 50, 50, 50);
+	myData->SetAttribute(2000, 2000, 2000, 50, 50, 2000);
 	myData->CalcMainStatus();
 
 	auto& hoge = ResourceManager::GetInstance()->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::PLAYER));
