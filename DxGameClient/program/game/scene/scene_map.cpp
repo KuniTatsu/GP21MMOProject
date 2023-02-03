@@ -7,12 +7,14 @@
 #include"../Actor/DummyPlayer.h"
 #include"../UI/UIManager.h"
 #include"../ResourceManager.h"
+#include"../InventoryManager.h"
 
 Scene_Map::Scene_Map()
 {
 	gManager = GameManager::GetInstance();
 	rManager = ResourceManager::GetInstance();
 	eManager = EnemyManager::GetInstance();
+	iManager = InventoryManager::GetInstance();
 }
 
 Scene_Map::~Scene_Map()
@@ -75,8 +77,6 @@ void Scene_Map::update(float delta_time)
 		}
 	}
 
-
-
 	int test = static_cast<int>(player->GetPos().x);
 	if ((test % 64) == 0) {
 		createChipRight = true;
@@ -111,7 +111,8 @@ void Scene_Map::render()
 		}
 	}
 
+#endif
 
 	UIManager::GetInstance()->Draw();
-#endif
+
 }

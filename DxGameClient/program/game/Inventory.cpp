@@ -51,8 +51,7 @@ void Inventory::DrawInventory(const int x, const int y)
 	int i = 0;
 
 	for (auto item : inventoryItemList) {
-		//アイテム名の描画
-
+	
 		//装備アイテムなら
 		if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::EQUIP)) {
 			auto eItem = std::shared_ptr<EquipItem>();
@@ -66,7 +65,7 @@ void Inventory::DrawInventory(const int x, const int y)
 				DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
 			}
 		}
-		else
+		else if(item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::CONSUME))
 		{
 			//アイテム名の描画
 			DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
@@ -93,6 +92,7 @@ void Inventory::DrawItemDesc(int x, int y)
 		itr++;
 	}
 	//inventory[selectCursor]->DrawItemData(x, y);
+	
 }
 
 /*装備アイテムの説明描画*/
