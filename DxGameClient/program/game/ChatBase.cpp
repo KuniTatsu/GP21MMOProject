@@ -13,74 +13,14 @@ using namespace json11;
 */
 
 using namespace std;
-/*
-std::string SjistoUTF8(std::string srcSjis)
-{
-	//Unicodeへ変換後の文字列長を得る
-	int lenghtUnicode = MultiByteToWideChar(CP_THREAD_ACP, 0, srcSjis.c_str(), srcSjis.size() + 1, NULL, 0);
-
-	//必要な分だけUnicode文字列のバッファを確保
-	wchar_t* bufUnicode = new wchar_t[lenghtUnicode];
-
-	memset(bufUnicode, 0, sizeof(char) * lenghtUnicode);
-
-	//ShiftJISからUnicodeへ変換
-	MultiByteToWideChar(CP_THREAD_ACP, 0, srcSjis.c_str(), srcSjis.size() + 1, bufUnicode, lenghtUnicode);
-
-
-	//UTF8へ変換後の文字列長を得る
-	int lengthUTF8 = WideCharToMultiByte(CP_UTF8, 0, bufUnicode, -1, NULL, 0, NULL, NULL);
-
-	//必要な分だけUTF8文字列のバッファを確保
-	char* bufUTF8 = new char[lengthUTF8];
-
-	memset(bufUTF8, 0, sizeof(char) * lengthUTF8);
-
-	//UnicodeからUTF8へ変換
-	WideCharToMultiByte(CP_UTF8, 0, bufUnicode, lenghtUnicode - 1, bufUTF8, lengthUTF8, NULL, NULL);
-
-
-	std::string strUTF8(bufUTF8);
-
-	delete[] bufUnicode;
-	delete[] bufUTF8;
-
-	return strUTF8;
-}
-*/
 
 ChatBase::ChatBase()
 {
 	gManager = GameManager::GetInstance();
 
-	connect = new Connect();
-	//サーバーに接続
-	int result = connect->ConnectServer();
-
+	connect = gManager->GetConnection();
 	
-	if (!init) {
-
-		//string name = SjistoUTF8("プレイヤー1");
-
-		connect->EntryServer("プレイヤー1");
-
-		connect->GetEntryUserId();
-
-		init = true;
-	}
-
-
 	const string test = "こんにちは";
-
-	/*Json obj = Json::object({
-		{ "chat", test },
-		});
-
-	std::string hogehoge = obj.dump();*/
-
-
-	//string utf = gManager->SjistoUTF8(test);
-
 
 	//メッセージを送信
 	connect->SendClientMessage(test);

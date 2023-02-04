@@ -54,7 +54,7 @@ private:
 
 	std::string clientUUID = "";
 
-
+	std::string playerName = "";
 
 
 	// ゲーム全体で参照したい変数はここで用意
@@ -125,6 +125,13 @@ public:
 	// 破棄
 	void Destroy();
 
+	inline void SetPlayerName(std::string name) {
+		playerName = name;
+	}
+	inline std::string GetPlayerName() {
+		return playerName;
+	}
+
 	//単位ベクトル取得関数
 	inline tnl::Vector3 GetFixVector(float X, float Y) {
 		float vecLength = std::sqrt(X * X + Y * Y);
@@ -175,6 +182,9 @@ public:
 
 	//Player(このクライアントの)生成
 	std::shared_ptr<Player> CreatePlayer();
+
+	//再ログイン時のプレイヤー生成
+	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum);
 
 	inline std::shared_ptr<Player>& GetPlayer() {
 		return player;
@@ -248,6 +258,23 @@ public:
 	inline std::string GetClientUUID() {
 		return clientUUID;
 	}
+	//connect取得
+	std::shared_ptr<Connect>GetConnection() {
+		if(connect)return connect;
+		return nullptr;
+	}
+
+	//サーバーに接続する関数
+	void ConnectServer();
+
+	//チャット作成
+	void CreateChat();
+
+	//スレッド作成
+	void CreateThread();
+
+	//エネミーの情報を取得する関数
+	void GetServerEnemyInfo();
 
 	//サーバーから送られてきた他のプレイヤーの情報からDummyPlayerを生成し登録する関数
 	bool CreateDummyPlayer(std::string json);
@@ -281,8 +308,26 @@ public:
 	//UUIDと合致するDummyPlayerのHPを変動させる関数
 	void UpdateDummyHP(std::string UUID, float moveHP);
 
+	//サーバーにAttributeのデータを送信する関数
+	void SendPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+	//サーバーから来たAttributeのデータをセットする関数
+	void SetPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+
+	//サーバーにattributeを要求する関数
+	void GetPlayerAttribute();
+	//サーバーにPlayerデータを要求する関数
+	void GetPlayerInfo(std::string UUID);
+
+	//サーバーに名前を送る関数
+	void EntryServer();
+	//サーバーからUUIDを取得する関数
+	void GetMyUUID();
+
+
+
 	//四角形のマウスクリック感知
 	bool isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
+	bool isClickedRect(tnl::Vector3& CenterPos, int halfSize = 16);
 
 	//四角形のマウス範囲内感知
 	bool OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom);

@@ -41,6 +41,14 @@ public:
 	//クライアントキャラクターが発動した攻撃のエフェクトの座標とエフェクト番号を送る関数
 	void SendClientAttackEffectInfo(float x, float y, int effectNum, int dir = 0);
 
+	//クライアントキャラクター作成時にAttributeが決まったときにサーバーに送る関数
+	void SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+
+	//再ログイン時にクライアントの情報をサーバーから取得する関数
+	void GetClientCharactorInfo(std::string UUID);
+	//再ログイン時にクライアントのAttribute情報をサーバーから取得する関数
+	void GetClientCharactorAttribute();
+
 	//エネミーの初期情報のサーバー登録
 	void SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type);
 
@@ -67,9 +75,9 @@ private:
 private:
 
 	//サーバーのIPアドレス
-	//std::string host = "127.0.0.1";
+	std::string host = "127.0.0.1";
 	//std::string host = "192.168.80.129";
-	std::string host = "10.76.14.195";
+	//std::string host = "10.76.14.195";
 
 	//ポート
 	const std::string  port = "9001"; //80
