@@ -38,6 +38,8 @@ public:
 	//NPCのタイトルごとのテキストを描画する関数
 	void DrawNpcText(int textId, tnl::Vector3& drawPos);
 
+	//近くにプレイヤーがいるか返す関数 
+	bool CheckNearNPC(float PlayerX, float PlayerY);
 
 protected:
 
@@ -45,6 +47,12 @@ protected:
 		return drawPos;
 	}
 	int cursorGh = 0;
+
+	//このnpcの話しかけられる距離(半径)
+	float canHearDistance = 64.0f;//デフォルトはキャラ２つ分
+
+	//近くにplayerがいるかどうか
+	bool isNearPlayer = false;
 
 	//NPCが話す内容の配列
 	std::vector<std::shared_ptr<NPCSpeak>> npcSpeaks;

@@ -17,8 +17,6 @@ public:
 	void Draw(Camera* camera)override;
 	void Init() override;
 
-	//近くにプレイヤーがいるか返す関数 GameManagerを通してplayerから呼ぶ
-	bool CheckNearNPC(float PlayerX, float PlayerY);
 
 public:
 
@@ -53,7 +51,7 @@ private:
 		MAX
 	};
 
-	SEQUENCE nowSequence = SEQUENCE::FIRSTMENU;
+	SEQUENCE nowSequence = SEQUENCE::WAIT;
 
 	//シークエンス変更関数
 	bool ChangeSequence(SEQUENCE NextSeq);
@@ -62,12 +60,6 @@ private:
 
 	////npcの項目ごとのヒント文章
 	//std::vector<std::string> hint;
-
-	//このnpcの話しかけられる距離(半径)
-	float canHearDistance = 64.0f;//デフォルトはキャラ２つ分
-
-	//近くにplayerがいるかどうか
-	bool isNearPlayer = false;
 
 	//メニュー番号
 	int cursorNum = 0;

@@ -43,3 +43,25 @@ void NPC::DrawNpcText(int textId,tnl::Vector3& drawPos)
 
 	DrawStringEx(drawPos.x, drawPos.y, -1, text.c_str());
 }
+
+bool NPC::CheckNearNPC(float PlayerX, float PlayerY)
+{
+	bool ret = false;
+
+	auto gManager = GameManager::GetInstance();
+
+	tnl::Vector3 pPos(PlayerX, PlayerY, 0);
+
+	float distance = gManager->GetLength(pPos, GetDrawPos());
+
+	if (canHearDistance > distance)
+	{
+		isNearPlayer = true;
+		ret = true;
+	}
+	else {
+		isNearPlayer = false;
+	}
+
+	return ret;
+}

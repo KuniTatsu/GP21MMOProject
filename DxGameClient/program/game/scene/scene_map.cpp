@@ -5,6 +5,7 @@
 #include"../EnemyManager.h"
 #include"../Actor/Enemy.h"
 #include"../Actor/DummyPlayer.h"
+#include"../Actor/ActorData.h"
 #include"../UI/UIManager.h"
 #include"../ResourceManager.h"
 #include"../Actor/NPC/SupportNPC.h"
@@ -28,11 +29,16 @@ Scene_Map::~Scene_Map()
 
 void Scene_Map::initialzie()
 {
+	////DEBUG
+	//gManager->GetConnection();
+
+
 	//チャット接続
 	gManager->CreateChat();
 
-	//プレイヤーの生成
-	player = gManager->CreatePlayer();
+	////プレイヤーの生成
+	//player = gManager->CreatePlayer();
+	
 	//マップの生成
 	gManager->CreateMap();
 	//エネミーの生成
@@ -44,6 +50,13 @@ void Scene_Map::initialzie()
 
 	//Player情報のサーバーへの送信
 	gManager->SendPlayerInfoToServer();
+
+	player = gManager->GetPlayer();
+
+	auto& data = player->GetActorData();
+	auto& attribute = data->GetAttribute();
+
+	gManager->SendPlayerAttribute(attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5]);
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
 
@@ -75,10 +88,11 @@ void Scene_Map::update(float delta_time)
 		eManager->Update(gManager->deltaTime);
 	}
 
-	auto& npcList = NPCManager::GetInstance()->GetNPCList();
-	for (auto& npc : npcList) {
-		npc->Update();
-	}
+	auto npcManager = NPCManager::GetInstance();
+	npcManager->Update();
+
+	auto& pos = player->GetPos();
+	npcManager->CheckNearPlayer(pos.x, pos.y);
 
 
 	EffectManager::GetInstance()->Update(gManager->deltaTime);
@@ -117,15 +131,15 @@ void Scene_Map::render()
 		map->Draw(&camera);
 	}
 
-	/*エネミーの描画*/
-	if (eManager != nullptr) {
-		eManager->Draw(&camera);
-	}
+	///*エネミーの描画*/
+	//if (eManager != nullptr) {
+	//	eManager->Draw(&camera);
+	//}
 
 	/*Playerの描画*/
-	player->Draw(&camera);
+	//player->Draw(&camera);
 
-
+	//Actorの描画
 	ActorDrawManager::GetInstance()->DrawActorList(&camera);
 
 	EffectManager::GetInstance()->Draw(&camera);

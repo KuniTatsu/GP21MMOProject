@@ -263,8 +263,8 @@ public:
 		return clientUUID;
 	}
 	//connectæ“¾
-	std::shared_ptr<Connect>GetConnection() {
-		if(connect)return connect;
+	inline std::shared_ptr<Connect>GetConnection() {
+		if (connect)return connect;
 		return nullptr;
 	}
 

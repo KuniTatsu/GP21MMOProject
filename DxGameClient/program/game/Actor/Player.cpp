@@ -22,8 +22,6 @@ Player::Player(int startX, int startY, int type)
 	myData = std::make_shared<ActorData>();
 	//本来はTalentとJobから取得する
 
-
-	gManager->SendPlayerAttribute(2000, 2000, 2000, 50, 50, 2000);
 	myData->SetAttribute(2000, 2000, 2000, 50, 50, 2000);
 
 	myData->CalcMainStatus();
@@ -89,7 +87,10 @@ void Player::Draw(Camera* camera)
 	float x = drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
 	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
 
-	DrawRotaGraphF(x, y, 1, 0, gh, false);
+	//DrawRotaGraphF(x, y, 1, 0, gh, false);
+	//アニメーション更新
+	Anim(ghs, 3);
+	DrawRotaGraphF(x, y, 1, 0, drawGh, true);
 
 	if (bufPos.empty())return;
 

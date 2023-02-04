@@ -10,6 +10,12 @@ public:
 	// インスタンスの取得
 	static NPCManager* GetInstance();
 
+	// 破棄
+	void Destroy();
+
+	//NPCのUpdate
+	void Update();
+
 	enum class NPCTYPE {
 		SUPPORT,
 		DISASSEMBLY,
@@ -22,6 +28,9 @@ public:
 	inline std::vector<std::shared_ptr<NPC>>& GetNPCList() {
 		return NpcList;
 	}
+
+	//各NPCのPlayer隣接チェック
+	void CheckNearPlayer(float x, float y);
 
 private:
 	NPCManager();

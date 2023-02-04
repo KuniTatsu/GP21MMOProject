@@ -47,27 +47,6 @@ void SupportNPC::Init()
 
 }
 
-bool SupportNPC::CheckNearNPC(float PlayerX, float PlayerY)
-{
-	bool ret = false;
-
-	auto gManager = GameManager::GetInstance();
-
-	tnl::Vector3 pPos(PlayerX, PlayerY, 0);
-
-	float distance = gManager->GetLength(pPos, GetDrawPos());
-
-	if (canHearDistance > distance)
-	{
-		isNearPlayer = true;
-		ret = true;
-	}
-	else {
-		isNearPlayer = false;
-	}
-
-	return ret;
-}
 
 bool SupportNPC::loadNPCHint()
 {
@@ -84,6 +63,8 @@ bool SupportNPC::loadNPCHint()
 
 bool SupportNPC::SeqWait(const float DeltaTime)
 {
+
+
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer)return false;
 
@@ -131,6 +112,8 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 	//項目を決定
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 
+		//描画するUIをhintに変更
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::HINT));
 		ChangeSequence(SEQUENCE::HINT);
 	}
 	//会話をやめる
@@ -190,12 +173,12 @@ void SupportNPC::DrawHintSequence()
 {
 	//選ばれたヒントの配列番号
 	int selectHint = 0;
-	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
+	std::vector<std::shared_ptr<GraphicUI>>hintMenuGraphics;
 	if (mainSequence.isStart()) {
-		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		hintMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
 
 		//2番が文字を描画するUI枠なのでそこだけ取得する
-		auto& leftTopPos = firstMenuGraphics[2]->GetLeftTopPos();
+		auto& leftTopPos = hintMenuGraphics[2]->GetLeftTopPos();
 		drawPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y, 0);
 
 		selectHint = nowDrawPage * MAXDRAWNUM + cursorNum;

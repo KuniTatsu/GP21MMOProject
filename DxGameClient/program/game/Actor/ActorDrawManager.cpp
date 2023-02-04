@@ -41,7 +41,7 @@ void ActorDrawManager::DrawActorList(Camera* camera)
 		auto pos1 = left->GetPos().y;
 		auto pos2 = right->GetPos().y;
 
-		if (left < right)return true;
+		if (pos1 < pos2)return true;
 		return false;
 		});
 

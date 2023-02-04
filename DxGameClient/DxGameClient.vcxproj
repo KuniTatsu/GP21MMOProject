@@ -158,6 +158,7 @@
     <ClInclude Include="program\dxlib_ext\OBJLoader.h" />
     <ClInclude Include="program\game\Actor\Actor.h" />
     <ClInclude Include="program\game\Actor\ActorData.h" />
+    <ClInclude Include="program\game\Actor\ActorDrawManager.h" />
     <ClInclude Include="program\game\Actor\Camera.h" />
     <ClInclude Include="program\game\Actor\DummyPlayer.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
@@ -254,6 +255,7 @@
     <ClCompile Include="program\dxlib_ext\OBJLoader.cpp" />
     <ClCompile Include="program\game\Actor\Actor.cpp" />
     <ClCompile Include="program\game\Actor\ActorData.cpp" />
+    <ClCompile Include="program\game\Actor\ActorDrawManager.cpp" />
     <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />

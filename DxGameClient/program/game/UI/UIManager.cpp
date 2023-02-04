@@ -24,9 +24,11 @@ void UIManager::Update()
 
 void UIManager::Draw()
 {
-	if (!canDrawUI)return;
+	
 	//UI‚ÌŽí—Þ‚²‚Æ‚É•`‰æ”»’è
 	for (int i = 0; i < static_cast<int>(UISERIES::MAX); ++i) {
+
+		if (!canDrawUI[i])return;
 
 		auto& vector = GetUIVector(i);
 		if (vector[NOWDRAWUIs[i]].empty())continue;

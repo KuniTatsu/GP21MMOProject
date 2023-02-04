@@ -5,6 +5,7 @@
 #include"Actor/ActorData.h"
 #include"GameManager.h"
 #include"ResourceManager.h"
+#include"Actor/ActorDrawManager.h"
 #include<time.h>
 #include<random>
 
@@ -207,6 +208,8 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], 0);
 
+	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
+	
 	SetEnemyList(newEnemy);
 	spawntiming = false;
 	intervalCount = 0;
@@ -222,6 +225,9 @@ void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& sp
 	auto& ghs = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type,identId);
+
+	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
+
 	SetEnemyList(newEnemy);
 	createCount++;
 	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
@@ -246,6 +252,9 @@ void EnemyManager::Update(float deltatime)
 			recentDeadEnemyList.emplace_back((*itr));
 			//生きている敵リストから削除
 			itr = EnemyList.erase(itr);
+			//描画対象から削除
+			ActorDrawManager::GetInstance()->RemoveDrawActorList((*itr));
+
 			createCount--;
 		}
 		else {
