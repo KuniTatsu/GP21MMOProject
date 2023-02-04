@@ -36,7 +36,6 @@ ChatBase::ChatBase()
 
 ChatBase::~ChatBase()
 {
-	delete connect;
 	DeleteKeyInput(g_InputHandle);
 }
 
