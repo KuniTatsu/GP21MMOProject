@@ -39,10 +39,15 @@ void Player::Update()
 {
 	Move();
 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_A)) {
+
+	float deltatime = GameManager::GetInstance()->deltaTime;
+	//インターバル更新
+	UpdateAttackInterval(deltatime);
+
+	//通常攻撃
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_SPACE)) {
 		DefaultAttack();
 	}
-
 }
 
 void Player::Draw(Camera* camera)
@@ -106,22 +111,22 @@ void Player::Move()
 
 	//どうにかしてまとめたい　関数化したいがうまく思いつかない
 	//上下キー感知
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::UP)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::UP)]) || tnl::Input::IsKeyDown(eKeys::KB_W)) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::UP)];
 		//myDir = DIR::UP;
 		DrawStringEx(200, 300, -1, "UP");
 	}
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::DOWN)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::DOWN)]) || tnl::Input::IsKeyDown(eKeys::KB_S)) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::DOWN)];
 		//myDir = DIR::DOWN;
 	}
 
 	//左右キー感知
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::RIGHT)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::RIGHT)]) || tnl::Input::IsKeyDown(eKeys::KB_D)) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::RIGHT)];
 		//myDir = DIR::RIGHT;
 	}
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::LEFT)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::LEFT)]) || tnl::Input::IsKeyDown(eKeys::KB_A)) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::LEFT)];
 		//myDir = DIR::LEFT;
 		DrawStringEx(200, 400, -1, "LEFT");

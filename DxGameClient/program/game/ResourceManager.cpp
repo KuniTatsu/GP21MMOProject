@@ -91,6 +91,8 @@ ResourceManager::ResourceManager()
 
 	LoadResouce(static_cast<int>(RESOUCETYPE::PLAYER));
 	LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
+
+	LoadResouce(static_cast<int>(RESOUCETYPE::EFFECT));
 }
 
 ResourceManager::~ResourceManager()

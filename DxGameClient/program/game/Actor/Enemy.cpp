@@ -38,7 +38,7 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
 
 	myData = std::make_shared<ActorData>();
-	myData->SetAllStatus( data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
 
 	auto& attribute = data->GetAttribute();
@@ -135,15 +135,14 @@ unsigned int Enemy::ChangedColor()
 }
 
 void Enemy::EnemyMove() {
-
-	auto v = gManager->GetVectorToPlayer(drawPos);
-	auto s = myData->GetMoveSpeed();
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 }
 
 void Enemy::Update()
 {
-	
+	float deltatime = GameManager::GetInstance()->deltaTime;
+	//インターバル更新
+	UpdateAttackInterval(deltatime);
 
 #ifdef DEBUG_OFF
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
@@ -151,7 +150,7 @@ void Enemy::Update()
 
 	if (onFollowToPlayer) {
 		EnemyMove();
-	}
+}
 }
 
 void Enemy::Draw(Camera* camera)
@@ -159,7 +158,7 @@ void Enemy::Draw(Camera* camera)
 	auto x = static_cast<int>(drawPos.x) - camera->pos.x + (gManager->SCREEN_WIDTH >> 1);
 	auto y = static_cast<int>(drawPos.y) - camera->pos.y + (gManager->SCREEN_HEIGHT >> 1);
 
-	
+
 	/*索敵関数*/
 	SearchBox(tnl::Vector3(x, y, 0), myData->GetAttackRange());
 

@@ -5,6 +5,7 @@
 #include"../dxlib_ext/dxlib_ext.h"
 
 class Effect;
+class Camera;
 class EffectManager
 {
 public:
@@ -15,6 +16,14 @@ public:
 
 	void Update(const float deltatime);
 
+	void Draw(Camera* camera);
+
+	enum class EFFECTTYPE:uint32_t {
+		NORMAL,
+		WATER,
+		MAX
+	};
+	
 private:
 	EffectManager();
 	~EffectManager();

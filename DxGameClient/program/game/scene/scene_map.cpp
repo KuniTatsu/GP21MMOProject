@@ -11,6 +11,8 @@
 #include"../Actor/NPC/NPC.h"
 #include"../Actor/NPC/NPCManager.h"
 #include"../InventoryManager.h"
+#include"../EffectManager.h"
+#include"../Actor/ActorDrawManager.h"
 
 Scene_Map::Scene_Map()
 {
@@ -64,8 +66,10 @@ void Scene_Map::update(float delta_time)
 	auto& npcList = NPCManager::GetInstance()->GetNPCList();
 	for (auto& npc : npcList) {
 		npc->Update();
-		npc->Draw(&camera);
 	}
+
+
+	EffectManager::GetInstance()->Update(gManager->deltaTime);
 
 	auto uiManager = UIManager::GetInstance();
 	//メニュー描画切り替え //今後はシークエンスにして一番最初のシークエンスでのみ変更可能にする
@@ -108,6 +112,11 @@ void Scene_Map::render()
 
 	/*Playerの描画*/
 	player->Draw(&camera);
+
+
+	ActorDrawManager::GetInstance()->DrawActorList(&camera);
+
+	EffectManager::GetInstance()->Draw(&camera);
 
 	/*どこのシーンであるか*///debugMessage
 	SetFontSize(50);

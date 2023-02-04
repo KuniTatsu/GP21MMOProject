@@ -383,17 +383,32 @@ tnl::Vector3 GameManager::GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& 
 
 tnl::Vector3 GameManager::GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB) {
 	tnl::Vector3 ab = linePointB - linePointA;
-	float t = tnl::Vector3::Dot(point - linePointA, ab);
+	tnl::Vector3 ba = linePointA - linePointB;
+
+	tnl::Vector3 ap = point - linePointA;
+	tnl::Vector3 bp = point - linePointB;
+
+
+	float t = tnl::Vector3::Dot(ap, ab);
 	if (t <= 0.0f) {
 		return linePointA;
 	}
 	else {
+		if (tnl::Vector3::Dot(bp, ba) < 0)return linePointB;
+		
+		//||AB||
+		auto abNorm = sqrt((linePointB.x - linePointA.x) * (linePointB.x - linePointA.x) + (linePointB.y - linePointA.y) * (linePointB.y - linePointA.y));
+
+		tnl::Vector3 nearPoint = linePointA + ((ab / abNorm) * (t / abNorm));
+
 		float denom = tnl::Vector3::Dot(ab, ab);
 		if (t >= denom) {
 			return linePointB;
 		}
 		else {
 			t /= denom;
+
+			auto aaaaa = linePointA + (ab * t);;
 			return linePointA + (ab * t);
 		}
 	}
