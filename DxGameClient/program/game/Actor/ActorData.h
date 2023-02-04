@@ -114,7 +114,7 @@ private:
 	int spd = 0;
 	int dex = 0;
 
-	int level = 1;
+	int level = 100;
 
 };
 

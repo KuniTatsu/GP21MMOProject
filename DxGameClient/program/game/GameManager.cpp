@@ -137,7 +137,8 @@ bool GameManager::CreateMap()
 {
 	int hoge = 0;
 	if (Maps.empty()) {
-		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0));
+		/*ファーストマップ(村)*/
+		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0),static_cast<uint32_t>(Map::MAPTYPE::VILLAGE));
 		firstMap->test = hoge;
 
 		hoge++;
@@ -150,7 +151,7 @@ bool GameManager::CreateMap()
 			//nullだった場合の処理
 			//Mapを新しく生成する
 			tnl::Vector3 createMapCenter = firstMap->GetMapCenterPos() + MAPPOSOFFSET[i];
-			auto newMap = std::make_shared<Map>(createMapCenter);
+			auto newMap = std::make_shared<Map>(createMapCenter,static_cast<uint32_t>(Map::MAPTYPE::GRASS));
 			newMap->test = hoge;
 			hoge++;
 
@@ -187,7 +188,7 @@ bool GameManager::CreateMap()
 		//nullだった場合の処理
 		//Mapを新しく生成する
 		tnl::Vector3 createMapCenter = nowMap->GetMapCenterPos() + MAPPOSOFFSET[i];
-		auto newMap = std::make_shared<Map>(createMapCenter);
+		auto newMap = std::make_shared<Map>(createMapCenter,static_cast<uint32_t>(Map::MAPTYPE::GRASS));
 		newMap->test = hoge;
 		hoge++;
 

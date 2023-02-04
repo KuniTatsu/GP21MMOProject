@@ -182,7 +182,7 @@ void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
 		auto distance1 = gManager->GetLengthFromTwoPoint(playerPos, left->GetPos());
 		auto distance2 = gManager->GetLengthFromTwoPoint(playerPos, right->GetPos());
 
-		if (distance1 > distance2)return true;
+		if (distance1 < distance2)return true;
 		return false;
 		});
 }
