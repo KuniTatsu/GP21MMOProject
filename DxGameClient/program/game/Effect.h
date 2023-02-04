@@ -2,6 +2,8 @@
 #include<vector>
 #include"../dxlib_ext/dxlib_ext.h"
 
+class Camera;
+
 class Effect
 {
 public:
@@ -11,6 +13,9 @@ public:
 	Effect(int Id, int MaxIndex, float ActSpeed = 3.0f);
 	~Effect();
 
+	void Update();
+
+	void Draw(Camera* camera);
 
 	inline int GetId() {
 		return id;
@@ -22,6 +27,10 @@ public:
 
 	inline float GetActSpeed() {
 		return actSpeed;
+	}
+
+	inline bool GetIsLive() {
+		return isAlive;
 	}
 
 private:
@@ -44,5 +53,6 @@ private:
 	//•`‰æ‚·‚é‰æ‘œ
 	int drawGh = 0;
 
+	bool isAlive = true;
 };
 

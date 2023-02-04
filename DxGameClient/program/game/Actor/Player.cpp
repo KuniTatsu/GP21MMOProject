@@ -24,8 +24,6 @@ Player::Player(int startX, int startY, int type)
 	myData = std::make_shared<ActorData>();
 	//本来はTalentとJobから取得する
 
-
-	gManager->SendPlayerAttribute(2000, 2000, 2000, 50, 50, 2000);
 	myData->SetAttribute(2000, 2000, 2000, 50, 50, 2000);
 
 	myData->CalcMainStatus();
@@ -79,10 +77,15 @@ void Player::Update()
 
 	Move();
 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_A)) {
+
+	float deltatime = GameManager::GetInstance()->deltaTime;
+	//インターバル更新
+	UpdateAttackInterval(deltatime);
+
+	//通常攻撃
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_SPACE)) {
 		DefaultAttack();
 	}
-
 }
 
 void Player::Draw(Camera* camera)
@@ -92,7 +95,10 @@ void Player::Draw(Camera* camera)
 	float x = drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
 	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
 
-	DrawRotaGraphF(x, y, 1, 0, gh, false);
+	//DrawRotaGraphF(x, y, 1, 0, gh, false);
+	//アニメーション更新
+	Anim(ghs, 3);
+	DrawRotaGraphF(x, y, 1, 0, drawGh, true);
 
 	if (bufPos.empty())return;
 
@@ -150,22 +156,22 @@ void Player::Move()
 
 	//どうにかしてまとめたい　関数化したいがうまく思いつかない
 	//上下キー感知
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::UP)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::UP)]) || tnl::Input::IsKeyDown(eKeys::KB_W)) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::UP)];
 		//myDir = DIR::UP;
 		DrawStringEx(200, 300, -1, "UP");
 	}
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::DOWN)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::DOWN)]) || tnl::Input::IsKeyDown(eKeys::KB_S)) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::DOWN)];
 		//myDir = DIR::DOWN;
 	}
 
 	//左右キー感知
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::RIGHT)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::RIGHT)]) || tnl::Input::IsKeyDown(eKeys::KB_D)) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::RIGHT)];
 		//myDir = DIR::RIGHT;
 	}
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::LEFT)])) {
+	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::LEFT)]) || tnl::Input::IsKeyDown(eKeys::KB_A)) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::LEFT)];
 		//myDir = DIR::LEFT;
 		DrawStringEx(200, 400, -1, "LEFT");
@@ -196,9 +202,11 @@ void Player::Move()
 		//向き変更
 		SetExDir(fixMoveX, fixMoveY);
 
+
 #ifdef DEBUG_OFF
 		gManager->SendPlayerInfoToServer();
 #endif
+
 	}
 
 	//gManager->SetStayMap();

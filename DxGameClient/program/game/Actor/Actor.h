@@ -69,8 +69,19 @@ public:
 
 	void SetCircleSize(tnl::Vector3& size);
 
+	//半径取得
 	inline float GetCircleSize() {
 		return circleSize;
+	}
+
+	//通常攻撃間隔の変更関数
+	inline void SetCanAttackTime(float time) {
+		if (time <= 0.0f)return;
+		canAttackTime = time;
+	}
+	//通常攻撃間隔の取得関数
+	inline float GetCanAttackTime(float time) {
+		return canAttackTime;
 	}
 
 
@@ -114,6 +125,11 @@ protected:
 	int actWait = actSpeed;
 	//描画するアニメーション配列のインデックス番号
 	int actIndex = 0;
+
+	//通常攻撃の検知間隔
+	float canAttackTime = 1.0f;
+	//通常攻撃の現在のインターバル
+	float attackInterval = 0.0f;
 
 	GameManager* gManager = nullptr;
 
@@ -170,23 +186,16 @@ protected:
 	//向いている方向の距離のオフセット 上,右,下,左
 	const tnl::Vector3 VECOFFSET[4] = { tnl::Vector3(1,-1,0),tnl::Vector3(1,1,0),tnl::Vector3(1,1,0),tnl::Vector3(-1,1,0) };
 
+	//通常攻撃エフェクト用距離オフセット
+	tnl::Vector3 EFFECTOFFSET[8] = {};
+
 	//アニメーションするgh 本来はこっちを使う
 	std::vector<int>ghs;
 
 
 	//このクラス内でしか使わない関数はここに書く
 private:
-	//移動関数 上下左右
 
-	void MoveUp();
-
-	void MoveRight();
-
-	void MoveDown();
-
-	void MoveLeft();
-
-	void MoveDummy() {};
 
 	//向いている方向の任意座標を取得する関数
 	tnl::Vector3 GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& distance);
@@ -194,10 +203,11 @@ private:
 	//ある座標と、線分との最近点との一番近い点を求める関数
 	tnl::Vector3 GetNearestPoint(tnl::Vector3& Pos, std::vector<tnl::Vector3>& boxPos);
 
+	//通常攻撃用エフェクト用のオフセットを求める関数
+	void SetDefaultAttackOffset();
+
 	//継承先で使う関数かつprivateなものはここに書く
 protected:
-	//移動関数のポインタ配列
-	const std::function< void(Actor*) > MOVEFUNC[4] = { &Actor::MoveUp,&Actor::MoveRight,&Actor::MoveDown,&Actor::MoveLeft };
 
 	//XとYから方向を返す関数
 	uint32_t GetExDir(float x, float y);
@@ -212,6 +222,9 @@ protected:
 
 	//基本攻撃関数	
 	void DefaultAttack();
+
+	//通常攻撃のインターバル更新
+	void UpdateAttackInterval(const float deltatime);
 
 	//基本攻撃の近接タイプの範囲を計算する関数 左上,右上,左下,右下の順
 	std::vector<tnl::Vector3>GetMeleeAttackBox();

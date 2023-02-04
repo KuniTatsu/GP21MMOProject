@@ -147,9 +147,16 @@ public:
 
 	//2‚Â‚ÌÀ•WŠÔ‚Ì‹——£‚ğ‹‚ß‚éŠÖ”
 	inline float GetLengthFromTwoPoint(tnl::Vector3& pos1, tnl::Vector3& pos2) {
-		auto defX = (pos2.x - pos1.x);
-		auto defY = (pos2.y - pos1.y);
-		return sqrtf((defX * defX) + (defY * defY));
+		tnl::Vector3 vec = pos2 - pos1;
+		return vec.length();
+	}
+
+	//4“_‚Ì’†‰›‚ÌÀ•W‚ğ‹‚ß‚éŠÖ”
+	inline tnl::Vector3 GetCenterPosRect(std::vector<tnl::Vector3>& rectPos) {
+
+		auto x = rectPos[1].x - rectPos[0].x;
+		auto y = rectPos[3].y - rectPos[0].y;
+		return tnl::Vector3(x, y, 0);
 	}
 
 	//‰æ‘œ‚ğ“Ç‚İ‚ñ‚Åmap‚É“ü‚ê‚éŠÖ”
@@ -259,8 +266,8 @@ public:
 		return clientUUID;
 	}
 	//connectæ“¾
-	std::shared_ptr<Connect>GetConnection() {
-		if(connect)return connect;
+	inline std::shared_ptr<Connect>GetConnection() {
+		if (connect)return connect;
 		return nullptr;
 	}
 
