@@ -14,9 +14,6 @@ public:
 
 	int test = 0;
 
-	void Update(const float deltatime);
-	void Draw(Camera* camera);
-
 	inline tnl::Vector3& GetMapCenterPos() {
 		return mapCenterPos;
 	}
@@ -30,7 +27,23 @@ public:
 	inline tnl::Vector3& GetMapRightBottomPos() {
 		return mapRightBottomPos;
 	}
+	
+	/*村の当たり判定座標*/
+	inline tnl::Vector3& GetMapHitPos() {
+		return mapHitPos;
+	}
+	inline int GetMapHitArray() {
+		return hitarray;
+	}
 
+	inline std::vector<std::vector<int>>& GetHitMap() {
+		return mapChipsVillageHit;
+	}
+
+	/*レイヤー順序、FALSEなら後方、TRUEなら前方*/
+	inline bool SetIsFront(bool isFront) {
+		return isDrawFront = isFront;
+	}
 
 	enum class MAPTYPE : uint32_t {
 		VILLAGE,
@@ -38,11 +51,13 @@ public:
 		MAX
 	};
 
+	void Update(const float deltatime);
+	void Draw(Camera* camera);
+
 	void SetNearMap(int dirNum,std::shared_ptr<Map>map);
 private:
 	tnl::Vector3 PlayerPos;
 	GameManager* gManager = nullptr;
-
 
 	//マップチップの配列
 	//村
@@ -53,6 +68,7 @@ private:
 	std::vector<std::vector<int>>mapChipsVillageFront;
 	//草原
 	std::vector<std::vector<int>> mapChips;
+
 	//マップの中心座標
 	tnl::Vector3 mapCenterPos;
 	//マップの左上の座標
@@ -60,13 +76,14 @@ private:
 	//マップの右下の座標
 	tnl::Vector3 mapRightBottomPos;
 
+	/*マップの当たり判定*/
+	tnl::Vector3 mapHitPos;
+	int hitarray = 0;
+	//std::vector<tnl::Vector3>mapHitPos;
+
 	//周囲の8マップ
 	std::vector<std::shared_ptr<Map>>nearMaps;
 
-	/*マップのロード*/
-	//草原
-	void LoadMap();
-	
 	/*画像ハンドル*/
 	int img_mapchip_grass = 0;
 	int img_mapchip_grass_line = 0;
@@ -81,7 +98,11 @@ private:
 
 	/*最初の初期村をロードするマップフラグ*/
 	bool isLoadLocalMap = false;
+	/*レイヤー順序、FALSEなら後方、TRUEなら前方*/
+	bool isDrawFront = false;
+	/*マップのロード*/
+	void LoadMap();
 
-
-	void DrawMap(Camera* camera);
+	/*レイヤー階層関数（カメラ、レイヤー前方後方フラグ、マップタイプ、チャンクの中心座標）*/
+	void DrawLayer(Camera* camera, bool isFront, int maptype);
 };

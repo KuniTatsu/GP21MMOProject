@@ -6,6 +6,8 @@
 #include"../ResourceManager.h"
 #include"ActorData.h"
 
+#include"../scene/Map.h"
+
 Player::Player(int startX, int startY, int type)
 {
 	drawPos.x = static_cast<float>(startX);
@@ -67,6 +69,12 @@ Player::~Player()
 
 void Player::Update()
 {
+	///*プレイヤーとマップの当たり判定*/
+	//HitMaptoCharacter();
+
+	//if (mapHitToPlayer != 0)tnl::DebugTrace("当たった\n");
+	//if (isHitMapToPlayer)tnl::DebugTrace("当たった\n");
+
 	Move();
 
 
@@ -182,6 +190,14 @@ void Player::Move()
 		//座標移動
 		drawPos.x += fixMoveX;
 		drawPos.y += fixMoveY;
+
+		//移動できなかったら
+		if (!HitMaptoCharacter(drawPos)) {
+			//元の位置に戻す
+			drawPos.x -= fixMoveX;
+			drawPos.y -= fixMoveY;
+		}
+
 
 		//向き変更
 		SetExDir(fixMoveX, fixMoveY);

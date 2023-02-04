@@ -229,6 +229,9 @@ public:
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	inline std::list<std::shared_ptr<Map>>& GetMapsListForMap() {
+		return Maps;
+	}
 
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {

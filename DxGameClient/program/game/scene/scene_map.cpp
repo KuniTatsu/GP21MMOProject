@@ -126,8 +126,12 @@ void Scene_Map::update(float delta_time)
 }
 void Scene_Map::render()
 {
+
+
+
 	/*マップの描画*/
 	for (auto map : gManager->GetMapList()) {
+		map->SetIsFront(false);
 		map->Draw(&camera);
 	}
 
@@ -143,6 +147,11 @@ void Scene_Map::render()
 	ActorDrawManager::GetInstance()->DrawActorList(&camera);
 
 	EffectManager::GetInstance()->Draw(&camera);
+
+	for (auto map : gManager->GetMapList()) {
+		map->SetIsFront(true);
+		map->Draw(&camera);
+	}
 
 	/*どこのシーンであるか*///debugMessage
 	SetFontSize(50);

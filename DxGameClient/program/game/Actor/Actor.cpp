@@ -7,7 +7,9 @@
 #include"Player.h"
 #include"../BattleLogic.h"
 #include"../EffectManager.h"
+#include<math.h>
 
+#include"../scene/Map.h"
 
 Actor::Actor()
 {
@@ -61,6 +63,24 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 	if (drawGh == -1) {
 		int hoge = 0;
 	}
+}
+
+bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
+{
+	/*auto& player = GameManager::GetInstance()->GetPlayer();
+	tnl::Vector3& characterPos = player->GetPos();*/
+
+	auto map = GameManager::GetInstance()->GetPlayerOnMap();
+
+	auto& hitMap = map->GetHitMap();
+
+	auto x = std::floor(pos.x / 32);
+	auto y = std::floor(pos.y / 32);
+
+	tnl::Vector3 localPos = (tnl::Vector3(x+1, y+1, 0));
+
+	if (hitMap[localPos.y+17][localPos.x+17] == 65)return false;
+	return true;
 }
 
 //指定座標から指定距離離れた場所の座標を取得する関数 当たり判定の短形の各点座標を求めるのに使う

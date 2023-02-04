@@ -135,6 +135,7 @@ unsigned int Enemy::ChangedColor()
 }
 
 void Enemy::EnemyMove() {
+
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 }
 
@@ -160,7 +161,7 @@ void Enemy::Draw(Camera* camera)
 
 
 	/*õ“GŠÖ”*/
-	SearchBox(tnl::Vector3(x, y, 0), myData->GetAttackRange());
+	SearchBox(tnl::Vector3(x, y, 0), 50);
 
 	DrawRotaGraphF(x, y, 1.0f, 0, img_Ghost, true);
 }
