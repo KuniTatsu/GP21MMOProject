@@ -322,4 +322,7 @@
     <None Include="csv\UI\SaveUI.csv" />
     <None Include="csv\UI\TestSaveUI.csv" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="save\myUUID.txt" />
+  </ItemGroup>
 </Project>
