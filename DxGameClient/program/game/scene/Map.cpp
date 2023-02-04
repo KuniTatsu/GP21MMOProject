@@ -43,6 +43,7 @@ Map::Map(tnl::Vector3 centerPos, int type)
 	//PlayerPos = start;
 
 	/*画像ロード*/
+	/*release_fukushi ↓修正ポイント（このままだと村以外のマップの描画ができない状態）*/
 	if (type == static_cast<int>(MAPTYPE::VILLAGE)) {
 		gManager->LoadDivGraphEx("graphics/LocalMapChip.png", 1992, 8, 249, 32, 32, img_mapchip_localmap);
 	}
@@ -238,8 +239,9 @@ void Map::DrawLayer(Camera* camera, bool isFront, int maptype)
 		for (auto h : mapChipsVillageHit) {
 			for (auto w : h) {
 				if (-1 != w) {
-					mapVillageHitPos.x = x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
-					mapVillageHitPos.y = y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
+					mapHitPos.x = x;
+					mapHitPos.y = y;
+
 					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
 						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
