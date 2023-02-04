@@ -131,6 +131,8 @@ private:
 	//UI‚ð•`‰æ‚·‚é‚©‚Ç‚¤‚© Ží—Þ‚²‚Æ
 	bool canDrawUI[static_cast<int>(UISERIES::MAX)] = { false,false,false,false };
 
+	const std::string err[2] = { "err","err" };
+
 private:
 
 	UIManager();

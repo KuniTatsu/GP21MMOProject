@@ -71,6 +71,7 @@
     <ClCompile Include="program\game\UI\GraphicUI.cpp" />
     <ClCompile Include="program\game\UI\UIEditor.cpp" />
     <ClCompile Include="program\game\UI\UIManager.cpp" />
+    <ClCompile Include="program\game\scene\LoginScene.cpp" />
     <ClCompile Include="program\game\Inventory.cpp" />
     <ClCompile Include="program\game\InventoryManager.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
@@ -151,6 +152,7 @@
     <ClInclude Include="program\game\UI\GraphicUI.h" />
     <ClInclude Include="program\game\UI\UIEditor.h" />
     <ClInclude Include="program\game\UI\UIManager.h" />
+    <ClInclude Include="program\game\scene\LoginScene.h" />
     <ClInclude Include="program\game\Inventory.h" />
     <ClInclude Include="program\game\InventoryManager.h" />
     <ClInclude Include="program\game\Actor\NPC\NPC.h" />

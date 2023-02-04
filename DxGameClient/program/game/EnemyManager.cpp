@@ -137,7 +137,7 @@ void EnemyManager::ShareEnemyStatusFromServer(int identId, float moveHP)
 		}
 	}
 }
-
+//サーバーから送られてきた情報を元に敵の死亡状況を更新する関数
 void EnemyManager::ShareEnemyDead(int identId, int isDead)
 {
 	//送られてきたのが死亡通知だったら

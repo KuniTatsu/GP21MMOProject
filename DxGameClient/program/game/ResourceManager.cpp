@@ -15,7 +15,8 @@ void ResourceManager::LoadResouce(int type)
 {
 	if (type == static_cast<uint32_t>(RESOUCETYPE::PLAYER) ||
 		type == static_cast<uint32_t>(RESOUCETYPE::ENEMY) ||
-		type == static_cast<uint32_t>(RESOUCETYPE::EFFECT))
+		type == static_cast<uint32_t>(RESOUCETYPE::EFFECT) ||
+		type == static_cast<uint32_t>(RESOUCETYPE::SKILL))
 	{
 		LoadAnimGraphicCsv(loadCsvPasses[type], GetAnimVector(type), type);
 	}
@@ -62,6 +63,9 @@ std::vector<int>& ResourceManager::GetGraphicVector(int type)
 	case static_cast<uint32_t>(RESOUCETYPE::SKILL):
 		return skillGhs;
 		break;
+	case static_cast<uint32_t>(RESOUCETYPE::CHARAICON):
+		return charaIcons;
+		break;
 	default:
 		break;
 	}
@@ -91,6 +95,7 @@ ResourceManager::ResourceManager()
 
 	LoadResouce(static_cast<int>(RESOUCETYPE::PLAYER));
 	LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
+	LoadResouce(static_cast<int>(RESOUCETYPE::CHARAICON));
 }
 
 ResourceManager::~ResourceManager()
@@ -106,6 +111,8 @@ void ResourceManager::SetLoadCsvPass()
 	loadCsvPasses.emplace_back("csv/GraphicPassCsv/ItemIconGraphics.csv");
 	loadCsvPasses.emplace_back("csv/GraphicPassCsv/JobIconGraphics.csv");
 	loadCsvPasses.emplace_back("csv/GraphicPassCsv/TalentIconGraphics.csv");
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/SkillIconGraphics.csv");
+	loadCsvPasses.emplace_back("csv/GraphicPassCsv/CharaIconGraphics.csv");
 
 }
 //単一画像のグラフィックハンドルのロード
