@@ -23,9 +23,12 @@ void EnemySpawnManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 
 	//xが-200から200の間,yが-200から200の間のどこかをとる
 	//プレイヤーからの最低距離の絶対値
-	minPos = PlayerPos + tnl::Vector3{ 20, 20, 0 };
+	//minPos = PlayerPos + tnl::Vector3{ 20, 20, 0 };
+	float min = gManager->CHIPHEIGHT * gManager->MAPSIZE;
+	minPos = PlayerPos + tnl::Vector3{ min, min, 0 };
 	//プレイヤーからの最大距離の絶対値
-	maxPos = PlayerPos + tnl::Vector3{ 200,200,0 };
+	float max = gManager->CHIPHEIGHT * gManager->MAPSIZE + 200;
+	maxPos = PlayerPos + tnl::Vector3{ max,max,0 };
 
 	/*beta用範囲縮小*/
 	//maxPos = PlayerPos + tnl::Vector3{ 100,100,0 };
