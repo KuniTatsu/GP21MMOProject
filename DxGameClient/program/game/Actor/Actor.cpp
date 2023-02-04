@@ -6,6 +6,7 @@
 #include"Enemy.h"
 #include"Player.h"
 #include"../BattleLogic.h"
+#include"../EffectManager.h"
 #include<math.h>
 
 #include"../scene/Map.h"
@@ -14,6 +15,7 @@ Actor::Actor()
 {
 	gManager = GameManager::GetInstance();
 	myData = std::make_shared<ActorData>();
+	SetDefaultAttackOffset();
 }
 
 std::vector<tnl::Vector3> Actor::GetCharaEdgePos()
@@ -45,8 +47,8 @@ void Actor::SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int D
 
 void Actor::SetCircleSize(tnl::Vector3& size)
 {
-	if (size.x >= size.y)circleSize = size.x;
-	else circleSize = size.y;
+	if (size.x >= size.y)circleSize = size.x / 2;
+	else circleSize = size.y / 2;
 }
 
 void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
@@ -81,29 +83,6 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 	return true;
 }
 
-void Actor::MoveUp()
-{
-	//ローカルポジションの移動
-	localPos += {0, -1, 0};
-}
-
-void Actor::MoveRight()
-{
-	//ローカルポジションの移動
-	localPos += {1, 0, 0};
-}
-
-void Actor::MoveDown()
-{
-	//ローカルポジションの移動
-	localPos += {0, 1, 0};
-}
-
-void Actor::MoveLeft()
-{
-	//ローカルポジションの移動
-	localPos += {-1, 0, 0};
-}
 //指定座標から指定距離離れた場所の座標を取得する関数 当たり判定の短形の各点座標を求めるのに使う
 tnl::Vector3 Actor::GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& distance)
 {
@@ -138,6 +117,22 @@ tnl::Vector3 Actor::GetNearestPoint(tnl::Vector3& Pos, std::vector<tnl::Vector3>
 		}
 	}
 	return nearPoses[mostNearNum];
+}
+void Actor::SetDefaultAttackOffset()
+{
+	auto range = myData->GetAttackRange();
+
+	//ToDo 向きが逆
+
+	EFFECTOFFSET[static_cast<int>(EXDIR::LEFTTOP)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(225)), (range / 2) * std::sin(tnl::ToRadian(225)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::LEFT)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(180)), (range / 2) * std::sin(tnl::ToRadian(180)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::LEFTBOTTOM)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(135)), (range / 2) * std::sin(tnl::ToRadian(135)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::BOTTOM)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(90)), (range / 2) * std::sin(tnl::ToRadian(90)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::RIGHTBOTTOM)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(45)), (range / 2) * std::sin(tnl::ToRadian(45)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::RIGHT)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(0)), (range / 2) * std::sin(tnl::ToRadian(0)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::RIGHTTOP)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(315)), (range / 2) * std::sin(tnl::ToRadian(315)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::TOP)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(270)), (range / 2) * std::sin(tnl::ToRadian(270)), 0);
+
 }
 uint32_t Actor::GetExDir(float x, float y)
 {
@@ -263,6 +258,9 @@ void Actor::SetExDir(int dir)
 //通常攻撃関数
 void Actor::DefaultAttack()
 {
+	//攻撃した直後なら行動を行わない
+	if (attackInterval > 0.0f)return;
+
 	//攻撃者
 	std::shared_ptr<Actor> attackActor = shared_from_this();
 	//防衛者
@@ -275,7 +273,16 @@ void Actor::DefaultAttack()
 		//左上, 右上, 左下, 右下の順で格納(回転済みの当たり判定座標)
 		auto boxPos = GetMeleeAttackBox();
 
+
+		//auto animPos = tnl::Vector3(50, 50, 0);
+
 		//攻撃アニメーションの生成
+
+		auto animPos = drawPos + EFFECTOFFSET[static_cast<int>(myExDir)];
+		EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::NORMAL), animPos);
+
+		//インターバルセット
+		attackInterval = canAttackTime;
 
 		bool isHit = false;
 
@@ -298,12 +305,15 @@ void Actor::DefaultAttack()
 				float pointToCircleCenter = gManager->GetLengthFromTwoPoint(mostNear, pos);
 				//この距離が敵の当たり判定の半径より小さいなら当たっている
 				if (enemy->GetCircleSize() > pointToCircleCenter)isHit = true;
+				else {
+					//内包している場合の判定
+					if (gManager->isHitRotateBox(boxPos, pos))isHit = true;
+				}
 
-				//内包している場合の判定
-				if (gManager->isHitRotateBox(boxPos, pos))isHit = true;
 				//当たっている場合ダメージ判定対象に入れる
 				if (isHit) {
 					defendActor.emplace_back(enemy);
+					isHit = false;
 					continue;
 					//bool successAttack = BattleLogic::GetInstance()->IsSuccessAttack();
 				}
@@ -347,10 +357,21 @@ void Actor::DefaultAttack()
 		bool successAttack = battleLogic->IsSuccessAttack(attackData, defendData, static_cast<int>(myType));
 
 		double damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
-		defendData->UpdateHp((damage * (-1)));
+		if (defendData->UpdateHp((damage * (-1)))) {
+			//trueで帰ってきたら死んでるので、isliveを変える
+			defender->SetIsLive(false);
+		}
 	}
+}
+void Actor::UpdateAttackInterval(const float deltatime)
+{
+	//インターバルが0以下なら減らさない
+	if (attackInterval <= 0.0f) return;
 
-
+	//インターバル更新
+	attackInterval -= deltatime;
+	//マイナスになっていたら0にする
+	if (attackInterval < 0.0f) attackInterval = 0.0f;
 }
 //向いている方向の当たり判定の四角形の四点を取得する関数 左上,右上,左下,右下の順で格納する
 std::vector<tnl::Vector3> Actor::GetMeleeAttackBox()

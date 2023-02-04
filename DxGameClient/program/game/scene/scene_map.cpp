@@ -5,9 +5,15 @@
 #include"../EnemyManager.h"
 #include"../Actor/Enemy.h"
 #include"../Actor/DummyPlayer.h"
+#include"../Actor/ActorData.h"
 #include"../UI/UIManager.h"
 #include"../ResourceManager.h"
+#include"../Actor/NPC/SupportNPC.h"
+#include"../Actor/NPC/NPC.h"
+#include"../Actor/NPC/NPCManager.h"
 #include"../InventoryManager.h"
+#include"../EffectManager.h"
+#include"../Actor/ActorDrawManager.h"
 
 Scene_Map::Scene_Map()
 {
@@ -23,11 +29,16 @@ Scene_Map::~Scene_Map()
 
 void Scene_Map::initialzie()
 {
+	////DEBUG
+	//gManager->GetConnection();
+
+
 	//チャット接続
 	gManager->CreateChat();
 
-	//プレイヤーの生成
-	player = gManager->CreatePlayer();
+	////プレイヤーの生成
+	//player = gManager->CreatePlayer();
+	
 	//マップの生成
 	gManager->CreateMap();
 	//エネミーの生成
@@ -39,6 +50,13 @@ void Scene_Map::initialzie()
 
 	//Player情報のサーバーへの送信
 	gManager->SendPlayerInfoToServer();
+
+	player = gManager->GetPlayer();
+
+	auto& data = player->GetActorData();
+	auto& attribute = data->GetAttribute();
+
+	gManager->SendPlayerAttribute(attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5]);
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
 
@@ -47,6 +65,9 @@ void Scene_Map::initialzie()
 
 	///*Playerの生成*/
 	//player->Draw(&camera);
+
+	//NPCの生成
+	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 50, 50, 0);
 
 }
 
@@ -67,6 +88,14 @@ void Scene_Map::update(float delta_time)
 		eManager->Update(gManager->deltaTime);
 	}
 
+	auto npcManager = NPCManager::GetInstance();
+	npcManager->Update();
+
+	auto& pos = player->GetPos();
+	npcManager->CheckNearPlayer(pos.x, pos.y);
+
+
+	EffectManager::GetInstance()->Update(gManager->deltaTime);
 
 	auto uiManager = UIManager::GetInstance();
 	//メニュー描画切り替え //今後はシークエンスにして一番最初のシークエンスでのみ変更可能にする
@@ -106,13 +135,18 @@ void Scene_Map::render()
 		map->Draw(&camera);
 	}
 
-	/*エネミーの描画*/
-	if (eManager != nullptr) {
-		eManager->Draw(&camera);
-	}
+	///*エネミーの描画*/
+	//if (eManager != nullptr) {
+	//	eManager->Draw(&camera);
+	//}
 
 	/*Playerの描画*/
-	player->Draw(&camera);
+	//player->Draw(&camera);
+
+	//Actorの描画
+	ActorDrawManager::GetInstance()->DrawActorList(&camera);
+
+	EffectManager::GetInstance()->Draw(&camera);
 
 	for (auto map : gManager->GetMapList()) {
 		map->SetIsFront(true);

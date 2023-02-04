@@ -15,6 +15,8 @@
 #include"../json11.hpp"
 #include"UI/UIManager.h"
 #include"Actor/ActorData.h"
+#include"Actor/ActorDrawManager.h"
+#include"Actor/NPC/NPCManager.h"
 
 
 GameManager* GameManager::instance = nullptr;
@@ -82,10 +84,15 @@ void GameManager::Destroy() {
 
 	isEnd = true;
 	//acceptThread->join();
+
+	ActorDrawManager::GetInstance()->RemoveDrawActorList(player);
 	connect->SendExitServer();
 	acceptThread.join();
 
+	//ƒVƒ“ƒOƒ‹ƒgƒ“‚Ì”jŠü
 	UIManager::GetInstance()->Destroy();
+	NPCManager::GetInstance()->Destroy();
+
 	InitGraph();
 
 	if (instance) {
@@ -124,12 +131,14 @@ void GameManager::LoadDivGraphEx(const std::string gh, const int allNum, const i
 std::shared_ptr<Player> GameManager::CreatePlayer()
 {
 	player = std::make_shared<Player>(10, 10, 0);
+	ActorDrawManager::GetInstance()->AddDrawActorList(player);
 	return player;
 }
 
 std::shared_ptr<Player> GameManager::CreatePlayerFromServer(int posX, int posY, double HP, int ghNum)
 {
 	player = std::make_shared<Player>(posX, posY, HP, ghNum);
+	ActorDrawManager::GetInstance()->AddDrawActorList(player);
 	return player;
 }
 
@@ -388,17 +397,32 @@ tnl::Vector3 GameManager::GetCenterVector(tnl::Vector3& firstPos, tnl::Vector3& 
 
 tnl::Vector3 GameManager::GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB) {
 	tnl::Vector3 ab = linePointB - linePointA;
-	float t = tnl::Vector3::Dot(point - linePointA, ab);
+	tnl::Vector3 ba = linePointA - linePointB;
+
+	tnl::Vector3 ap = point - linePointA;
+	tnl::Vector3 bp = point - linePointB;
+
+
+	float t = tnl::Vector3::Dot(ap, ab);
 	if (t <= 0.0f) {
 		return linePointA;
 	}
 	else {
+		if (tnl::Vector3::Dot(bp, ba) < 0)return linePointB;
+		
+		////||AB||
+		//auto abNorm = sqrt((linePointB.x - linePointA.x) * (linePointB.x - linePointA.x) + (linePointB.y - linePointA.y) * (linePointB.y - linePointA.y));
+
+		//tnl::Vector3 nearPoint = linePointA + ((ab / abNorm) * (t / abNorm));
+
 		float denom = tnl::Vector3::Dot(ab, ab);
 		if (t >= denom) {
 			return linePointB;
 		}
 		else {
 			t /= denom;
+
+			auto aaaaa = linePointA + (ab * t);;
 			return linePointA + (ab * t);
 		}
 	}
@@ -800,7 +824,7 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-
+		connect = std::make_shared<Connect>();
 #ifdef DEBUG_OFF
 		connect = std::make_shared<Connect>();
 #endif
@@ -828,12 +852,12 @@ void GameManager::Update(float delta_time) {
 
 
 
-//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
-//	uiEditor->ChangeEnable();
-//}
+if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
+	uiEditor->ChangeEnable();
+}
 
-//uiEditor->Update();
-//uiEditor->Draw();
+uiEditor->Update();
+uiEditor->Draw();
 
 
 }

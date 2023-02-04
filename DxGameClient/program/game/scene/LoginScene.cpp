@@ -228,6 +228,8 @@ bool LoginScene::SeqCheckGraphic(const float deltatime)
 		//UUID‚ÌŽæ“¾
 		GameManager::GetInstance()->GetMyUUID();
 
+		//player‚Ì¶¬
+		GameManager::GetInstance()->CreatePlayer();
 
 		ChangeSequence(static_cast<int>(SEQUENCE::WAITCHANGESCENE));
 	}
@@ -256,9 +258,10 @@ bool LoginScene::SeqWaitChangeScene(const float deltatime)
 	bufferDeltaTime += deltatime;
 	if (BUFFERTIME > bufferDeltaTime)return true;
 
+	if (GameManager::GetInstance()->GetPlayer() == nullptr)return false;
 	canChangeScene = true;
 
-	return false;
+	return true;
 }
 
 void LoginScene::DrawWritingMessage()
