@@ -57,7 +57,7 @@ void Map::Update(const float deltatime)
 
 void Map::Draw(Camera* camera)
 {
-	DrawMap(camera);
+	DrawLayer(camera, isDrawFront, mapType);
 }
 
 void Map::SetNearMap(int dirNum, std::shared_ptr<Map> map)
@@ -111,79 +111,108 @@ void Map::LoadMap()
 }
 
 /*マップチップの生成、iはマスの場所番号*/
-void Map::DrawMap(Camera* camera)
+void Map::DrawLayer(Camera* camera, bool isFront, int maptype)
 {
 	float dis = (gManager->MAPSIZE - 1) / 2;
+	float x = 0;
+	float y = 0;
 
-	/*村の左上座標*/
+	/*マップごとの左上座標*/
 	tnl::Vector3 leftTopVillageChipPos;
-	if (mapType == static_cast<int>(MAPTYPE::VILLAGE)) {
+	/*中心座標の保存*/
+	//村
+	if (maptype == static_cast<int>(MAPTYPE::VILLAGE)) {
 		leftTopVillageChipPos = mapCenterPos - (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
 			tnl::Vector3(dis, dis, 0));
 	}
 
-	/*草原などの周辺地形座表*/
-	tnl::Vector3 leftTopChipPos = mapCenterPos
-		- (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
-			tnl::Vector3(dis, dis, 0));
+	//レイヤー後方
+	if (!isFront) {
+		/*村*/
+		if (maptype == static_cast<int>(MAPTYPE::VILLAGE)) {
 
-	int x = 0;
-	int y = 0;
-
-	/*最初の村*/
-	if (mapType == static_cast<int>(MAPTYPE::VILLAGE)) {
-
-		x = static_cast<int>(leftTopVillageChipPos.x);
-		y = static_cast<int>(leftTopVillageChipPos.y);
-
-
-		/*地面*/
-		for (auto h : mapChipsVillageGround) {
-			for (auto w : h) {
-				if (-1 != w) {
-					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
-				}
-				x += gManager->CHIPWIDTH;
-			}
+			/*座標初期化*/
 			x = leftTopVillageChipPos.x;
-			y += gManager->CHIPHEIGHT;
+			y = leftTopVillageChipPos.y;
+
+			/*村_地面*/
+			for (auto h : mapChipsVillageGround) {
+				for (auto w : h) {
+					if (-1 != w) {
+						DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+							y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
+					}
+					x += gManager->CHIPWIDTH;
+				}
+				x = leftTopVillageChipPos.x;
+				y += gManager->CHIPHEIGHT;
+			}
+
+			/*座標初期化*/
+			x = leftTopVillageChipPos.x;
+			y = leftTopVillageChipPos.y;
+
+			/*村_背景*/
+			for (auto h : mapChipsVillageBack) {
+				for (auto w : h) {
+					if (-1 != w) {
+						DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+							y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
+					}
+					x += gManager->CHIPWIDTH;
+				}
+				x = leftTopVillageChipPos.x;
+				y += gManager->CHIPHEIGHT;
+			}
+
+			/*座標初期化*/
+			x = leftTopVillageChipPos.x;
+			y = leftTopVillageChipPos.y;
+
+			/*村真ん中*/
+			for (auto h : mapChipsVillageMiddle) {
+				for (auto w : h) {
+					if (-1 != w) {
+						DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+							y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
+					}
+					x += gManager->CHIPWIDTH;
+				}
+				x = leftTopVillageChipPos.x;
+				y += gManager->CHIPHEIGHT;
+			}
 		}
 
-		/*座標初期化*/
-		x = leftTopVillageChipPos.x;
-		y = leftTopVillageChipPos.y;
+		//---------------------------------------------------------------------------------------
+		/*草原*/
+		if (maptype == static_cast<int>(MAPTYPE::GRASS)) {
+			/*草原の左上座標*/
+			tnl::Vector3 leftTopGrassChipPos = mapCenterPos
+				- (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
+					tnl::Vector3(dis, dis, 0));
 
-		/*村_背景*/
-		for (auto h : mapChipsVillageBack) {
-			for (auto w : h) {
-				if (-1 != w) {
-					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
+			x = leftTopGrassChipPos.x;
+			y = leftTopGrassChipPos.y;
+
+			for (auto h : mapChips) {
+				for (auto w : h) {
+					if (0 == w) {
+						DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+							y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_grass, true);
+					}
+					x += gManager->CHIPWIDTH;
 				}
-				x += gManager->CHIPWIDTH;
+				x = leftTopGrassChipPos.x;
+				y += gManager->CHIPHEIGHT;
 			}
-			x = leftTopVillageChipPos.x;
-			y += gManager->CHIPHEIGHT;
 		}
+	}
+	//-------------------------------------------------------------------------------------------------------------------------
+	//レイヤー前方
+	if (!isFront)return;
 
-		/*座標初期化*/
-		x = leftTopVillageChipPos.x;
-		y = leftTopVillageChipPos.y;
-
-		/*村真ん中*/
-		for (auto h : mapChipsVillageMiddle) {
-			for (auto w : h) {
-				if (-1 != w) {
-					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
-				}
-				x += gManager->CHIPWIDTH;
-			}
-			x = leftTopVillageChipPos.x;
-			y += gManager->CHIPHEIGHT;
-		}
-
+	/*村*/
+	if (maptype == static_cast<int>(MAPTYPE::VILLAGE)) {
 		/*座標初期化*/
 		x = leftTopVillageChipPos.x;
 		y = leftTopVillageChipPos.y;
@@ -209,9 +238,10 @@ void Map::DrawMap(Camera* camera)
 		for (auto h : mapChipsVillageHit) {
 			for (auto w : h) {
 				if (-1 != w) {
-					int gh = img_mapchip_localmap[w];
-					//DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-						//y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
+					mapVillageHitPos.x = x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
+					mapVillageHitPos.y = y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
+					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
 				x += gManager->CHIPWIDTH;
 			}
@@ -220,22 +250,4 @@ void Map::DrawMap(Camera* camera)
 		}
 	}
 
-	/*草原*/
-	if (mapType == static_cast<int>(MAPTYPE::GRASS)) {
-
-		x = leftTopChipPos.x;
-		y = leftTopChipPos.y;
-
-		for (auto h : mapChips) {
-			for (auto w : h) {
-				if (0 == w) {
-					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_grass, true);
-				}
-				x += gManager->CHIPWIDTH;
-			}
-			x = leftTopChipPos.x;
-			y += gManager->CHIPHEIGHT;
-		}
-	}
 }
