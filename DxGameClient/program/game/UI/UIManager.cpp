@@ -227,8 +227,6 @@ const std::string* UIManager::GetLoadPass(int series)
 	default:
 		break;
 	}
-
-	const std::string err[2] = { "err","err" };
 	return err;
 
 }

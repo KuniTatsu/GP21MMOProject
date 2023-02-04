@@ -20,13 +20,45 @@ Player::Player(int startX, int startY, int type)
 	SetTalent();
 
 	myData = std::make_shared<ActorData>();
+	//本来はTalentとJobから取得する
 
+
+	gManager->SendPlayerAttribute(2000, 2000, 2000, 50, 50, 2000);
 	myData->SetAttribute(2000, 2000, 2000, 50, 50, 2000);
+
 	myData->CalcMainStatus();
 
 	auto& hoge = ResourceManager::GetInstance()->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::PLAYER));
 
 	SetCircleSize(hoge[type]);
+
+}
+
+Player::Player(int startX, int startY, double HP,  int ghNum)
+{
+	drawPos.x = static_cast<float>(startX);
+	drawPos.y = static_cast<float>(startY);
+
+	gh = gManager->LoadGraphEx("graphics/Player.png");
+
+	testGh = gManager->LoadGraphEx("graphics/test.png");
+
+	auto rManager = ResourceManager::GetInstance();
+	ghs = rManager->GetCharaVectorAtGhNum(ghNum);
+
+	myData = std::make_shared<ActorData>();
+
+	//attributeをサーバーから取得
+	gManager->GetPlayerAttribute();
+	//取得したattributeからステータスを決定
+	myData->CalcDefaultStatus();
+
+	//HPを設定
+	myData->SetHP(HP);
+
+	auto& hoge = ResourceManager::GetInstance()->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::PLAYER));
+
+	SetCircleSize(hoge[ghNum]);
 
 }
 
@@ -83,6 +115,10 @@ void Player::Draw(Camera* camera)
 
 void Player::Init()
 {
+}
+void Player::SetAttributeFromServer(int STR, int VIT, int INT, int MID, int SPD, int DEX)
+{
+	myData->SetAttribute(STR, VIT, INT, MID, SPD, DEX);
 }
 //才能の付与 ※レア度によるウェイトがかかってない完全ランダムでの選択なので要修正
 void Player::SetTalent()

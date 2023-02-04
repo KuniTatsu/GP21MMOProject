@@ -29,6 +29,7 @@ public:
 		JOB,
 		TALENT,
 		SKILL,
+		CHARAICON,
 		MAX
 	};
 
@@ -60,6 +61,8 @@ private:
 	std::vector<int>jobGhs;
 	std::vector<int>talentGhs;
 	std::vector<int>skillGhs;
+
+	std::vector<int>charaIcons;
 
 	//‰æ‘œ‚Ìx,y•ûŒü‚Ì‘å‚«‚³
 	std::vector<std::vector<tnl::Vector3>> graphicSizes;

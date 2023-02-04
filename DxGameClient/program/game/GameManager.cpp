@@ -127,7 +127,12 @@ std::shared_ptr<Player> GameManager::CreatePlayer()
 	return player;
 }
 
-/*マップ生成関数*/
+std::shared_ptr<Player> GameManager::CreatePlayerFromServer(int posX, int posY, double HP, int ghNum)
+{
+	player = std::make_shared<Player>(posX, posY, HP, ghNum);
+	return player;
+}
+
 bool GameManager::CreateMap()
 {
 	int hoge = 0;
@@ -558,6 +563,29 @@ bool GameManager::CheckRandomNumberInOdds(const float maxOdds)
 	return false;
 }
 
+void GameManager::ConnectServer()
+{
+	connect->ConnectServer();
+}
+
+void GameManager::CreateChat()
+{
+	if (chat == nullptr) {
+		chat = new ChatBase();
+	}
+}
+
+void GameManager::CreateThread()
+{
+	acceptThread = std::thread([this] {GameManager::Accept(); });
+}
+
+void GameManager::GetServerEnemyInfo()
+{
+	//enemy情報問い合せ
+	connect->GetServerEnemyInfo();
+}
+
 bool GameManager::CreateDummyPlayer(std::string json)
 {
 	if (json == "")return false;
@@ -584,9 +612,9 @@ bool GameManager::CreateDummyPlayer(std::string json)
 	posX = static_cast<float>(pJson["PlayerposX"].number_value());
 	posY = static_cast<float>(pJson["PlayerposY"].number_value());
 	dir = pJson["dir"].int_value();
-	HP = static_cast<float>(pJson["startHP"].number_value());
+	HP = static_cast<float>(pJson["HP"].number_value());
 
-	ghNum = pJson["Playergh"].int_value();
+	ghNum = pJson["gh"].int_value();
 	UUID = pJson["UUID"].string_value();
 
 	//すでに存在しないかチェック
@@ -647,10 +675,44 @@ void GameManager::MoveDummyInUUID(float x, float y, int dir, std::string UUID)
 			break;
 		}
 	}
-
 }
 void GameManager::UpdateDummyHP(std::string UUID, float moveHP)
 {
+	for (auto& other : otherPlayers) {
+
+		auto bufUUID = other->GetUUID();
+		if (UUID == bufUUID) {
+			auto data = other->GetActorData();
+			data->UpdateHp(moveHP);
+			break;
+		}
+	}
+}
+void GameManager::SendPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
+{
+	connect->SendClientPlayerAttribute(STR, VIT, INT, MID, SPD, DEX);
+}
+void GameManager::SetPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
+{
+	player->SetAttributeFromServer(STR, VIT, INT, MID, SPD, DEX);
+
+}
+void GameManager::GetPlayerAttribute()
+{
+	connect->GetClientCharactorAttribute();
+}
+void GameManager::GetPlayerInfo(std::string UUID)
+{
+	connect->GetClientCharactorInfo(UUID);
+}
+void GameManager::EntryServer()
+{
+	if (playerName == "")return;
+	connect->EntryServer(playerName);
+}
+void GameManager::GetMyUUID()
+{
+	connect->GetEntryUserId();
 }
 //他プレイヤーのリストからの削除
 void GameManager::PopOtherPlayerInUUID(std::string UUID)
@@ -679,6 +741,15 @@ bool GameManager::isClickedRect(int RectLeft, int RectTop, int RectRight, int Re
 	return ret;
 }
 
+bool GameManager::isClickedRect(tnl::Vector3& CenterPos, int halfSize)
+{
+	int left = CenterPos.x - halfSize;
+	int top = CenterPos.y - halfSize;
+	int right = CenterPos.x + halfSize;
+	int bottom = CenterPos.y + halfSize;
+	return isClickedRect(left, top, right, bottom);
+}
+
 void GameManager::SendPlayerInfoToServer()
 {
 	//他のプレイヤーにDummyを作るための処理
@@ -690,12 +761,13 @@ void GameManager::SendPlayerInfoToServer()
 	auto type = player->GetActorType();
 
 	if (player->GetIsCreatedDummy()) {
-		//既にダミーが作られているならダミーの情報更新のための通信なので引数を1にする
+		//既にダミーが作られているならダミーの情報更新のための通信なので引数を1にする:Playerの移動からここに来たときの処理
 		connect->SendClientPlayerInfo(pos.x, pos.y, dir, data->GetHP(), 1);
 	}
 	else {
+		//ログイン時の処理
 		connect->SendClientPlayerInfo(pos.x, pos.y, dir, data->GetHP());
-		connect->SendClientPlayerInitInfo(pos.x, pos.y, data->GetHP(),type);
+		connect->SendClientPlayerInitInfo(pos.x, pos.y, data->GetHP(), type);
 	}
 
 
@@ -743,49 +815,19 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
+
 #ifdef DEBUG_OFF
 		connect = std::make_shared<Connect>();
 #endif
 		uiEditor = std::make_shared<UIEditor>();
 
-
 		uiEditor->Init();
-
-#ifdef DEBUG_OFF
-		if (chat == nullptr) {
-
-			chat = new ChatBase();
-		}
-
-		
-		acceptThread = std::thread([this] {GameManager::Accept(); });
-
-
-		//enemy情報問い合せ
-		connect->GetServerEnemyInfo();
-		
-		SendPlayerInfoToServer();
-		//Dummy生成完了
-		player->SetIsCreatedDummy();
-
-		
-
-		//test用Dummy生成
-		connect->SendClientPlayerInfo(100, 100, 0, 0, 1);
-#endif
 
 		init = true;
 	}
 
 	GetMousePoint(&mousePosX, &mousePosY);
-	/*tnl::DebugTrace("%d", num1);
-	tnl::DebugTrace("\n");*/
 
-#ifdef DEBUG_OFF
-	if (chat == nullptr) {
-		chat = new ChatBase();
-	}
-#endif
 
 	deltaTime = delta_time;
 
@@ -793,16 +835,20 @@ void GameManager::Update(float delta_time) {
 	sManager->Draw();
 
 #ifdef DEBUG_OFF
-	chat->Update();
-	chat->Draw();
+	if (chat) {
+		chat->Update();
+		chat->Draw();
+	}
 #endif
 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
-		uiEditor->ChangeEnable();
-	}
 
-	uiEditor->Update();
-	uiEditor->Draw();
+
+//if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
+//	uiEditor->ChangeEnable();
+//}
+
+//uiEditor->Update();
+//uiEditor->Draw();
 
 
 }

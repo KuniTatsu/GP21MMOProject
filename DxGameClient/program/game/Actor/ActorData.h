@@ -71,6 +71,9 @@ public:
 	//攻撃力などの基本ステータスの計算と代入
 	void CalcMainStatus();
 
+	//HP以外のステータスを計算して代入
+	void CalcDefaultStatus();
+
 public:
 	enum class ATTRIBUTE :uint32_t {
 		STR,
