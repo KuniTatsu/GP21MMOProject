@@ -203,7 +203,7 @@ void Player::Move()
 		SetExDir(fixMoveX, fixMoveY);
 
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 		gManager->SendPlayerInfoToServer();
 #endif
 

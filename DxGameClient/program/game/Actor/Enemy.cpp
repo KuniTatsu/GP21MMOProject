@@ -145,7 +145,7 @@ void Enemy::Update()
 	//インターバル更新
 	UpdateAttackInterval(deltatime);
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 

@@ -157,7 +157,7 @@ void Scene_Map::render()
 	SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	/*‘¼‚ÌƒvƒŒƒCƒ„[‚Ì•`‰æ*/
 	auto& others = gManager->GetOtherPlayersList();
 	if (!others.empty()) {

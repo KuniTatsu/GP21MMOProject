@@ -23,7 +23,7 @@ GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
 
 /*fukushi_デバック用*/
-//#define DEBUG_OFF
+#define DEBUG_ON
 
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
@@ -824,8 +824,8 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		connect = std::make_shared<Connect>();
-#ifdef DEBUG_OFF
+		//connect = std::make_shared<Connect>();
+#ifndef DEBUG_ON
 		connect = std::make_shared<Connect>();
 #endif
 		uiEditor = std::make_shared<UIEditor>();
@@ -843,7 +843,7 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	if (chat) {
 		chat->Update();
 		chat->Draw();
