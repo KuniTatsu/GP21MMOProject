@@ -5,7 +5,7 @@
 #include<time.h>
 #include<random>
 #include"../ResourceManager.h"
-
+#include"../DebugDef.h"
 
 
 Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type)

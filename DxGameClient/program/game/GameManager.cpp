@@ -17,13 +17,11 @@
 #include"Actor/ActorData.h"
 #include"Actor/ActorDrawManager.h"
 #include"Actor/NPC/NPCManager.h"
+#include"DebugDef.h"
 
 
 GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
-
-/*fukushi_デバック用*/
-#define DEBUG_ON
 
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
@@ -86,7 +84,10 @@ void GameManager::Destroy() {
 	//acceptThread->join();
 
 	ActorDrawManager::GetInstance()->RemoveDrawActorList(player);
+
+#ifndef DEBUG_ON
 	connect->SendExitServer();
+#endif
 	acceptThread.join();
 
 	//シングルトンの破棄

@@ -7,6 +7,8 @@
 #include"ActorData.h"
 
 #include"../scene/Map.h"
+#include"../DebugDef.h"
+
 
 Player::Player(int startX, int startY, int type)
 {
@@ -48,8 +50,11 @@ Player::Player(int startX, int startY, double HP,  int ghNum)
 
 	myData = std::make_shared<ActorData>();
 
+#ifndef DEBUG_ON
 	//attributeをサーバーから取得
 	gManager->GetPlayerAttribute();
+#endif
+
 	//取得したattributeからステータスを決定
 	myData->CalcDefaultStatus();
 
@@ -69,14 +74,8 @@ Player::~Player()
 
 void Player::Update()
 {
-	///*プレイヤーとマップの当たり判定*/
-	//HitMaptoCharacter();
-
-	//if (mapHitToPlayer != 0)tnl::DebugTrace("当たった\n");
-	//if (isHitMapToPlayer)tnl::DebugTrace("当たった\n");
 
 	Move();
-
 
 	float deltatime = GameManager::GetInstance()->deltaTime;
 	//インターバル更新

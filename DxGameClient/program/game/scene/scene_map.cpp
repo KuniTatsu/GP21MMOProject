@@ -14,6 +14,7 @@
 #include"../InventoryManager.h"
 #include"../EffectManager.h"
 #include"../Actor/ActorDrawManager.h"
+#include"../DebugDef.h"
 
 Scene_Map::Scene_Map()
 {
@@ -33,11 +34,15 @@ void Scene_Map::initialzie()
 	//gManager->GetConnection();
 
 
+#ifndef DEBUG_ON
 	//チャット接続
 	gManager->CreateChat();
+#endif
 
+#ifdef DEBUG_ON
 	////プレイヤーの生成
-	//player = gManager->CreatePlayer();
+	player = gManager->CreatePlayer();
+#endif
 	
 	//マップの生成
 	gManager->CreateMap();
@@ -47,21 +52,26 @@ void Scene_Map::initialzie()
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
-
+#ifndef DEBUG_ON
 	//Player情報のサーバーへの送信
 	gManager->SendPlayerInfoToServer();
+#endif
 
 	player = gManager->GetPlayer();
 
 	auto& data = player->GetActorData();
 	auto& attribute = data->GetAttribute();
 
+#ifndef DEBUG_ON
 	gManager->SendPlayerAttribute(attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5]);
+#endif
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
 
+#ifndef DEBUG_ON
 	//エネミー取得
 	gManager->GetServerEnemyInfo();
+#endif
 
 	///*Playerの生成*/
 	//player->Draw(&camera);

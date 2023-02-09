@@ -171,6 +171,7 @@
     <ClInclude Include="program\game\BattleLogic.h" />
     <ClInclude Include="program\game\ChatBase.h" />
     <ClInclude Include="program\game\Connect.h" />
+    <ClInclude Include="program\game\DebugDef.h" />
     <ClInclude Include="program\game\Effect.h" />
     <ClInclude Include="program\game\EffectManager.h" />
     <ClInclude Include="program\game\EnemyManager.h" />

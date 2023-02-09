@@ -77,9 +77,9 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 	auto x = std::floor(pos.x / 32);
 	auto y = std::floor(pos.y / 32);
 
-	tnl::Vector3 localPos = (tnl::Vector3(x+1, y+1, 0));
+	tnl::Vector3 localPos = (tnl::Vector3(x + 1, y + 1, 0));
 
-	if (hitMap[localPos.y+17][localPos.x+17] == 65)return false;
+	if (hitMap[localPos.y + 17][localPos.x + 17] == 65)return false;
 	return true;
 }
 

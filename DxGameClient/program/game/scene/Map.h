@@ -32,12 +32,12 @@ public:
 	inline tnl::Vector3& GetMapHitPos() {
 		return mapHitPos;
 	}
-	inline int GetMapHitArray() {
-		return hitarray;
-	}
-
 	inline std::vector<std::vector<int>>& GetHitMap() {
 		return mapChipsVillageHit;
+	}
+
+	inline int GetMapType() {
+		return mapType;
 	}
 
 	/*レイヤー順序、FALSEなら後方、TRUEなら前方*/
@@ -78,7 +78,6 @@ private:
 
 	/*マップの当たり判定*/
 	tnl::Vector3 mapHitPos;
-	int hitarray = 0;
 	//std::vector<tnl::Vector3>mapHitPos;
 
 	//周囲の8マップ
