@@ -138,10 +138,6 @@ protected:
 	//当たり判定用の半径
 	float circleSize = 0.0f;
 
-	//マップの当たり判定（短形）、0=当たってない、1=左、2=右、3=上,4=下
-	int mapHitToPlayer = 0;
-	//bool isHitMapToPlayer = false;
-
 	//方向
 	enum class DIR {
 		UP,

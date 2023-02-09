@@ -28,10 +28,6 @@ public:
 		return mapRightBottomPos;
 	}
 	
-	/*村の当たり判定座標*/
-	inline tnl::Vector3& GetMapHitPos() {
-		return mapHitPos;
-	}
 	inline std::vector<std::vector<int>>& GetHitMap() {
 		return mapChipsVillageHit;
 	}
@@ -41,7 +37,7 @@ public:
 	}
 
 	/*レイヤー順序、FALSEなら後方、TRUEなら前方*/
-	inline bool SetIsFront(bool isFront) {
+	inline bool SetIsDrawFront(bool isFront) {
 		return isDrawFront = isFront;
 	}
 
@@ -75,10 +71,6 @@ private:
 	tnl::Vector3 mapLeftTopPos;
 	//マップの右下の座標
 	tnl::Vector3 mapRightBottomPos;
-
-	/*マップの当たり判定*/
-	tnl::Vector3 mapHitPos;
-	//std::vector<tnl::Vector3>mapHitPos;
 
 	//周囲の8マップ
 	std::vector<std::shared_ptr<Map>>nearMaps;

@@ -11,6 +11,10 @@
 
 #include"../scene/Map.h"
 
+//村マップの当たり判定ずれがある
+//村を出るとゲームが落ちる
+	//村をでても村の配列を読込ためnullで落ちる
+
 Actor::Actor()
 {
 	gManager = GameManager::GetInstance();
@@ -67,17 +71,17 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 
 bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
-	/*auto& player = GameManager::GetInstance()->GetPlayer();
-	tnl::Vector3& characterPos = player->GetPos();*/
-
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
 
 	auto& hitMap = map->GetHitMap();
 
+	//プレイヤーが村にいないなら
+	if (hitMap.empty())return true;
+
 	auto x = std::floor(pos.x / 32);
 	auto y = std::floor(pos.y / 32);
-
-	tnl::Vector3 localPos = (tnl::Vector3(x + 1, y + 1, 0));
+	
+	tnl::Vector3 localPos = tnl::Vector3(x+1, y+1, 0);
 
 	if (hitMap[localPos.y + 17][localPos.x + 17] == 65)return false;
 	return true;

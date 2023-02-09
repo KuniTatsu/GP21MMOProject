@@ -141,7 +141,7 @@ void Scene_Map::render()
 
 	/*ƒ}ƒbƒv‚Ì•`‰æ*/
 	for (auto map : gManager->GetMapList()) {
-		map->SetIsFront(false);
+		map->SetIsDrawFront(false);
 		map->Draw(&camera);
 	}
 
@@ -159,7 +159,7 @@ void Scene_Map::render()
 	EffectManager::GetInstance()->Draw(&camera);
 
 	for (auto map : gManager->GetMapList()) {
-		map->SetIsFront(true);
+		map->SetIsDrawFront(true);
 		map->Draw(&camera);
 	}
 

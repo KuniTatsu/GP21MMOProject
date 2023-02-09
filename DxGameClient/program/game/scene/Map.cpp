@@ -123,8 +123,9 @@ void Map::DrawLayer(Camera* camera, bool isFront, int maptype)
 	/*中心座標の保存*/
 	//村
 	if (maptype == static_cast<int>(MAPTYPE::VILLAGE)) {
-		leftTopVillageChipPos = mapCenterPos - (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
-			tnl::Vector3(dis, dis, 0));
+		/*leftTopVillageChipPos = mapCenterPos - (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
+			tnl::Vector3(dis, dis, 0));*/
+		//leftTopVillageChipPos = mapLeftTopPos;
 	}
 
 	//レイヤー後方
@@ -239,9 +240,6 @@ void Map::DrawLayer(Camera* camera, bool isFront, int maptype)
 		for (auto h : mapChipsVillageHit) {
 			for (auto w : h) {
 				if (-1 != w) {
-					mapHitPos.x = x;
-					mapHitPos.y = y;
-
 					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
 						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
 				}
