@@ -236,8 +236,8 @@ void Map::DrawLayer(Camera* camera, bool isFront, int maptype)
 		for (auto h : mapChipsVillageHit) {
 			for (auto w : h) {
 				if (-1 != w) {
-					DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
-						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);
+					/*DrawRotaGraphF(x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1),
+						y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1.0f, 0, img_mapchip_localmap[w], true);*/
 				}
 				x += gManager->CHIPWIDTH;
 			}
