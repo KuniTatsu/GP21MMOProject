@@ -82,13 +82,28 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 
 	tnl::Vector3 localPos = tnl::Vector3(x + 1, y + 1, 0);
 
-	if (localPos.x > 17 || localPos.y > 17) {
-		if (hitMap[localPos.y + 16][localPos.x + 16] == 65)return false;
+	if ((localPos.x > 17 && localPos.y > -17) || (localPos.y > 17 && localPos.x > -17)) {
+		float hitArrayX = localPos.x + 16;
+		float hitArrayY = localPos.y + 16;
+		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
+			tnl::DebugTrace("1 Debug用マップの当たり判定がNULLを参照した\n");
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("ゲーム落ちた\n");
+		}
+		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
 	}
-	else {
-		if (hitMap[localPos.y + 17][localPos.x + 17] == 65)return false;
+	else if(localPos.x < 18 && localPos.y < 18)
+	{
+		float hitArrayX = localPos.x + 17;
+		float hitArrayY = localPos.y + 17;
+		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
+			tnl::DebugTrace("2 Debug用マップの当たり判定がNULLを参照した\n");
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("ゲーム落ちた\n");
+		}
+		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
+		
 	}
-
 	return true;
 }
 

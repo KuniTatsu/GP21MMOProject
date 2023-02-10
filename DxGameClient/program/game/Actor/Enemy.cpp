@@ -135,7 +135,6 @@ unsigned int Enemy::ChangedColor()
 }
 
 void Enemy::EnemyMove() {
-
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 }
 
@@ -151,7 +150,7 @@ void Enemy::Update()
 
 	if (onFollowToPlayer) {
 		EnemyMove();
-}
+	}
 }
 
 void Enemy::Draw(Camera* camera)
