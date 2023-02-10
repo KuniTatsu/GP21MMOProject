@@ -123,9 +123,7 @@ void Map::DrawLayer(Camera* camera, bool isFront, int maptype)
 	/*中心座標の保存*/
 	//村
 	if (maptype == static_cast<int>(MAPTYPE::VILLAGE)) {
-		/*leftTopVillageChipPos = mapCenterPos - (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
-			tnl::Vector3(dis, dis, 0));*/
-		//leftTopVillageChipPos = mapLeftTopPos;
+		leftTopVillageChipPos = mapLeftTopPos;
 	}
 
 	//レイヤー後方
@@ -189,9 +187,7 @@ void Map::DrawLayer(Camera* camera, bool isFront, int maptype)
 		/*草原*/
 		if (maptype == static_cast<int>(MAPTYPE::GRASS)) {
 			/*草原の左上座標*/
-			tnl::Vector3 leftTopGrassChipPos = mapCenterPos
-				- (tnl::Vector3(gManager->CHIPWIDTH, gManager->CHIPHEIGHT, 0) *
-					tnl::Vector3(dis, dis, 0));
+			tnl::Vector3 leftTopGrassChipPos = mapLeftTopPos;
 
 			x = leftTopGrassChipPos.x;
 			y = leftTopGrassChipPos.y;

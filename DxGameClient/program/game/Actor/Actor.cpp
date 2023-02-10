@@ -11,9 +11,8 @@
 
 #include"../scene/Map.h"
 
-//村マップの当たり判定ずれがある
-//村を出るとゲームが落ちる
-	//村をでても村の配列を読込ためnullで落ちる
+//村に下と右側から入ろうとするとゲームが落ちる件
+	//今度は草原から村に入ろうとすると村のcsvがnullのため落ちる？
 
 Actor::Actor()
 {
@@ -73,17 +72,23 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
 
-	auto& hitMap = map->GetHitMap();
+	std::vector<std::vector<int>>& hitMap = map->GetHitMap();
 
 	//プレイヤーが村にいないなら
 	if (hitMap.empty())return true;
 
-	auto x = std::floor(pos.x / 32);
-	auto y = std::floor(pos.y / 32);
-	
-	tnl::Vector3 localPos = tnl::Vector3(x+1, y+1, 0);
+	float x = std::floor(pos.x / 32);
+	float y = std::floor(pos.y / 32);
 
-	if (hitMap[localPos.y + 17][localPos.x + 17] == 65)return false;
+	tnl::Vector3 localPos = tnl::Vector3(x + 1, y + 1, 0);
+
+	if (localPos.x > 17 || localPos.y > 17) {
+		if (hitMap[localPos.y + 16][localPos.x + 16] == 65)return false;
+	}
+	else {
+		if (hitMap[localPos.y + 17][localPos.x + 17] == 65)return false;
+	}
+
 	return true;
 }
 
