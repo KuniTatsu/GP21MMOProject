@@ -149,8 +149,6 @@ void Actor::SetDefaultAttackOffset()
 {
 	auto range = myData->GetAttackRange();
 
-	//ToDo Œü‚«‚ª‹t
-
 	EFFECTOFFSET[static_cast<int>(EXDIR::LEFTTOP)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(225)), (range / 2) * std::sin(tnl::ToRadian(225)), 0);
 	EFFECTOFFSET[static_cast<int>(EXDIR::LEFT)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(180)), (range / 2) * std::sin(tnl::ToRadian(180)), 0);
 	EFFECTOFFSET[static_cast<int>(EXDIR::LEFTBOTTOM)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(135)), (range / 2) * std::sin(tnl::ToRadian(135)), 0);

@@ -4,6 +4,8 @@
 #include"../ResourceManager.h"
 #include"../SceneManager.h"
 #include"../scene/scene_map.h"
+#include"../Actor/Player.h"
+#include"../Actor/ActorData.h"
 
 LoginScene::LoginScene()
 {
@@ -67,6 +69,11 @@ bool LoginScene::SeqCheckHaveUUID(const float deltatime)
 	//サーバーへ接続
 	GameManager::GetInstance()->ConnectServer();
 
+	if (mainSequence.isStart()) {
+		//サーバー通信取得用スレッドの作成
+		GameManager::GetInstance()->CreateThread();
+	}
+
 	//ofstream型の変数 開いたファイルが展開される
 	std::ifstream loadfile;
 	//相対パス
@@ -95,6 +102,9 @@ bool LoginScene::SeqCheckHaveUUID(const float deltatime)
 
 		//UUIDを登録
 		gManager->SetClientUUID(UUID);
+
+
+
 
 		ChangeSequence(static_cast<int>(SEQUENCE::WAITCHANGESCENE));
 	}
@@ -187,8 +197,10 @@ bool LoginScene::SeqSelectGraphic(const float deltatime)
 		if (i > charaIcon.size() / 2) {
 			DrawRotaGraph(100 + 45 * i, 350, 1, 0, charaIcon[i], true);
 		}
-		//1段目
-		DrawRotaGraph(100 + 45 * i, 300, 1, 0, charaIcon[i], true);
+		else {
+			//1段目
+			DrawRotaGraph(100 + 45 * (i - 4), 300, 1, 0, charaIcon[i], true);
+		}
 	}
 
 	for (int i = 0; i < charaIcon.size(); ++i) {
@@ -223,13 +235,23 @@ bool LoginScene::SeqCheckGraphic(const float deltatime)
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_Y)) {
 
+		auto gManager = GameManager::GetInstance();
+
 		//名前をサーバーへ送信
-		GameManager::GetInstance()->EntryServer();
+		gManager->EntryServer();
 		//UUIDの取得
-		GameManager::GetInstance()->GetMyUUID();
+		gManager->GetMyUUID();
 
 		//playerの生成
-		GameManager::GetInstance()->CreatePlayer();
+		auto player = GameManager::GetInstance()->CreatePlayer(charaIcon[selectCharaIconNum]);
+
+		////Player情報のサーバーへの送信--データベース登録とサーバーの一時データへの保存
+		//gManager->SendPlayerInfoToServer();
+
+		auto& data = player->GetActorData();
+		auto& attribute = data->GetAttribute();
+		gManager->SendPlayerAttribute(attribute[0], attribute[1], attribute[2], attribute[3], attribute[4], attribute[5]);
+
 
 		ChangeSequence(static_cast<int>(SEQUENCE::WAITCHANGESCENE));
 	}
@@ -242,10 +264,10 @@ bool LoginScene::SeqCheckGraphic(const float deltatime)
 
 bool LoginScene::SeqWaitChangeScene(const float deltatime)
 {
-	if (mainSequence.isStart()) {
-		//サーバー通信取得用スレッドの作成
-		GameManager::GetInstance()->CreateThread();
-	}
+	//if (mainSequence.isStart()) {
+	//	//サーバー通信取得用スレッドの作成
+	//	GameManager::GetInstance()->CreateThread();
+	//}
 
 
 	SetFontSize(25);
@@ -258,7 +280,15 @@ bool LoginScene::SeqWaitChangeScene(const float deltatime)
 	bufferDeltaTime += deltatime;
 	if (BUFFERTIME > bufferDeltaTime)return true;
 
-	if (GameManager::GetInstance()->GetPlayer() == nullptr)return false;
+	auto& player = GameManager::GetInstance()->GetPlayer();
+
+	if (player == nullptr)return false;
+
+	//Player情報のサーバーへの送信--サーバーの一時データへの保存
+	GameManager::GetInstance()->SendPlayerInfoToServer(true);
+	player->SetIsCreatedDummy();
+
+
 	canChangeScene = true;
 
 	return true;

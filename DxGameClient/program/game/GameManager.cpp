@@ -86,6 +86,8 @@ void GameManager::Destroy() {
 	ActorDrawManager::GetInstance()->RemoveDrawActorList(player);
 
 #ifndef DEBUG_ON
+
+	//サーバーに退室を通知
 	connect->SendExitServer();
 #endif
 	acceptThread.join();
@@ -129,9 +131,9 @@ void GameManager::LoadDivGraphEx(const std::string gh, const int allNum, const i
 
 }
 
-std::shared_ptr<Player> GameManager::CreatePlayer()
+std::shared_ptr<Player> GameManager::CreatePlayer(int ghNum)
 {
-	player = std::make_shared<Player>(10, 10, 0);
+	player = std::make_shared<Player>(10, 10, ghNum);
 	ActorDrawManager::GetInstance()->AddDrawActorList(player);
 	return player;
 }
@@ -148,7 +150,7 @@ bool GameManager::CreateMap()
 	int hoge = 0;
 	if (Maps.empty()) {
 		/*ファーストマップ(村)*/
-		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0),static_cast<uint32_t>(Map::MAPTYPE::VILLAGE));
+		auto firstMap = std::make_shared<Map>(tnl::Vector3(0, 0, 0), static_cast<uint32_t>(Map::MAPTYPE::VILLAGE));
 		firstMap->test = hoge;
 
 		hoge++;
@@ -161,7 +163,7 @@ bool GameManager::CreateMap()
 			//nullだった場合の処理
 			//Mapを新しく生成する
 			tnl::Vector3 createMapCenter = firstMap->GetMapCenterPos() + MAPPOSOFFSET[i];
-			auto newMap = std::make_shared<Map>(createMapCenter,static_cast<uint32_t>(Map::MAPTYPE::GRASS));
+			auto newMap = std::make_shared<Map>(createMapCenter, static_cast<uint32_t>(Map::MAPTYPE::GRASS));
 			newMap->test = hoge;
 			hoge++;
 
@@ -198,7 +200,7 @@ bool GameManager::CreateMap()
 		//nullだった場合の処理
 		//Mapを新しく生成する
 		tnl::Vector3 createMapCenter = nowMap->GetMapCenterPos() + MAPPOSOFFSET[i];
-		auto newMap = std::make_shared<Map>(createMapCenter,static_cast<uint32_t>(Map::MAPTYPE::GRASS));
+		auto newMap = std::make_shared<Map>(createMapCenter, static_cast<uint32_t>(Map::MAPTYPE::GRASS));
 		newMap->test = hoge;
 		hoge++;
 
@@ -410,7 +412,7 @@ tnl::Vector3 GameManager::GetNearestPointLine(const tnl::Vector3& point, const t
 	}
 	else {
 		if (tnl::Vector3::Dot(bp, ba) < 0)return linePointB;
-		
+
 		////||AB||
 		//auto abNorm = sqrt((linePointB.x - linePointA.x) * (linePointB.x - linePointA.x) + (linePointB.y - linePointA.y) * (linePointB.y - linePointA.y));
 
@@ -665,6 +667,8 @@ bool GameManager::CreateDummyPlayer(std::string json)
 	//Dummyプレイヤー生成成功
 	if (dummy != nullptr) {
 		otherPlayers.emplace_back(dummy);
+
+		ActorDrawManager::GetInstance()->AddDrawActorList(dummy);
 		return true;
 	}
 	//Dummyプレイヤー生成失敗
@@ -762,7 +766,10 @@ void GameManager::PopOtherPlayerInUUID(std::string UUID)
 
 		auto thisUUID = other->GetUUID();
 		if (UUID == thisUUID) {
+			//ダミーリストから削除
 			otherPlayers.erase(itr);
+			//描画するアクターリストから削除
+			ActorDrawManager::GetInstance()->RemoveDrawActorList((*itr));
 		}
 		itr++;
 	}
@@ -790,9 +797,8 @@ bool GameManager::isClickedRect(tnl::Vector3& CenterPos, int halfSize)
 	return isClickedRect(left, top, right, bottom);
 }
 
-void GameManager::SendPlayerInfoToServer()
+void GameManager::SendPlayerInfoToServer(bool isReLogin)
 {
-	//他のプレイヤーにDummyを作るための処理
 	const auto& pos = player->GetPos();
 	auto dir = player->GetDir();
 
@@ -805,12 +811,23 @@ void GameManager::SendPlayerInfoToServer()
 		connect->SendClientPlayerInfo(pos.x, pos.y, dir, data->GetHP(), 1);
 	}
 	else {
-		//ログイン時の処理
+		//他のプレイヤーにDummyを作るための処理
 		connect->SendClientPlayerInfo(pos.x, pos.y, dir, data->GetHP());
+
+		//再ログイン時ならデータベースへの登録は行わない
+		if (isReLogin) {
+			//自分以外のプレイヤーを取り寄せる
+			connect->GetServerOtherUser();
+			return;
+		}
+		//初ログイン時のデータベース登録処理
 		connect->SendClientPlayerInitInfo(pos.x, pos.y, data->GetHP(), type);
 	}
+}
 
-
+void GameManager::GetServerOtherUser()
+{
+	connect->GetServerOtherUser();
 }
 
 void GameManager::SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
@@ -883,12 +900,12 @@ void GameManager::Update(float delta_time) {
 
 
 
-if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
-	uiEditor->ChangeEnable();
-}
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
+		uiEditor->ChangeEnable();
+	}
 
-uiEditor->Update();
-uiEditor->Draw();
+	uiEditor->Update();
+	uiEditor->Draw();
 
 
 }

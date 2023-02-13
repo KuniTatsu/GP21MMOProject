@@ -1,8 +1,9 @@
 #include "NPC.h"
 #include"NPCSpeak.h"
 #include"../../GameManager.h"
+#include"../../ResourceManager.h"
 
-NPC::NPC(float x, float y)
+NPC::NPC(float x, float y,int ghNum)
 {
 	//‰ŠúÀ•W‚Ì“o˜^
 	drawPos.x = x;
@@ -10,12 +11,42 @@ NPC::NPC(float x, float y)
 
 	cursorGh = GameManager::GetInstance()->LoadGraphEx("graphics/menuCursor.png");
 
-	
+	//NPC‚ÌŒ©‚½–Ú‚ðÝ’è
+	ghs = ResourceManager::GetInstance()->GetCharaVectorAtGhNum(ghNum);
 }
 
 NPC::~NPC()
 {
 	npcSpeaks.clear();
+}
+
+bool NPC::loadNPCHint(int npcType)
+{
+	std::string pass = "";
+	switch (npcType)
+	{
+	case static_cast<int>(NPCTYPE::SUP):
+		pass = "csv/NpcText/hint.csv";
+		break;
+	case static_cast<int>(NPCTYPE::DISASSEMBLY):
+		pass = "csv/NpcText/disassembly.csv";
+		break;
+	case static_cast<int>(NPCTYPE::GUARD):
+		pass = "csv/NpcText/guard.csv";
+		break;
+	default:
+		break;
+	}
+
+	bool ret = false;
+
+	auto loadCsv = tnl::LoadCsv(pass);
+
+	for (int i = 1; i < loadCsv.size(); ++i) {
+		CreateNpcSpeak(std::stoi(loadCsv[i][0]), loadCsv[i][1], loadCsv[i][2]);
+	}
+	if (IsCreatedNpcSpeak())ret = true;
+	return ret;
 }
 
 void NPC::CreateNpcSpeak(int id, std::string name, std::string speak)
