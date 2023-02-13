@@ -188,7 +188,7 @@ public:
 	tnl::Vector3 GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB);
 
 	//Player(このクライアントの)生成
-	std::shared_ptr<Player> CreatePlayer();
+	std::shared_ptr<Player> CreatePlayer(int ghNum = 0);
 
 	//再ログイン時のプレイヤー生成
 	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum);
@@ -288,8 +288,11 @@ public:
 
 	bool CreateDummyPlayer(float posX, float posY, std::string UUID, int dir, float HP, int ghNum);
 
-	//プレイヤーの情報をサーバーに送る関数
-	void SendPlayerInfoToServer();
+	//プレイヤーの情報をサーバーに送る関数　args:再ログイン時か否か
+	void SendPlayerInfoToServer(bool isReLogin = false);
+
+	//他プレイヤーの情報を取得する関数
+	void GetServerOtherUser();
 
 	//enemyが生成された時にサーバーに登録する関数
 	void SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);

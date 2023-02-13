@@ -3,23 +3,16 @@
 #include"../../GameManager.h"
 #include"../../UI/UIManager.h"
 #include"../../UI/GraphicUI.h"
-#include"../../ResourceManager.h"
 #include"../Camera.h"
 #include<math.h>
 
-SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y)
+SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y, ghNum)
 {
-	drawPos.x = x;
-	drawPos.y = y;
-
 	canHearDistance = distance;
 	//NPCの話す内容の読み込み
-	if (loadNPCHint()) {
+	if (loadNPCHint(static_cast<int>(NPCTYPE::SUP))) {
 		maxPageNum = static_cast<int>(std::floor(npcSpeaks.size() / MAXDRAWNUM));
 	}
-	//NPCの見た目を設定
-	ghs = ResourceManager::GetInstance()->GetCharaVectorAtGhNum(ghNum);
-
 }
 
 SupportNPC::~SupportNPC()
@@ -37,7 +30,7 @@ void SupportNPC::Update()
 void SupportNPC::Draw(Camera* camera)
 {
 	DrawRotaGraphF(drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1), drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1),
-						1, 0, ghs[10], true);
+		1, 0, ghs[10], true);
 	//シークエンスごとの描画
 	DRAWSEQUENCE[static_cast<uint32_t>(nowSequence)](this);
 }
@@ -47,23 +40,8 @@ void SupportNPC::Init()
 
 }
 
-
-bool SupportNPC::loadNPCHint()
-{
-	bool ret = false;;
-
-	auto loadCsv = tnl::LoadCsv("csv/NpcText/hint.csv");
-
-	for (int i = 1; i < loadCsv.size(); ++i) {
-		CreateNpcSpeak(std::stoi(loadCsv[i][0]), loadCsv[i][1], loadCsv[i][2]);
-	}
-	if (IsCreatedNpcSpeak())ret = true;
-	return ret;
-}
-
 bool SupportNPC::SeqWait(const float DeltaTime)
 {
-
 
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer)return false;
@@ -150,6 +128,9 @@ bool SupportNPC::SeqHint(const float DeltaTime)
 
 void SupportNPC::DrawWaitSequence()
 {
+	SetFontSize(50);
+	DrawStringEx(20, 20, -1, "SupNPC:Wait");
+	SetFontSize(16);
 }
 
 void SupportNPC::DrawFirstMenuSequence()
@@ -167,6 +148,10 @@ void SupportNPC::DrawFirstMenuSequence()
 	}
 
 	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawPos);
+
+	SetFontSize(50);
+	DrawStringEx(20, 20, -1, "SupNPC:MENU");
+	SetFontSize(16);
 }
 
 void SupportNPC::DrawHintSequence()
@@ -186,6 +171,9 @@ void SupportNPC::DrawHintSequence()
 
 	DrawNpcText(selectHint, drawPos);
 
+	SetFontSize(50);
+	DrawStringEx(20, 20, -1, "SupNPC:Hint");
+	SetFontSize(16);
 }
 
 bool SupportNPC::ChangeSequence(SEQUENCE NextSeq)

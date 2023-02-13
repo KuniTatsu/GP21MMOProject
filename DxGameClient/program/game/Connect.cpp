@@ -216,7 +216,7 @@ const std::string Connect::GetServerMessage()
 
 
 	//プレイヤーのサーバー退出系の情報処理
-	if (hoge["ExitPlayerUUID"].string_value() != "") {
+	if (!hoge["ExitPlayerUUID"].is_null()) {
 		std::string message = "";
 		message = gManager->UTF8toSjis(hoge["ExitPlayerUUID"].string_value());
 
@@ -385,6 +385,18 @@ void Connect::GetEntryUserId()
 	}*/
 }
 
+//サーバーからログイン済みの他ユーザーをすべて取得する関数
+void Connect::GetServerOtherUser()
+{
+	Json obj = Json::object({
+		{ "notify", 1 },
+		});
+
+	std::string send = obj.dump();
+
+	SendMessageToServer(send);
+}
+
 void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
 {
 	Json obj = Json::object({
@@ -483,9 +495,10 @@ void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int di
 	SendMessageToServer(send);
 }
 
-void Connect::SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX)
+void Connect::SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX, int isCreated)
 {
 	std::string UUID = gManager->GetClientUUID();
+
 	Json obj = Json::object({
 		{ "Str", STR },
 		{ "Vit", VIT },
@@ -494,6 +507,7 @@ void Connect::SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int 
 		{ "Spd",SPD},
 		{ "Dex",DEX},
 		{ "UUID",UUID},
+		{"isCreated",isCreated}
 		});
 
 	std::string send = obj.dump();

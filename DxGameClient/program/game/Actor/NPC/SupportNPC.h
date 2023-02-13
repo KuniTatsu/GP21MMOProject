@@ -22,9 +22,6 @@ public:
 
 
 private:
-	//NPCが話すヒントをCsvからロード
-	bool loadNPCHint();
-
 
 	//初期シークエンスを設定
 	tnl::Sequence<SupportNPC> mainSequence =
