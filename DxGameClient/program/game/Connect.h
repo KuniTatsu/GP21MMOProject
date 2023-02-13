@@ -23,6 +23,9 @@ public:
 	//ユーザー登録情報取得関数
 	void GetEntryUserId();
 
+	//他のログインしているユーザーの情報を取得する関数
+	void GetServerOtherUser();
+
 	//アイテムのフィールドへのドロップ状況を共有する関数
 	void SendClientFieldItemInfo(float x, float y, int itemId);
 
@@ -41,8 +44,8 @@ public:
 	//クライアントキャラクターが発動した攻撃のエフェクトの座標とエフェクト番号を送る関数
 	void SendClientAttackEffectInfo(float x, float y, int effectNum, int dir = 0);
 
-	//クライアントキャラクター作成時にAttributeが決まったときにサーバーに送る関数
-	void SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+	//クライアントキャラクター作成時にAttributeが決まったときにサーバーに送る関数 isCreated:0->データベース未登録,1->登録済み
+	void SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX,int isCreated=0);
 
 	//再ログイン時にクライアントの情報をサーバーから取得する関数
 	void GetClientCharactorInfo(std::string UUID);

@@ -19,12 +19,14 @@ class NPCSpeak;
 class NPC :public Actor
 {
 public:
-	NPC(float x, float y);
+	NPC(float x, float y,int ghNum);
 	~NPC();
 
 	virtual void Update() = 0;
 	virtual void Draw(Camera* camera) = 0;
 	virtual void Init() = 0;
+
+	bool loadNPCHint(int npcType);
 
 	//NPC‚ª˜b‚·“à—e‚ğ“o˜^‚·‚éŠÖ”
 	void CreateNpcSpeak(int id, std::string name, std::string speak);
@@ -42,6 +44,14 @@ public:
 	bool CheckNearNPC(float PlayerX, float PlayerY);
 
 protected:
+
+	enum class NPCTYPE :uint32_t {
+		SUP,
+		DISASSEMBLY,
+		GUARD,
+		MAX
+	};
+
 
 	inline tnl::Vector3& GetDrawPos() {
 		return drawPos;
