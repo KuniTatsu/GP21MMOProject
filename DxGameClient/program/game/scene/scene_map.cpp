@@ -47,9 +47,10 @@ void Scene_Map::initialzie()
 
 #ifndef DEBUG_ON
 
+	
+	player = gManager->GetPlayer();
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
-	player = gManager->GetPlayer();
 
 	//エネミー取得
 	gManager->GetServerEnemyInfo();
