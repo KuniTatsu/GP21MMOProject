@@ -457,7 +457,7 @@ std::shared_ptr<Map> GameManager::GetPlayerOnMap()
 
 std::shared_ptr<Map> GameManager::GetEnemyOnMap()
 {
-	Maps.sort([&](std::shared_ptr<Map>map1,std::shared_ptr<Map>map2){
+	Maps.sort([&](std::shared_ptr<Map>map1, std::shared_ptr<Map>map2) {
 		float distanceMapA = GetMaptoEnemyDistance(map1);
 		float distanceMapB = GetMaptoEnemyDistance(map2);
 
@@ -467,7 +467,7 @@ std::shared_ptr<Map> GameManager::GetEnemyOnMap()
 		else {
 			return false;
 		}
-	});
+		});
 	return Maps.front();
 }
 
@@ -512,7 +512,7 @@ float GameManager::GetMaptoEnemyDistance(std::shared_ptr<Map> map)
 			(mapPos.y - enemyPos.y) * (mapPos.y - enemyPos.y));
 		return distance;
 	}
-	
+
 	//return 0.0f;
 }
 
@@ -614,6 +614,8 @@ void GameManager::CreateChat()
 {
 	if (chat == nullptr) {
 		chat = new ChatBase();
+
+		chat->Init();
 	}
 }
 

@@ -20,10 +20,10 @@ ChatBase::ChatBase()
 
 	connect = gManager->GetConnection();
 	
-	const string test = "こんにちは";
+	//const string test = "こんにちは";
 
-	//メッセージを送信
-	connect->SendClientMessage(test);
+	////メッセージを送信
+	//connect->SendClientMessage(test);
 
 	//チャット欄のスクリーンを生成
 	chatArea = MakeScreen(340, 400, TRUE);
@@ -37,6 +37,14 @@ ChatBase::ChatBase()
 ChatBase::~ChatBase()
 {
 	DeleteKeyInput(g_InputHandle);
+}
+
+void ChatBase::Init()
+{
+	const string test = "こんにちは";
+
+	//メッセージを送信
+	connect->SendClientMessage(test);
 }
 
 void ChatBase::DrawWritingMessage()
