@@ -148,7 +148,7 @@ void Enemy::Update()
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 
-	if (onFollowToPlayer) {
+	if (onFollowToPlayer /*&& !HitMaptoCharacter(drawPos)*/) {
 		EnemyMove();
 	}
 }

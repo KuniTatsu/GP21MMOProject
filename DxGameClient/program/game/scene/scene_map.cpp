@@ -164,8 +164,8 @@ void Scene_Map::render()
 	}
 
 	/*どこのシーンであるか*///debugMessage
-	SetFontSize(50);
-	DrawStringEx(50, 50, -1, "Scene_map");
+	/*SetFontSize(50);
+	DrawStringEx(50, 50, -1, "Scene_map");*/
 
 #ifndef DEBUG_ON
 	/*他のプレイヤーの描画*/

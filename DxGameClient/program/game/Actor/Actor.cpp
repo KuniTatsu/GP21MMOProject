@@ -71,12 +71,15 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
+	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
 
 	std::vector<std::vector<int>>& hitMap = map->GetHitMap();
+	std::vector<std::vector<int>>& hitEnemyMap = mapenemy->GetHitMap();
 
 	//ƒvƒŒƒCƒ„[‚ª‘º‚É‚¢‚È‚¢‚È‚ç
 	if (hitMap.empty())return true;
-
+	if (hitEnemyMap.empty())return true;
+	
 	float x = std::floor(pos.x / 32);
 	float y = std::floor(pos.y / 32);
 
