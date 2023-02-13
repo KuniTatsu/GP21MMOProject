@@ -3,6 +3,9 @@
 #include"scene/scene_title.h"
 #include"scene/scene_map.h"
 
+/*デバック用*/
+//#define DEBUG_ON
+
 SceneManager* SceneManager::instance = nullptr;
 
 SceneManager* SceneManager::GetInstance()
@@ -47,8 +50,10 @@ void SceneManager::chengeScene(SceneBase* next)
 SceneManager::SceneManager()
 {
 	//imgBlack = LoadGraph("graphics/black.bmp");
+#ifndef DEBUG_ON
 	nowScene = new SceneTitle();
-	//nowScene = new Scene_Map();
+#endif
+	nowScene = new Scene_Map();
 
 	nowScene->initialzie();
 }

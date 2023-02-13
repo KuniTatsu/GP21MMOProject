@@ -5,7 +5,7 @@
 #include<time.h>
 #include<random>
 #include"../ResourceManager.h"
-
+#include"../DebugDef.h"
 
 
 Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type)
@@ -135,7 +135,6 @@ unsigned int Enemy::ChangedColor()
 }
 
 void Enemy::EnemyMove() {
-
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 }
 
@@ -145,13 +144,13 @@ void Enemy::Update()
 	//インターバル更新
 	UpdateAttackInterval(deltatime);
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 
-	if (onFollowToPlayer) {
+	if (onFollowToPlayer /*&& !HitMaptoCharacter(drawPos)*/) {
 		EnemyMove();
-}
+	}
 }
 
 void Enemy::Draw(Camera* camera)

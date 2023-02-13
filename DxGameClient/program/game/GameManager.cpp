@@ -17,13 +17,11 @@
 #include"Actor/ActorData.h"
 #include"Actor/ActorDrawManager.h"
 #include"Actor/NPC/NPCManager.h"
+#include"DebugDef.h"
 
 
 GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
-
-/*fukushi_デバック用*/
-//#define DEBUG_OFF
 
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
@@ -86,8 +84,12 @@ void GameManager::Destroy() {
 	//acceptThread->join();
 
 	ActorDrawManager::GetInstance()->RemoveDrawActorList(player);
+
+#ifndef DEBUG_ON
+
 	//サーバーに退室を通知
 	connect->SendExitServer();
+#endif
 	acceptThread.join();
 
 	//シングルトンの破棄
@@ -453,6 +455,22 @@ std::shared_ptr<Map> GameManager::GetPlayerOnMap()
 	return Maps.front();
 }
 
+std::shared_ptr<Map> GameManager::GetEnemyOnMap()
+{
+	Maps.sort([&](std::shared_ptr<Map>map1,std::shared_ptr<Map>map2){
+		float distanceMapA = GetMaptoEnemyDistance(map1);
+		float distanceMapB = GetMaptoEnemyDistance(map2);
+
+		if (distanceMapA < distanceMapB) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	});
+	return Maps.front();
+}
+
 std::shared_ptr<Map> GameManager::GetMapOnPoint(tnl::Vector3& Point)
 {
 	for (auto map : Maps) {
@@ -482,6 +500,20 @@ float GameManager::GetMapToPlayerDistance(std::shared_ptr<Map> map)
 		(mapPos.y - playerPos.y) * (mapPos.y - playerPos.y));
 
 	return distance;
+}
+
+float GameManager::GetMaptoEnemyDistance(std::shared_ptr<Map> map)
+{
+	for (auto enm : Enemys) {
+		tnl::Vector3 enemyPos = enm->GetPos();
+		tnl::Vector3 mapPos = map->GetMapCenterPos();
+
+		float distance = std::sqrt((mapPos.x - enemyPos.x) * (mapPos.x - enemyPos.x) +
+			(mapPos.y - enemyPos.y) * (mapPos.y - enemyPos.y));
+		return distance;
+	}
+	
+	//return 0.0f;
 }
 
 std::list<std::shared_ptr<Map>> GameManager::GetMapList()
@@ -840,8 +872,8 @@ void GameManager::Update(float delta_time) {
 	if (!init) {
 		sManager = SceneManager::GetInstance();
 
-		connect = std::make_shared<Connect>();
-#ifdef DEBUG_OFF
+		//connect = std::make_shared<Connect>();
+#ifndef DEBUG_ON
 		connect = std::make_shared<Connect>();
 #endif
 		uiEditor = std::make_shared<UIEditor>();
@@ -859,7 +891,7 @@ void GameManager::Update(float delta_time) {
 	sManager->Update(delta_time);
 	sManager->Draw();
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	if (chat) {
 		chat->Update();
 		chat->Draw();

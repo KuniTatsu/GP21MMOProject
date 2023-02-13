@@ -14,6 +14,7 @@
 #include"../InventoryManager.h"
 #include"../EffectManager.h"
 #include"../Actor/ActorDrawManager.h"
+#include"../DebugDef.h"
 
 Scene_Map::Scene_Map()
 {
@@ -29,8 +30,11 @@ Scene_Map::~Scene_Map()
 
 void Scene_Map::initialzie()
 {
+#ifndef DEBUG_ON
+
 	//チャット接続
 	gManager->CreateChat();
+#endif
 
 	//マップの生成
 	gManager->CreateMap();
@@ -40,11 +44,16 @@ void Scene_Map::initialzie()
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
-	player = gManager->GetPlayer();
 
+#ifndef DEBUG_ON
+
+	//Dummy生成完了
+	player->SetIsCreatedDummy();
+	player = gManager->GetPlayer();
 
 	//エネミー取得
 	gManager->GetServerEnemyInfo();
+#endif
 
 	//NPCの生成
 	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 80, 80, 0);
@@ -111,7 +120,7 @@ void Scene_Map::render()
 
 	/*マップの描画*/
 	for (auto map : gManager->GetMapList()) {
-		map->SetIsFront(false);
+		map->SetIsDrawFront(false);
 		map->Draw(&camera);
 	}
 
@@ -129,15 +138,15 @@ void Scene_Map::render()
 	EffectManager::GetInstance()->Draw(&camera);
 
 	for (auto map : gManager->GetMapList()) {
-		map->SetIsFront(true);
+		map->SetIsDrawFront(true);
 		map->Draw(&camera);
 	}
 
 	/*どこのシーンであるか*///debugMessage
-	SetFontSize(50);
-	DrawStringEx(50, 50, -1, "Scene_map");
+	/*SetFontSize(50);
+	DrawStringEx(50, 50, -1, "Scene_map");*/
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	/*他のプレイヤーの描画*/
 	auto& others = gManager->GetOtherPlayersList();
 	if (!others.empty()) {

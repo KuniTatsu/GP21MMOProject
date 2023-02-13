@@ -11,6 +11,9 @@
 
 #include"../scene/Map.h"
 
+//村に下と右側から入ろうとするとゲームが落ちる件
+	//今度は草原から村に入ろうとすると村のcsvがnullのため落ちる？
+
 Actor::Actor()
 {
 	gManager = GameManager::GetInstance();
@@ -67,19 +70,43 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 
 bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
-	/*auto& player = GameManager::GetInstance()->GetPlayer();
-	tnl::Vector3& characterPos = player->GetPos();*/
-
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
+	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
 
-	auto& hitMap = map->GetHitMap();
+	std::vector<std::vector<int>>& hitMap = map->GetHitMap();
+	std::vector<std::vector<int>>& hitEnemyMap = mapenemy->GetHitMap();
 
-	auto x = std::floor(pos.x / 32);
-	auto y = std::floor(pos.y / 32);
+	//プレイヤーが村にいないなら
+	if (hitMap.empty())return true;
+	if (hitEnemyMap.empty())return true;
+	
+	float x = std::floor(pos.x / 32);
+	float y = std::floor(pos.y / 32);
 
-	tnl::Vector3 localPos = (tnl::Vector3(x+1, y+1, 0));
+	tnl::Vector3 localPos = tnl::Vector3(x + 1, y + 1, 0);
 
-	if (hitMap[localPos.y+17][localPos.x+17] == 65)return false;
+	if ((localPos.x > 17 && localPos.y > -17) || (localPos.y > 17 && localPos.x > -17)) {
+		float hitArrayX = localPos.x + 16;
+		float hitArrayY = localPos.y + 16;
+		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
+			tnl::DebugTrace("1 Debug用マップの当たり判定がNULLを参照した\n");
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("ゲーム落ちた\n");
+		}
+		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
+	}
+	else if(localPos.x < 18 && localPos.y < 18)
+	{
+		float hitArrayX = localPos.x + 17;
+		float hitArrayY = localPos.y + 17;
+		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
+			tnl::DebugTrace("2 Debug用マップの当たり判定がNULLを参照した\n");
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("ゲーム落ちた\n");
+		}
+		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
+		
+	}
 	return true;
 }
 

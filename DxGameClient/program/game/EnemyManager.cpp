@@ -193,7 +193,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	//ŒÂ‘Ì¯•Ê”Ô†‚ğæ“¾
 	int identId = SearchBlankEnemyNum();
 	//ŒÂ‘Ì¯•Ê”Ô†‚ªƒGƒ‰[”Ô†‚È‚ç“G‚Ì¶¬‚ğs‚í‚È‚¢

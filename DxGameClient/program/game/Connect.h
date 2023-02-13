@@ -78,9 +78,9 @@ private:
 private:
 
 	//サーバーのIPアドレス
-	std::string host = "127.0.0.1";
+	//std::string host = "127.0.0.1";
 	//std::string host = "192.168.80.129";
-	//std::string host = "10.76.14.195";
+	std::string host = "10.76.14.250";
 
 	//ポート
 	const std::string  port = "9001"; //80
