@@ -31,7 +31,7 @@ void DummyPlayer::Draw(Camera* camera)
 	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
 	//アニメーション更新
 	Anim(ghs, 3);
-	DrawRotaGraphF(x, y, 1, 0, drawGh, false);
+	DrawRotaGraphF(x, y, 1, 0, drawGh, true);
 }
 
 void DummyPlayer::Init()

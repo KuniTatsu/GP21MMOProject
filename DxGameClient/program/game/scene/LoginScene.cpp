@@ -264,11 +264,6 @@ bool LoginScene::SeqCheckGraphic(const float deltatime)
 
 bool LoginScene::SeqWaitChangeScene(const float deltatime)
 {
-	//if (mainSequence.isStart()) {
-	//	//サーバー通信取得用スレッドの作成
-	//	GameManager::GetInstance()->CreateThread();
-	//}
-
 
 	SetFontSize(25);
 
@@ -284,11 +279,12 @@ bool LoginScene::SeqWaitChangeScene(const float deltatime)
 
 	if (player == nullptr)return false;
 
-	//Player情報のサーバーへの送信--サーバーの一時データへの保存
-	GameManager::GetInstance()->SendPlayerInfoToServer(true);
-	player->SetIsCreatedDummy();
-
-
+	if (!isSend) {
+		//Player情報のサーバーへの送信--サーバーの一時データへの保存
+		GameManager::GetInstance()->SendPlayerInfoToServer(true);
+		player->SetIsCreatedDummy();
+		isSend = true;
+	}
 	canChangeScene = true;
 
 	return true;

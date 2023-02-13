@@ -53,7 +53,7 @@ SceneManager::SceneManager()
 #ifndef DEBUG_ON
 	nowScene = new SceneTitle();
 #endif
-	nowScene = new Scene_Map();
+	//nowScene = new Scene_Map();
 
 	nowScene->initialzie();
 }

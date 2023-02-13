@@ -129,7 +129,7 @@ bool SupportNPC::SeqHint(const float DeltaTime)
 void SupportNPC::DrawWaitSequence()
 {
 	SetFontSize(50);
-	DrawStringEx(20, 20, -1, "SupNPC:Wait");
+//	DrawStringEx(20, 20, -1, "SupNPC:Wait");
 	SetFontSize(16);
 }
 
@@ -150,7 +150,7 @@ void SupportNPC::DrawFirstMenuSequence()
 	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawPos);
 
 	SetFontSize(50);
-	DrawStringEx(20, 20, -1, "SupNPC:MENU");
+	//DrawStringEx(20, 20, -1, "SupNPC:MENU");
 	SetFontSize(16);
 }
 
@@ -163,7 +163,7 @@ void SupportNPC::DrawHintSequence()
 		hintMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
 
 		//2”Ô‚ª•¶Žš‚ð•`‰æ‚·‚éUI˜g‚È‚Ì‚Å‚»‚±‚¾‚¯Žæ“¾‚·‚é
-		auto& leftTopPos = hintMenuGraphics[2]->GetLeftTopPos();
+		auto& leftTopPos = hintMenuGraphics[1]->GetLeftTopPos();
 		drawPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y, 0);
 
 		selectHint = nowDrawPage * MAXDRAWNUM + cursorNum;
@@ -172,7 +172,7 @@ void SupportNPC::DrawHintSequence()
 	DrawNpcText(selectHint, drawPos);
 
 	SetFontSize(50);
-	DrawStringEx(20, 20, -1, "SupNPC:Hint");
+//	DrawStringEx(20, 20, -1, "SupNPC:Hint");
 	SetFontSize(16);
 }
 

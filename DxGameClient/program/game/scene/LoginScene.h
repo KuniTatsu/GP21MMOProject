@@ -50,6 +50,9 @@ private:
 	//シーン遷移中のdeltatime
 	float bufferDeltaTime = 0.0f;
 
+	//プレイヤーデータを送ったか
+	bool isSend = false;
+
 private:
 
 	//シークエンス変更関数
