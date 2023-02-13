@@ -4,7 +4,7 @@ DisassemblyNPC::DisassemblyNPC(float x, float y, int ghNum, float distance) :NPC
 {
 	canHearDistance = distance;
 	//NPCÇÃòbÇ∑ì‡óeÇÃì«Ç›çûÇ›
-	if (loadNPCHint()) {
+	if (loadNPCHint(static_cast<int>(NPCTYPE::DISASSEMBLY))) {
 		maxPageNum = static_cast<int>(std::floor(npcSpeaks.size() / MAXDRAWNUM));
 	}
 }

@@ -9,6 +9,11 @@ public:
 	~DisassemblyNPC();
 
 private:
+	//メニューのページ番号
+	int maxPageNum = 0;
+	int nowDrawPage = 0;
 
+	//メニューの1ページに描画する最大数
+	const int MAXDRAWNUM = 3;
 };
 

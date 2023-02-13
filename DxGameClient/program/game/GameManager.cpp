@@ -635,6 +635,8 @@ bool GameManager::CreateDummyPlayer(std::string json)
 	//Dummyプレイヤー生成成功
 	if (dummy != nullptr) {
 		otherPlayers.emplace_back(dummy);
+
+		ActorDrawManager::GetInstance()->AddDrawActorList(dummy);
 		return true;
 	}
 	//Dummyプレイヤー生成失敗

@@ -162,6 +162,7 @@
     <ClInclude Include="program\game\Actor\Camera.h" />
     <ClInclude Include="program\game\Actor\DummyPlayer.h" />
     <ClInclude Include="program\game\Actor\Enemy.h" />
+    <ClInclude Include="program\game\Actor\NPC\DisassemblyNPC.h" />
     <ClInclude Include="program\game\Actor\NPC\NPC.h" />
     <ClInclude Include="program\game\Actor\NPC\NPCManager.h" />
     <ClInclude Include="program\game\Actor\NPC\NPCSpeak.h" />
@@ -171,6 +172,7 @@
     <ClInclude Include="program\game\BattleLogic.h" />
     <ClInclude Include="program\game\ChatBase.h" />
     <ClInclude Include="program\game\Connect.h" />
+    <ClInclude Include="program\game\Disassembly.h" />
     <ClInclude Include="program\game\Effect.h" />
     <ClInclude Include="program\game\EffectManager.h" />
     <ClInclude Include="program\game\EnemyManager.h" />
@@ -258,6 +260,7 @@
     <ClCompile Include="program\game\Actor\ActorDrawManager.cpp" />
     <ClCompile Include="program\game\Actor\DummyPlayer.cpp" />
     <ClCompile Include="program\game\Actor\Enemy.cpp" />
+    <ClCompile Include="program\game\Actor\NPC\DisassemblyNPC.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPCManager.cpp" />
     <ClCompile Include="program\game\Actor\NPC\NPCSpeak.cpp" />
@@ -267,6 +270,7 @@
     <ClCompile Include="program\game\BattleLogic.cpp" />
     <ClCompile Include="program\game\ChatBase.cpp" />
     <ClCompile Include="program\game\Connect.cpp" />
+    <ClCompile Include="program\game\Disassembly.cpp" />
     <ClCompile Include="program\game\Effect.cpp" />
     <ClCompile Include="program\game\EffectManager.cpp" />
     <ClCompile Include="program\game\EnemyManager.cpp" />

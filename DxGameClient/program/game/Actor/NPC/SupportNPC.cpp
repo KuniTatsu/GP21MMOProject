@@ -128,6 +128,9 @@ bool SupportNPC::SeqHint(const float DeltaTime)
 
 void SupportNPC::DrawWaitSequence()
 {
+	SetFontSize(50);
+	DrawStringEx(20, 20, -1, "SupNPC:Wait");
+	SetFontSize(16);
 }
 
 void SupportNPC::DrawFirstMenuSequence()
@@ -145,6 +148,10 @@ void SupportNPC::DrawFirstMenuSequence()
 	}
 
 	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawPos);
+
+	SetFontSize(50);
+	DrawStringEx(20, 20, -1, "SupNPC:MENU");
+	SetFontSize(16);
 }
 
 void SupportNPC::DrawHintSequence()
@@ -164,6 +171,9 @@ void SupportNPC::DrawHintSequence()
 
 	DrawNpcText(selectHint, drawPos);
 
+	SetFontSize(50);
+	DrawStringEx(20, 20, -1, "SupNPC:Hint");
+	SetFontSize(16);
 }
 
 bool SupportNPC::ChangeSequence(SEQUENCE NextSeq)
