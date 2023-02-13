@@ -34,6 +34,9 @@ void Scene_Map::initialzie()
 
 	//チャット接続
 	gManager->CreateChat();
+#else
+	//player = gManager->GetPlayer();
+	player = GameManager::GetInstance()->CreatePlayer(0);
 #endif
 
 	//マップの生成
@@ -44,10 +47,8 @@ void Scene_Map::initialzie()
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
-
 #ifndef DEBUG_ON
 
-	
 	player = gManager->GetPlayer();
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
@@ -114,6 +115,7 @@ void Scene_Map::update(float delta_time)
 	}
 
 }
+
 void Scene_Map::render()
 {
 
@@ -146,17 +148,6 @@ void Scene_Map::render()
 	/*どこのシーンであるか*///debugMessage
 	/*SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");*/
-
-#ifndef DEBUG_ON
-	/*他のプレイヤーの描画*/
-	auto& others = gManager->GetOtherPlayersList();
-	if (!others.empty()) {
-		for (auto& dummy : others) {
-			dummy->Draw(&camera);
-		}
-	}
-
-#endif
 
 	UIManager::GetInstance()->Draw();
 

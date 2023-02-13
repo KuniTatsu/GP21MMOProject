@@ -33,9 +33,7 @@ private:
 //生成回数
 	int createCount = 0;
 	//生成制限
-	const int SPAWNLIMIT = 0;
-
-	int spawnLimit = 5;
+	const int SPAWNLIMIT = 5;
 
 	//インターバルのカウント開始Flag
 	bool spawntiming = false;
