@@ -149,12 +149,12 @@ void Scene_Map::render()
 
 #ifndef DEBUG_ON
 	/*‘¼‚ÌƒvƒŒƒCƒ„[‚Ì•`‰æ*/
-	auto& others = gManager->GetOtherPlayersList();
-	if (!others.empty()) {
-		for (auto& dummy : others) {
-			dummy->Draw(&camera);
-		}
-	}
+	//auto& others = gManager->GetOtherPlayersList();
+	//if (!others.empty()) {
+	//	for (auto& dummy : others) {
+	//		dummy->Draw(&camera);
+	//	}
+	//}
 
 #endif
 

@@ -615,7 +615,7 @@ void GameManager::CreateChat()
 	if (chat == nullptr) {
 		chat = new ChatBase();
 
-		chat->Init();
+		//chat->Init();
 	}
 }
 
@@ -686,6 +686,7 @@ bool GameManager::CreateDummyPlayer(float posX, float posY, std::string UUID, in
 	//Dummyプレイヤー生成成功
 	if (dummy != nullptr) {
 		otherPlayers.emplace_back(dummy);
+		ActorDrawManager::GetInstance()->AddDrawActorList(dummy);
 		return true;
 	}
 	//Dummyプレイヤー生成失敗
