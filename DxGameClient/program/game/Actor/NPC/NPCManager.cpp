@@ -27,6 +27,13 @@ void NPCManager::Update()
 	}
 }
 
+void NPCManager::DrawSpeak()
+{
+	for (auto& npc : NpcList) {
+		npc->DrawNPCSpeak();
+	}
+}
+
 std::shared_ptr<NPC> NPCManager::CreateNPC(int npcType, float x, float y, int ghNum)
 {
 	std::shared_ptr<NPC> ret = nullptr;

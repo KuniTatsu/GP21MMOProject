@@ -56,7 +56,8 @@ void Actor::SetCircleSize(tnl::Vector3& size)
 
 void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 {
-	if (--actWait <= 0) {
+	actWait -= ANIMSPEED[nowAnimMode];
+	if (actWait <= 0) {
 		actIndex++;
 		actWait = Speed;
 		actIndex %= MaxIndex;
@@ -95,8 +96,7 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 		}
 		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
 	}
-	else if (localPos.x > -18 &&localPos.x < 18 && localPos.y < 18)
-	{
+	else if (localPos.x > -18 &&localPos.x < 18 && localPos.y < 18)	{
 		float hitArrayX = localPos.x + 17;
 		float hitArrayY = localPos.y + 17;
 		tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
@@ -285,6 +285,32 @@ void Actor::SetExDir(int dir)
 	default:
 		break;
 	}
+}
+void Actor::ChangeAnimMode(int changeMode)
+{
+	if (changeMode == nowAnimMode) return;
+
+	switch (changeMode)
+	{
+	case static_cast<int>(ANIMMODE::NORMAL):
+		nowAnimMode = static_cast<int>(ANIMMODE::NORMAL);
+		break;
+	case static_cast<int>(ANIMMODE::FAST2X):
+		nowAnimMode = static_cast<int>(ANIMMODE::FAST2X);
+		break;
+	case static_cast<int>(ANIMMODE::FAST3X):
+		nowAnimMode = static_cast<int>(ANIMMODE::FAST3X);
+		break;
+	case static_cast<int>(ANIMMODE::HALF):
+		nowAnimMode = static_cast<int>(ANIMMODE::HALF);
+		break;
+	case static_cast<int>(ANIMMODE::STOP):
+		nowAnimMode = static_cast<int>(ANIMMODE::STOP);
+		break;
+	default:
+		break;
+	}
+
 }
 //í èÌçUåÇä÷êî
 void Actor::DefaultAttack()

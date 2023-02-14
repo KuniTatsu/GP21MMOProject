@@ -39,6 +39,14 @@ void Scene_Map::initialzie()
 	player = GameManager::GetInstance()->CreatePlayer(0);
 #endif
 
+#ifdef DEBUG_ON
+
+	gManager->CreatePlayer(0);
+	player = gManager->GetPlayer();
+#endif // DEBUG_ON
+
+
+
 	//マップの生成
 	gManager->CreateMap();
 	//エネミーの生成
@@ -48,7 +56,6 @@ void Scene_Map::initialzie()
 	gManager->SetStayMap();
 
 #ifndef DEBUG_ON
-
 	player = gManager->GetPlayer();
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
@@ -58,7 +65,7 @@ void Scene_Map::initialzie()
 #endif
 
 	//NPCの生成
-	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 80, 80, 0);
+	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 180, 240, 5);
 
 }
 
@@ -88,11 +95,14 @@ void Scene_Map::update(float delta_time)
 
 	EffectManager::GetInstance()->Update(gManager->deltaTime);
 
+	mainSequence.update(gManager->deltaTime);
+
+
 	auto uiManager = UIManager::GetInstance();
 	//メニュー描画切り替え //今後はシークエンスにして一番最初のシークエンスでのみ変更可能にする
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
+	/*if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
 		uiManager->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::MENU));
-	}
+	}*/
 	//debug
 	if (uiManager->GetCanDraw()) {
 		if (tnl::Input::IsKeyDownTrigger(eKeys::KB_1)) {
@@ -145,5 +155,50 @@ void Scene_Map::render()
 	DrawStringEx(50, 50, -1, "Scene_map");*/
 
 	UIManager::GetInstance()->Draw();
+	//NPCManager::GetInstance()->DrawSpeak();
+}
 
+bool Scene_Map::SeqWait(const float DeltaTime)
+{
+	return false;
+}
+
+bool Scene_Map::SeqFirstMenu(const float DeltaTime)
+{
+	return false;
+}
+
+bool Scene_Map::SeqStatus(const float DeltaTime)
+{
+	return false;
+}
+
+bool Scene_Map::SeqInventory(const float DeltaTime)
+{
+	return false;
+}
+
+bool Scene_Map::SeqEquip(const float DeltaTime)
+{
+	return false;
+}
+
+void Scene_Map::DrawWaitSequence()
+{
+}
+
+void Scene_Map::DrawFirstMenuSequence()
+{
+}
+
+void Scene_Map::DrawStatusSequence()
+{
+}
+
+void Scene_Map::DrawInventorySequence()
+{
+}
+
+void Scene_Map::DrawEquipSequence()
+{
 }

@@ -16,6 +16,9 @@ public:
 	//NPC‚ÌUpdate
 	void Update();
 
+	//NPC‚Ì‰ï˜b•¶‚Ì‚İ‚Ì•`‰æŠÖ” UI‚ª•\¦‚³‚ê‚é‚Æ‚«‚Ì‚İ•`‰æ‚·‚é‚±‚Æ
+	void DrawSpeak();
+
 	enum class NPCTYPE {
 		SUPPORT,
 		DISASSEMBLY,

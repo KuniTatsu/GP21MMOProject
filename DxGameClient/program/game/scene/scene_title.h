@@ -20,4 +20,6 @@ private:
 	bool init = false;
 	SceneManager* sManager = nullptr;
 
+	int gh = 0;
+
 };

@@ -20,6 +20,7 @@
 #include"DebugDef.h"
 
 
+
 GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
 

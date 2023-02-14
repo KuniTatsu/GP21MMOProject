@@ -13,6 +13,8 @@ public:
 	ChatBase();
 	~ChatBase();
 
+	void Init();
+
 	//Œ»İ“ü—Í’†‚Ì•¶š—ñ‚ğ•`‰æ‚·‚éŠÖ”
 	void DrawWritingMessage();
 	//“ü—ÍŠÖ”

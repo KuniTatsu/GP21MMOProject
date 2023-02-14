@@ -89,7 +89,7 @@ ResourceManager::ResourceManager()
 	graphicSizes.resize(static_cast<int>(RESOUCETYPE::MAX));
 	SetLoadCsvPass();
 
-	playerGhs.resize(5);
+	playerGhs.resize(8);
 	enemyGhs.resize(5);
 	effectGhs.resize(5);
 

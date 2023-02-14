@@ -25,6 +25,8 @@ public:
 	virtual void Update() = 0;
 	virtual void Draw(Camera* camera) = 0;
 	virtual void Init() = 0;
+	virtual void DrawNPCSpeak() {};
+
 
 	bool loadNPCHint(int npcType);
 

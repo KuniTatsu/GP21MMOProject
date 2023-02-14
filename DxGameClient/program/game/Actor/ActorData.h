@@ -91,7 +91,7 @@ private:
 private:
 
 	//’ÊíUŒ‚‚Ì“–‚½‚é‹——£(ƒŒƒ“ƒW)Šî–{’l
-	float attackRange = 100.0f;
+	float attackRange = 50.0f;
 
 	//UŒ‚—Í
 	float attack = 0.0f;
