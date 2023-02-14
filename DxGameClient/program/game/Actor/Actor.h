@@ -221,6 +221,9 @@ private:
 	//通常攻撃用エフェクト用のオフセットを求める関数
 	void SetDefaultAttackOffset();
 
+	//座標によるマップ配列との当たり判定
+	bool HitMapToPos(tnl::Vector3& pos, std::vector<std::vector<int>>& hitmap);
+
 	//継承先で使う関数かつprivateなものはここに書く
 protected:
 

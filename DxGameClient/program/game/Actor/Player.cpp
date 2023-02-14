@@ -14,7 +14,7 @@ Player::Player(int startX, int startY, int type)
 {
 	drawPos.x = static_cast<float>(startX);
 	drawPos.y = static_cast<float>(startY);
-	gh = gManager->LoadGraphEx("graphics/Player.png");
+	//gh = gManager->LoadGraphEx("graphics/Player.png");
 
 	testGh = gManager->LoadGraphEx("graphics/test.png");
 
@@ -41,7 +41,7 @@ Player::Player(int startX, int startY, double HP,  int ghNum)
 	drawPos.x = static_cast<float>(startX);
 	drawPos.y = static_cast<float>(startY);
 
-	gh = gManager->LoadGraphEx("graphics/Player.png");
+	//gh = gManager->LoadGraphEx("graphics/Player.png");
 
 	testGh = gManager->LoadGraphEx("graphics/test.png");
 
@@ -89,8 +89,7 @@ void Player::Update()
 
 void Player::Draw(Camera* camera)
 {
-
-
+	
 	float x = drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1);
 	float y = drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1);
 
