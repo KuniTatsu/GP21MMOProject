@@ -31,13 +31,17 @@ void SupportNPC::Draw(Camera* camera)
 {
 	DrawRotaGraphF(drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1), drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1),
 		1, 0, ghs[10], true);
-	//シークエンスごとの描画
-	DRAWSEQUENCE[static_cast<uint32_t>(nowSequence)](this);
 }
 
 void SupportNPC::Init()
 {
 
+}
+
+void SupportNPC::DrawNPCSpeak()
+{
+	//シークエンスごとの描画
+	DRAWSEQUENCE[static_cast<uint32_t>(nowSequence)](this);
 }
 
 bool SupportNPC::SeqWait(const float DeltaTime)
@@ -59,7 +63,7 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 	if (mainSequence.isStart()) {
 		cursorNum = 0;
 		//SUPNPCのUIを描画状態にする
-		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC),true);
 		//描画するUIをFirstMenuに変更
 		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::FIRSTMENU));
 	}
@@ -135,19 +139,21 @@ void SupportNPC::DrawWaitSequence()
 
 void SupportNPC::DrawFirstMenuSequence()
 {
-	tnl::Vector3 drawPos = {};
+	/*tnl::Vector3 drawPos = {};*/
 
 	//hintの数だけメニューを出す
 	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
 	if (mainSequence.isStart()) {
 		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
 
-		//1番が文字を描画するUI枠なのでそこだけ取得する
+		//2番がタイトルを描画するUI枠なのでそこだけ取得する
 		auto& leftTopPos = firstMenuGraphics[1]->GetLeftTopPos();
-		drawPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y, 0);
+		drawSpeakTitlePos = tnl::Vector3(leftTopPos.x + 50, leftTopPos.y+20, 0);
 	}
 
-	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawPos);
+	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawSpeakTitlePos);
+
+	DrawRotaGraph(drawSpeakTitlePos.x - 25, drawSpeakTitlePos.y + 10 + (cursorNum * 20), 0.25, 0, cursorGh, true);
 
 	SetFontSize(50);
 	//DrawStringEx(20, 20, -1, "SupNPC:MENU");
@@ -156,20 +162,24 @@ void SupportNPC::DrawFirstMenuSequence()
 
 void SupportNPC::DrawHintSequence()
 {
-	//選ばれたヒントの配列番号
-	int selectHint = 0;
+	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
 	std::vector<std::shared_ptr<GraphicUI>>hintMenuGraphics;
 	if (mainSequence.isStart()) {
+		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
 		hintMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
 
-		//2番が文字を描画するUI枠なのでそこだけ取得する
-		auto& leftTopPos = hintMenuGraphics[1]->GetLeftTopPos();
-		drawPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y, 0);
+		//2番がタイトルを描画するUI枠なのでそこだけ取得する
+		auto& titleLeftTopPos = firstMenuGraphics[1]->GetLeftTopPos();
+		drawSpeakTitlePos = tnl::Vector3(titleLeftTopPos.x + 50, titleLeftTopPos.y + 20, 0);
+
+		//3番が文字を描画するUI枠なのでそこだけ取得する
+		auto& leftTopPos = hintMenuGraphics[2]->GetLeftTopPos();
+		drawSpeakPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y+20, 0);
 
 		selectHint = nowDrawPage * MAXDRAWNUM + cursorNum;
 	}
-
-	DrawNpcText(selectHint, drawPos);
+	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawSpeakTitlePos);
+	DrawNpcText(selectHint, drawSpeakPos);
 
 	SetFontSize(50);
 //	DrawStringEx(20, 20, -1, "SupNPC:Hint");

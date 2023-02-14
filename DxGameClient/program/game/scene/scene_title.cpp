@@ -13,7 +13,7 @@ SceneTitle::SceneTitle()
 void SceneTitle::initialzie() {
 
 	//sManager = SceneManager::GetInstance();
-
+	gh = GameManager::GetInstance()->LoadGraphEx("graphics/title.png");
 }
 
 void SceneTitle::update(float delta_time)
@@ -34,5 +34,6 @@ void SceneTitle::update(float delta_time)
 
 void SceneTitle::render()
 {
-	DrawStringEx(50, 50, -1, "scene title");
+	//DrawStringEx(50, 50, -1, "scene title");
+	DrawRotaGraph(512, 384, 1, 0, gh, false);
 }

@@ -122,9 +122,28 @@ protected:
 	//実際に今描画中のグラフィックハンドル
 	int drawGh = 0;
 	//現在の切り替えタイマー
-	int actWait = actSpeed;
+	float actWait = actSpeed;
 	//描画するアニメーション配列のインデックス番号
 	int actIndex = 0;
+
+	////アニメーションが減るスピード 標準は1
+	//float decreaseAnimSpeed = 1;
+
+	//アニメーションの再生モード
+	enum class ANIMMODE {
+		NORMAL,
+		FAST2X,
+		FAST3X,
+		HALF,
+		STOP,
+		MAX
+	};
+
+	//今のアニメーションの再生モード
+	int nowAnimMode = static_cast<int>(ANIMMODE::NORMAL);
+
+	//モードごとのスピード
+	const float ANIMSPEED[static_cast<int>(ANIMMODE::MAX)] = { 1.0,2.0,3.0,0.5,0 };
 
 	//通常攻撃の検知間隔
 	float canAttackTime = 1.0f;
@@ -216,6 +235,9 @@ protected:
 	//引数から向いている方向を変更する関数
 	void SetExDir(int dir);
 
+	//アニメーションモードを変更する関数
+	void ChangeAnimMode(int changeMode);
+
 	//基本攻撃関数	
 	void DefaultAttack();
 
@@ -229,6 +251,6 @@ protected:
 
 	/*マップとキャラクターの当たり判定*/
 	bool HitMaptoCharacter(tnl::Vector3& pos);
-	
+
 };
 

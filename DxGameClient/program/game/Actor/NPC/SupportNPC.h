@@ -17,6 +17,7 @@ public:
 	void Draw(Camera* camera)override;
 	void Init() override;
 
+	void DrawNPCSpeak()override;
 
 public:
 
@@ -61,12 +62,18 @@ private:
 	//メニュー番号
 	int cursorNum = 0;
 
+	//選ばれたヒントの配列番号
+	int selectHint = 0;
+
 	//メニューのページ番号
 	int maxPageNum = 0;
 	int nowDrawPage = 0;
 
 	//メニューの1ページに描画する最大数
 	const int MAXDRAWNUM = 3;
+
+	tnl::Vector3 drawSpeakTitlePos = {};
+	tnl::Vector3 drawSpeakPos = {};
 
 };
 
