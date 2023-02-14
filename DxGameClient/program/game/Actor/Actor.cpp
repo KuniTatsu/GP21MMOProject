@@ -79,7 +79,7 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 	//プレイヤーが村にいないなら
 	if (hitMap.empty())return true;
 	if (hitEnemyMap.empty())return true;
-	
+
 	float x = std::floor(pos.x / 32);
 	float y = std::floor(pos.y / 32);
 
@@ -95,17 +95,23 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 		}
 		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
 	}
-	else if(localPos.x < 18 && localPos.y < 18)
+	else if (localPos.x > -18 &&localPos.x < 18 && localPos.y < 18)
 	{
 		float hitArrayX = localPos.x + 17;
 		float hitArrayY = localPos.y + 17;
+		tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
 		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
 			tnl::DebugTrace("2 Debug用マップの当たり判定がNULLを参照した\n");
 			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
 			tnl::DebugTrace("ゲーム落ちた\n");
 		}
+
 		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
-		
+
+	}
+	else {
+		tnl::DebugTrace("3 Debug用マップの当たり判定がNULLを参照した\n");
+		return true;
 	}
 	return true;
 }

@@ -109,11 +109,6 @@ void Scene_Map::update(float delta_time)
 		}
 	}
 
-	int test = static_cast<int>(player->GetPos().x);
-	if ((test % 64) == 0) {
-		createChipRight = true;
-	}
-
 }
 
 void Scene_Map::render()
