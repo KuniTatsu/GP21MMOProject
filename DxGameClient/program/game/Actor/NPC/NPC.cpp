@@ -59,7 +59,7 @@ void NPC::DrawNpcTextName(int maxNum, int nowDrawPage, tnl::Vector3& drawPos)
 {
 	//maxNumの文だけ縦に表示する
 	//配列の大きさがmaxNumより大きい場合は次のページに描画する
-	for (int i = 0; i < (maxNum - 1); ++i) {
+	for (int i = 0; i < (maxNum ); ++i) {
 		int index = (maxNum * nowDrawPage) + i;
 		if (index > npcSpeaks.size())return;
 

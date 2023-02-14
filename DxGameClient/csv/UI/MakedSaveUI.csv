@@ -1,4 +1,2 @@
 id, frameGhPass, type 0:split, 1 : normal, allNum, widthNum, heightNum, widthSize, heightSize, leftTopPos.x, leftTopPos.y, FrameWidth, FrameHeight, ingraphicsPass
-0,graphics/FrameBlack.png,0,9,3,3,16,16,4.000000,473.000000,1012,290,none
-1,graphics/FrameBlack.png,0,9,3,3,16,16,13.000000,480.000000,330,277,none
-2,graphics/FrameBlack.png,0,9,3,3,16,16,346.000000,479.000000,664,278,none
+0,graphics/FrameBlack.png,1,1,1,1,48,48,680.000000,474.000000,48,48,none

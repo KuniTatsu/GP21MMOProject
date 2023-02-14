@@ -118,7 +118,7 @@ void Player::Draw(Camera* camera)
 
 	/*DrawExtendGraph(boxX1, boxY1, boxX2, boxY2, testGh, true);*/
 	//左上、右上、右下、左下の頂点の座標 
-	DrawModiGraphF(boxX1, boxY1, boxX2, boxY2, boxX4, boxY4, boxX3, boxY3, testGh, true);
+	//DrawModiGraphF(boxX1, boxY1, boxX2, boxY2, boxX4, boxY4, boxX3, boxY3, testGh, true);
 }
 
 void Player::Init()
@@ -155,27 +155,30 @@ void Player::Move()
 
 	//どうにかしてまとめたい　関数化したいがうまく思いつかない
 	//上下キー感知
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::UP)]) || tnl::Input::IsKeyDown(eKeys::KB_W)) {
+	if (tnl::Input::IsKeyDown(eKeys::KB_W)) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::UP)];
 		//myDir = DIR::UP;
 		DrawStringEx(200, 300, -1, "UP");
 	}
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::DOWN)]) || tnl::Input::IsKeyDown(eKeys::KB_S)) {
+	if (tnl::Input::IsKeyDown(eKeys::KB_S)) {
 		moveY += MOVEAMOUNT[static_cast<int>(DIR::DOWN)];
 		//myDir = DIR::DOWN;
 	}
 
 	//左右キー感知
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::RIGHT)]) || tnl::Input::IsKeyDown(eKeys::KB_D)) {
+	if ( tnl::Input::IsKeyDown(eKeys::KB_D)) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::RIGHT)];
 		//myDir = DIR::RIGHT;
 	}
-	if (tnl::Input::IsKeyDown(arrowKeys[static_cast<int>(DIR::LEFT)]) || tnl::Input::IsKeyDown(eKeys::KB_A)) {
+	if (tnl::Input::IsKeyDown(eKeys::KB_A)) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::LEFT)];
 		//myDir = DIR::LEFT;
 		DrawStringEx(200, 400, -1, "LEFT");
 	}
-	if (moveX == 0 && moveY == 0)return;
+	if (moveX == 0 && moveY == 0) {
+		ChangeAnimMode(static_cast<int>(ANIMMODE::NORMAL));
+		return;
+	}
 
 	//移動量が0でなければベクトルを正規化して移動させる
 	if (moveX != 0 || moveY != 0) {
@@ -189,6 +192,9 @@ void Player::Move()
 		//座標移動
 		drawPos.x += fixMoveX;
 		drawPos.y += fixMoveY;
+
+		//アニメーションを早くする
+		ChangeAnimMode(static_cast<int>(ANIMMODE::FAST2X));
 
 		//移動できなかったら
 		if (!HitMaptoCharacter(drawPos)) {

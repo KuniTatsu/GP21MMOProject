@@ -31,6 +31,24 @@ private:
 	ResourceManager* rManager = nullptr;
 	InventoryManager* iManager = nullptr;
 
+	//初期シークエンスを設定
+	tnl::Sequence<Scene_Map> mainSequence =
+		tnl::Sequence<Scene_Map>(this, &Scene_Map::SeqWait);
+
+	//各シークエンスのUpdate関数
+	bool SeqWait(const float DeltaTime);
+	bool SeqFirstMenu(const float DeltaTime);
+	bool SeqStatus(const float DeltaTime);
+	bool SeqInventory(const float DeltaTime);
+	bool SeqEquip(const float DeltaTime);
+
+	//シークエンスごとの描画関数
+	void DrawWaitSequence();
+	void DrawFirstMenuSequence();
+	void DrawStatusSequence();
+	void DrawInventorySequence();
+	void DrawEquipSequence();
+
 	bool createChipRight = false;
 
 };

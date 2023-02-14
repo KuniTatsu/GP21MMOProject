@@ -31,12 +31,14 @@ public:
 	void ChangeDrawUI(int MenuSeries, int UINum);
 
 	//UI‚Ì•`‰æ‰Â”ÛØ‚è‘Ö‚¦
-	inline void ChangeCanDrawUI(int series) {
-		if (!canDrawUI[series]) {
+	inline void ChangeCanDrawUI(int series, bool swich = false) {
+		//¡‚ªfalse&true‚É‚µ‚ë‚Æ—ˆ‚½‚çtrue‚É•Ï‚¦‚é
+		if (swich && !canDrawUI[series]) {
 			canDrawUI[series] = true;
 			return;
 		}
-		canDrawUI[series] = false;
+		//¡‚ªtrue‚È‚ç‚Åfalse‚É‚µ‚ë‚Æ—ˆ‚½‚çfalse‚É‚·‚é
+		else if (!swich && canDrawUI[series])canDrawUI[series] = false;
 	}
 
 	//•`‰æ‰Â”Ûæ“¾
@@ -97,7 +99,7 @@ private:
 	const std::vector<int>SERIESINNUM = { static_cast<int>(MENUUI::MAX),static_cast<int>(SUPNPCUI::MAX),
 											static_cast<int>(DISASSEMBLYNPCUI::MAX),static_cast<int>(GUARDNPCUI::MAX) };
 
-	
+
 
 	//-----Œ»İ‘I‘ğ’†‚Ìui”Ô†-----
 	int nowDrawMenuUI = static_cast<int>(MENUUI::TOP);
