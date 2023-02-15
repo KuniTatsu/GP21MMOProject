@@ -73,31 +73,23 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
 	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
-
-	std::vector<std::vector<int>>& hitMapPlayer = map->GetHitMap();
+	
 	std::vector<std::vector<int>>& hitMapEnemy = mapenemy->GetHitMap();
+	std::vector<std::vector<int>>& hitMapPlayer = map->GetHitMap();
+	
 
 	float x = std::floor(pos.x / 32);
 	float y = std::floor(pos.y / 32);
 
 	tnl::Vector3 localPos = tnl::Vector3(x + 1, y + 1, 0);
-	
+
 	//hitMapPlayer‚ª‹ó‚Å‚©‚ÂhitMapEnemy‚ª‚©‚ç‚È‚çtrue
 	// hitMapPlayer‚ª‹ó‚Å‚È‚¢‚È‚çHitMapPos
 	// hitMapEnemy‚ª‹ó‚Å‚È‚¢‚È‚çHitMapPos
 	//---------------------------------------------------------------------
-	//Player
-	if (hitMapPlayer.empty() && hitMapEnemy.empty()) {
-		return true;
+	if (!hitMapPlayer.empty()) {
+		return HitMapToPos(localPos, hitMapPlayer);
 	}
-	else if (!hitMapPlayer.empty()) {
-		HitMapToPos(localPos, hitMapPlayer);
-	}else if (!hitMapEnemy.empty()) {
-		return HitMapToPos(localPos, hitMapEnemy);
-	}
-
-
-	//if(!hitMapPlayer.empty())
 
 	return true;
 }
@@ -123,10 +115,8 @@ bool Actor::HitMapToPos(tnl::Vector3& pos, std::vector<std::vector<int>>& hitmap
 			tnl::DebugTrace("POSy = %f POSx = %f\n", pos.y, pos.x);
 			tnl::DebugTrace("ƒQ[ƒ€—‚¿‚½\n");
 		}
-
 		if (hitmap[hitArrayY][hitArrayX] == 65)return false;
 	}
-	
 	return true;
 
 }
