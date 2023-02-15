@@ -8,6 +8,7 @@
 #include"Actor/ActorDrawManager.h"
 #include<time.h>
 #include<random>
+#include"DebugDef.h"
 
 EnemyManager* EnemyManager::instance = nullptr;
 
@@ -206,7 +207,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 #endif
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
-	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], 0);
+	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], type);
 
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
 	

@@ -25,7 +25,7 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 
 	auto rManager = ResourceManager::GetInstance();
 	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
-
+	
 	SetCircleSize(hoge[type]);
 
 	myAnimationGh = ghs;
@@ -136,6 +136,8 @@ unsigned int Enemy::ChangedColor()
 
 void Enemy::EnemyMove() {
 
+	ChangeAnimMode(static_cast<int>(ANIMMODE::NORMAL));
+	SetExDir(static_cast<int>(EXDIR::BOTTOM));
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 
 }
@@ -150,7 +152,7 @@ void Enemy::Update()
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 
-	if (onFollowToPlayer && HitMaptoCharacter(drawPos)) {
+	if (onFollowToPlayer) {
 		EnemyMove();
 	}
 }
@@ -164,6 +166,7 @@ void Enemy::Draw(Camera* camera)
 	/*çıìGä÷êî*/
 	SearchBox(tnl::Vector3(x, y, 0), 50);
 
-	DrawRotaGraphF(x, y, 1.0f, 0, img_Ghost, true);
+	Anim(myAnimationGh, 6);
+	DrawRotaGraphF(x, y, 1.0f, 0, drawGh, false);
 }
 

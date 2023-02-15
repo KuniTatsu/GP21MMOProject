@@ -1,4 +1,4 @@
 id,pass,allNum,widthNum,heightNum,widthSize,heightSize
-0,graphics/chara/CoboldEnemy.png,48,6,8,32,32
-1,graphics/chara/SlimeEnemy.png,48,6,8,32,32
-2,graphics/chara/SkullEnemy.png,48,6,8,32,32
+0,graphics/chara/KoboldEnemy.png,48,6,8,32,32
+1,graphics/chara/SlimeEnemy.png,32,4,8,32,32
+2,graphics/chara/SkullEnemy.png,32,4,8,32,32

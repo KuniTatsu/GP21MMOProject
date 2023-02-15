@@ -57,9 +57,9 @@ public:
 
 	/*エネミー種類*/
 	enum class EnemyType : uint32_t {
-		GHOST,
+		KOBOLD,
 		SLIME,
-		GOBLIN,
+		SKULL,
 		MAX
 	};
 
