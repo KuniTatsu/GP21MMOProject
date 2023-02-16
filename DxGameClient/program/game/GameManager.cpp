@@ -46,7 +46,7 @@ volatile int num1 = 0;
 
 void GameManager::Accept()
 {
-#ifdef DEBUG_OFF
+#ifdef DEBUG_ON
 	while (isEnd == false)
 	{
 		auto get = connect->GetServerMessage();

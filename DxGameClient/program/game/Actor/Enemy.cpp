@@ -163,12 +163,9 @@ void Enemy::Update()
 
 	//’ÊíUŒ‚
 	if (GetDisPlayerfromEnemy(drawPos) < 40) {
-		/*if(atackInterval % (60 * atackintervalLimit) == 0){
-
-			DefaultAttack();
-
-		
-		}*/
+		if (atackInterval % (60 * atackintervalLimit) == 0) {
+			//DefaultAttack();
+		}
 	}
 }
 
