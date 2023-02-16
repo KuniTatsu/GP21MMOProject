@@ -1,10 +1,12 @@
 
 #include"Connect.h"
 
+#ifdef DEBUG_OFF
 #include <boost/beast/core.hpp>
 #include <boost/beast/websocket.hpp>
 #include <boost/asio/connect.hpp>
 #include <boost/asio/ip/tcp.hpp>
+#endif
 #include"GameManager.h"
 #include"EnemyManager.h"
 #include <cstdlib>
@@ -13,11 +15,14 @@
 
 #include"../json11.hpp"
 
+#ifdef DEBUG_OFF
 #include<boost/version.hpp>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/lexical_cast.hpp>
+
+
 
 namespace beast = boost::beast;         // from <boost/beast.hpp>
 namespace http = beast::http;           // from <boost/beast/http.hpp>
@@ -33,7 +38,7 @@ net::io_context ioc;
 //// These objects perform our I/O
 tcp::resolver resolver{ ioc };
 websocket::stream<tcp::socket> ws{ ioc };
-
+#endif
 
 Connect::Connect()
 {
@@ -56,9 +61,12 @@ Connect::~Connect()
 int Connect::ConnectServer()
 {
 
+#ifdef DEBUG_OFF
+
 	try
 	{
 		// Look up the domain name
+
 
 		auto const results = resolver.resolve(host, port);
 
@@ -87,12 +95,16 @@ int Connect::ConnectServer()
 		std::cerr << "Error: " << e.what() << std::endl;
 		return EXIT_FAILURE;
 	}
+
+#endif
+
 	return 0;
 
 }
 //チャット送信
 void Connect::SendClientMessage(std::string sendMessage)
 {
+#ifdef DEBUG_OFF
 	const std::string  text = sendMessage;
 
 	Json obj = Json::object({
@@ -104,12 +116,13 @@ void Connect::SendClientMessage(std::string sendMessage)
 	auto fix = gManager->SjistoUTF8(send);
 
 	ws.write(net::buffer(fix));
-
+#endif
 }
 
 const std::string Connect::GetServerMessage()
 
 {
+#ifdef DEBUG_OFF
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
 	// Read a message into our buffer
@@ -139,7 +152,7 @@ const std::string Connect::GetServerMessage()
 
 			if (hoge[buf].is_null())break;
 
-			auto map = hoge[buf].object_items();
+			auto& map = hoge[buf].object_items();
 
 			/*auto hogehoge = map["UUID"].string_value();*/
 
@@ -182,7 +195,7 @@ const std::string Connect::GetServerMessage()
 
 			if (hoge[buf].is_null())break;
 
-			auto map = hoge[buf].object_items();
+			auto& map = hoge[buf].object_items();
 
 			//各種ステータスの入れ物を用意
 			float posX = 0.0f;
@@ -325,6 +338,7 @@ const std::string Connect::GetServerMessage()
 	else {
 		gManager->CreateDummyPlayer(getMessage);
 	}
+#endif
 
 	return "";
 }
@@ -332,6 +346,7 @@ const std::string Connect::GetServerMessage()
 
 void Connect::EntryServer(std::string playerName)
 {
+#ifdef DEBUG_OFF
 	const std::string  text = playerName;
 	Json obj = Json::object({
 		{ "playerName", text },
@@ -340,10 +355,13 @@ void Connect::EntryServer(std::string playerName)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+
+#endif
 }
 //UUIDを取得してiniファイルで出力
 void Connect::GetEntryUserId()
 {
+#ifdef DEBUG_OFF
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
 	// Read a message into our buffer
@@ -384,7 +402,11 @@ void Connect::GetEntryUserId()
 	if (!check) {
 		tnl::DebugTrace("書き込み失敗");
 		tnl::DebugTrace("\n");
+
+	}
+
 	}*/
+#endif
 }
 
 //サーバーからログイン済みの他ユーザーをすべて取得する関数
@@ -401,6 +423,7 @@ void Connect::GetServerOtherUser()
 
 void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
 {
+#ifdef DEBUG_OFF
 	Json obj = Json::object({
 		{ "FieldItemPosX", x },
 		{ "FieldItemPosY", y },
@@ -410,10 +433,12 @@ void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientPlayerInfo(float x, float y, int dir, float HP, int isCreated, int ghNum, int isDebug)
 {
+#ifdef DEBUG_OFF
 	//const std::string  text = playerName;
 	std::string UUID = "";
 	if (isDebug == 0) {
@@ -436,10 +461,12 @@ void Connect::SendClientPlayerInfo(float x, float y, int dir, float HP, int isCr
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientPlayerInitInfo(float x, float y, float HP, int ghNum)
 {
+#ifdef DEBUG_OFF
 	std::string UUID = gManager->GetClientUUID();
 
 	Json obj = Json::object({
@@ -453,10 +480,12 @@ void Connect::SendClientPlayerInitInfo(float x, float y, float HP, int ghNum)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientPlayerStatus(float moveHP)
 {
+#ifdef DEBUG_OFF
 	std::string UUID = gManager->GetClientUUID();
 
 	Json obj = Json::object({
@@ -467,10 +496,12 @@ void Connect::SendClientPlayerStatus(float moveHP)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientPlayerIsDead(int idDead)
 {
+#ifdef DEBUG_OFF
 	std::string UUID = gManager->GetClientUUID();
 
 	Json obj = Json::object({
@@ -481,10 +512,12 @@ void Connect::SendClientPlayerIsDead(int idDead)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int dir)
 {
+#ifdef DEBUG_OFF
 	Json obj = Json::object({
 		{ "EffectPosX", x },
 		{ "EffectPosY", y },
@@ -495,6 +528,7 @@ void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int di
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX, int isCreated)
@@ -545,6 +579,7 @@ void Connect::GetClientCharactorAttribute()
 
 void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type)
 {
+#ifdef DEBUG_OFF
 	Json obj = Json::object({
 		{ "InitEnemyPosX", x },
 		{ "InitEnemyPosY", y },
@@ -556,10 +591,12 @@ void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificat
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationNum, int type)
 {
+#ifdef DEBUG_OFF
 	Json obj = Json::object({
 		{ "EnemyPosX", x },
 		{ "EnemyPosY", y },
@@ -571,10 +608,12 @@ void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationN
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientEnemyStatus(int identificationNum, float moveHP)
 {
+#ifdef DEBUG_OFF
 	Json obj = Json::object({
 		{ "EnemyMoveHP", moveHP },
 		{ "identId",identificationNum},
@@ -583,10 +622,12 @@ void Connect::SendClientEnemyStatus(int identificationNum, float moveHP)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendClientEnemyIsDead(int identificationNum, int isDead)
 {
+#ifdef DEBUG_OFF
 	Json obj = Json::object({
 		{ "isDead", isDead },
 		{ "identId",identificationNum},
@@ -595,10 +636,12 @@ void Connect::SendClientEnemyIsDead(int identificationNum, int isDead)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::GetServerEnemyInfo()
 {
+#ifdef DEBUG_OFF
 	Json obj = Json::object({
 		{ "GetEnemy", 1 },
 		});
@@ -606,10 +649,12 @@ void Connect::GetServerEnemyInfo()
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendExitServer()
 {
+#ifdef DEBUG_OFF
 	std::string UUID = gManager->GetClientUUID();
 	Json obj = Json::object({
 		{ "ExitPlayerUUID", UUID },
@@ -618,11 +663,14 @@ void Connect::SendExitServer()
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+#endif
 }
 
 void Connect::SendMessageToServer(std::string message)
 {
+#ifdef DEBUG_OFF
 	auto fix = gManager->SjistoUTF8(message);
 	ws.write(net::buffer(fix));
+#endif
 }
 
