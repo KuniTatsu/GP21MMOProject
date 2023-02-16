@@ -4,6 +4,7 @@
 #include"../../UI/UIManager.h"
 #include"../../UI/GraphicUI.h"
 #include"../Camera.h"
+#include"../player.h"
 #include<math.h>
 
 SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y, ghNum)
@@ -46,12 +47,24 @@ void SupportNPC::DrawNPCSpeak()
 
 bool SupportNPC::SeqWait(const float DeltaTime)
 {
+	//このシークエンスに入った最初の一回だけ、プレイヤーがmenuを開ける状態に更新する
+	if (mainSequence.isStart()) {
+		auto& player = GameManager::GetInstance()->GetPlayer();
+		player->SetCanOpenMenu(true);
+	}
 
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer)return false;
 
+	//メニューを開けない状態なら無視する
+	if (!GameManager::GetInstance()->GetPlayer()->GetCanOpenMenu())return false;
+
 	//Enterを感知
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
+
+		auto& player = GameManager::GetInstance()->GetPlayer();
+		player->SetCanOpenMenu(false);
+
 		ChangeSequence(SEQUENCE::FIRSTMENU);
 	}
 
@@ -61,7 +74,6 @@ bool SupportNPC::SeqWait(const float DeltaTime)
 bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 {
 	if (mainSequence.isStart()) {
-		cursorNum = 0;
 		//SUPNPCのUIを描画状態にする
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC),true);
 		//描画するUIをFirstMenuに変更
@@ -101,6 +113,7 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 	//会話をやめる
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		cursorNum = 0;
 		ChangeSequence(SEQUENCE::WAIT);
 	}
 	return true;

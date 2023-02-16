@@ -6,6 +6,8 @@
 #include"GameManager.h"
 #include"ResourceManager.h"
 #include"Actor/ActorDrawManager.h"
+#include"EffectManager.h"
+#include"Connect.h"
 #include<time.h>
 #include<random>
 
@@ -64,7 +66,7 @@ void EnemyManager::LoadEnemyMaster()
 		auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 		auto enemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, data, animList[i - 1], i - 1);
-		
+
 		enemyMaster.emplace_back(enemy);
 
 	}
@@ -100,6 +102,11 @@ int EnemyManager::SearchBlankEnemyNum() {
 	}
 	//ŠJ‚¢‚Ä‚¢‚éêŠ‚ª‚È‚¢‚È‚çƒGƒ‰[ƒiƒ“ƒo[‚ð•Ô‚·
 	return -1;
+}
+void EnemyManager::ResetEnemyNum(int enemyNum)
+{
+	if (enemyNum > SPAWNLIMIT)return;
+	isUseEnemyIdentNum[enemyNum] = false;
 }
 //Enemy‚ÌˆÊ’uÀ•W‚Ì“¯Šú
 void EnemyManager::ShareEnemyPosFromServer(int identId, float x, float y, int dir, int type)
@@ -149,6 +156,22 @@ void EnemyManager::ShareEnemyDead(int identId, int isDead)
 			if (clientEnemyId == identId)
 			{
 				(*itr)->SetIsLive(false);
+				//Ž€‚ñ‚¾ƒAƒjƒ[ƒVƒ‡ƒ“
+				auto animPos = (*itr)->GetPos();
+				EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::DEATH), animPos);
+
+				//Ž€‚ñ‚¾“G‚ÌŒÂ•Ê”Ô†‚ðŠJ•ú‚·‚é
+				ResetEnemyNum((*itr)->GetIdentId());
+
+				//Å‹ßŽ€‚ñ‚¾“GƒŠƒXƒg‚É“o˜^
+				recentDeadEnemyList.emplace_back((*itr));
+				//•`‰æ‘ÎÛ‚©‚çíœ
+				ActorDrawManager::GetInstance()->RemoveDrawActorList((*itr));
+				//¶‚«‚Ä‚¢‚é“GƒŠƒXƒg‚©‚çíœ
+				itr = EnemyList.erase(itr);
+
+
+				createCount--;
 				break;
 			}
 		}
@@ -200,16 +223,18 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	if (identId == -1)return;
 
 	//ƒT[ƒo[‚É¶¬‚µ‚½“G‚Ìî•ñ‚ð‘—‚é
-	/*gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
-	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);*/
+	gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
+	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
 
 #endif
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], 0);
 
+	newEnemy->SetIdentId(identId);
+
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
-	
+
 	SetEnemyList(newEnemy);
 	spawntiming = false;
 	intervalCount = 0;
@@ -224,7 +249,7 @@ void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& sp
 
 	auto& ghs = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
-	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type,identId);
+	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type, identId);
 
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
 
@@ -243,17 +268,31 @@ void EnemyManager::Update(float deltatime)
 		enemy->Update();
 	}
 
-
 	//Ž€‚ñ‚¾“G‚Ìˆ—
 	for (auto itr = EnemyList.begin(); itr != EnemyList.end(); ) {
 		bool& isLive = (*itr)->GetIsLive();
 		if (!isLive) {
+
+			//Ž€‚ñ‚¾ƒAƒjƒ[ƒVƒ‡ƒ“
+			auto animPos = (*itr)->GetPos();
+			EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::DEATH), animPos);
+
+			auto id = (*itr)->GetIdentId();
+			auto connect = GameManager::GetInstance()->GetConnection();
+			if (connect != nullptr) {
+				connect->SendClientEnemyIsDead(id);
+			}
+
+			//Ž€‚ñ‚¾“G‚ÌŒÂ•Ê”Ô†‚ðŠJ•ú‚·‚é
+			ResetEnemyNum(id);
+
 			//Å‹ßŽ€‚ñ‚¾“GƒŠƒXƒg‚É“o˜^
 			recentDeadEnemyList.emplace_back((*itr));
-			//¶‚«‚Ä‚¢‚é“GƒŠƒXƒg‚©‚çíœ
-			itr = EnemyList.erase(itr);
 			//•`‰æ‘ÎÛ‚©‚çíœ
 			ActorDrawManager::GetInstance()->RemoveDrawActorList((*itr));
+			//¶‚«‚Ä‚¢‚é“GƒŠƒXƒg‚©‚çíœ
+			itr = EnemyList.erase(itr);
+
 
 			createCount--;
 		}
@@ -270,11 +309,7 @@ void EnemyManager::Update(float deltatime)
 
 void EnemyManager::Draw(Camera* camera)
 {
-
-	auto& list = GetEnemyList();
-	if (list.empty())return;
-
-	for (auto&& enemy : list) {
-		enemy->Draw(camera);
-	}
+	SetFontSize(50);
+	DrawStringEx(50, 50, -1, "%d", createCount);
+	SetFontSize(16);
 }

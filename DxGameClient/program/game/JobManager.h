@@ -8,12 +8,10 @@ class Job;
 class JobManager
 {
 public:
+	static JobManager* GetInstance();
+private:
 	JobManager();
 	~JobManager();
-
-private:
-	static JobManager* GetInstance();
-
 	// Csv‚©‚çEî•ñ‚ğæ“¾‚·‚éŠÖ”
 	void LoadCsv();
 

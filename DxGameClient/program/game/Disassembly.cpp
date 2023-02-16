@@ -1,5 +1,8 @@
 #include "Disassembly.h"
 #include"GameManager.h"
+#include"Item/ItemManager.h"
+#include"InventoryManager.h"
+#include"Actor/Player.h"
 
 
 Disassembly* Disassembly::instance = nullptr;
@@ -20,7 +23,7 @@ Disassembly* Disassembly::GetInstance()
 	return instance;
 }
 
-void Disassembly::DisassemblyDeadBody(int deadId, std::shared_ptr<Inventory> inventory)
+void Disassembly::DisassemblyDeadBody(int deadId)
 {
 	//死骸から取れるアイテムの個数を抽選　最大10個 今後死骸の大きさで変動予定
 	int getNum = GameManager::GetInstance()->CheckRandomNumberInOdds(10);
@@ -48,6 +51,13 @@ void Disassembly::DisassemblyDeadBody(int deadId, std::shared_ptr<Inventory> inv
 	for (int i = 0; i < getNum; ++i) {
 		int selectId = GameManager::GetInstance()->GerRandomNumInWeight(weights);
 
+		//選ばれたIdのアイテムを生成し、インベントリに追加する
+
+		//auto item = ItemManager::GetInstance()->CreateItem(selectId, static_cast<int>(ItemManager::ITEMTYPE::MATERIAL));
+
+		auto player = GameManager::GetInstance()->GetPlayer();
+		//アイテムをインベントリに追加
+		InventoryManager::GetInstance()->AddItemToInventory(selectId);
 
 	}
 
