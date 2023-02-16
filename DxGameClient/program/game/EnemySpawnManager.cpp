@@ -24,6 +24,7 @@ void EnemySpawnManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	//DEBUG用
 	maxPos = PlayerPos + tnl::Vector3{ 200, 200, 0 };
 	minPos = PlayerPos + tnl::Vector3{ 20, 20, 0 };
+	
 	//xが-200から200の間,yが-200から200の間のどこかをとる
 	//プレイヤーからの最低距離の絶対値
 	float min = gManager->CHIPHEIGHT * gManager->MAPSIZE;
@@ -31,9 +32,6 @@ void EnemySpawnManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	//プレイヤーからの最大距離の絶対値
 	float max = gManager->CHIPHEIGHT * gManager->MAPSIZE + 200;
 	//maxPos = PlayerPos + tnl::Vector3{ max,max,0 };
-
-	/*beta用範囲縮小*/
-	//maxPos = PlayerPos + tnl::Vector3{ 100,100,0 };
 
 	//20~200の間でランダムな数値を取得する
 	x = randomRange(static_cast<int>(minPos.x), static_cast<int>(maxPos.x));
@@ -71,10 +69,10 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 	if (!CheckCanCreateEnemy(posEnemy))return;
 
 	srand(static_cast<unsigned int>(time(NULL)));
-	random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX) - 1);
+	random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX));
 
 	/*DEBUG用*/
-	//random = 2;
+	//random = 0;
 
 	switch (random)
 	{

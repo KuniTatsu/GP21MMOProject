@@ -34,6 +34,7 @@ net::io_context ioc;
 tcp::resolver resolver{ ioc };
 websocket::stream<tcp::socket> ws{ ioc };
 
+
 Connect::Connect()
 {
 	//std::cout << BOOST_VERSION << std::endl;
@@ -54,6 +55,8 @@ Connect::~Connect()
 
 int Connect::ConnectServer()
 {
+
+//#ifdef DEBUG_ON
 
 
 	try
@@ -89,12 +92,18 @@ int Connect::ConnectServer()
 		return EXIT_FAILURE;
 	}
 
+//#endif
+
+
 	return 0;
 
 }
 //チャット送信
 void Connect::SendClientMessage(std::string sendMessage)
 {
+
+//#ifdef DEBUG_OFF
+
 	const std::string  text = sendMessage;
 
 	Json obj = Json::object({
@@ -106,6 +115,8 @@ void Connect::SendClientMessage(std::string sendMessage)
 	auto fix = gManager->SjistoUTF8(send);
 
 	ws.write(net::buffer(fix));
+
+//#endif
 
 }
 
@@ -328,12 +339,17 @@ const std::string Connect::GetServerMessage()
 		gManager->CreateDummyPlayer(getMessage);
 	}
 
+//#endif
+
+
 	return "";
 }
 
 
 void Connect::EntryServer(std::string playerName)
 {
+
+//#ifdef DEBUG_OFF
 
 	const std::string  text = playerName;
 	Json obj = Json::object({
@@ -344,10 +360,16 @@ void Connect::EntryServer(std::string playerName)
 
 	SendMessageToServer(send);
 
+
+//#endif
+
 }
 //UUIDを取得してiniファイルで出力
 void Connect::GetEntryUserId()
 {
+
+//#ifdef DEBUG_OFF
+
 	// This buffer will hold the incoming message
 	beast::flat_buffer buffer;
 	// Read a message into our buffer
@@ -392,6 +414,7 @@ void Connect::GetEntryUserId()
 	}
 
 	}*/
+//#endif
 
 }
 
@@ -409,6 +432,9 @@ void Connect::GetServerOtherUser()
 
 void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
 {
+
+//#ifdef DEBUG_OFF
+
 	Json obj = Json::object({
 		{ "FieldItemPosX", x },
 		{ "FieldItemPosY", y },
@@ -418,10 +444,15 @@ void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+
+//#endif
+
 }
 
 void Connect::SendClientPlayerInfo(float x, float y, int dir, float HP, int isCreated, int ghNum, int isDebug)
 {
+
+//#ifdef DEBUG_OFF
 
 	//const std::string  text = playerName;
 	std::string UUID = "";
@@ -446,10 +477,15 @@ void Connect::SendClientPlayerInfo(float x, float y, int dir, float HP, int isCr
 
 	SendMessageToServer(send);
 
+//#endif
+
 }
 
 void Connect::SendClientPlayerInitInfo(float x, float y, float HP, int ghNum)
 {
+
+//#ifdef DEBUG_OFF
+
 	std::string UUID = gManager->GetClientUUID();
 
 	Json obj = Json::object({
@@ -464,10 +500,14 @@ void Connect::SendClientPlayerInitInfo(float x, float y, float HP, int ghNum)
 
 	SendMessageToServer(send);
 
+//#endif
+
 }
 
 void Connect::SendClientPlayerStatus(float moveHP)
 {
+
+//#ifdef DEBUG_OFF
 
 	std::string UUID = gManager->GetClientUUID();
 
@@ -480,10 +520,14 @@ void Connect::SendClientPlayerStatus(float moveHP)
 
 	SendMessageToServer(send);
 
+//#endif
+
 }
 
 void Connect::SendClientPlayerIsDead(int idDead)
 {
+
+//#ifdef DEBUG_OFF
 
 	std::string UUID = gManager->GetClientUUID();
 
@@ -496,10 +540,14 @@ void Connect::SendClientPlayerIsDead(int idDead)
 
 	SendMessageToServer(send);
 
+//#endif
+
 }
 
 void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int dir)
 {
+
+//#ifdef DEBUG_OFF
 
 	Json obj = Json::object({
 		{ "EffectPosX", x },
@@ -511,6 +559,8 @@ void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int di
 	std::string send = obj.dump();
 
 	SendMessageToServer(send);
+
+//#endif
 
 }
 
@@ -563,6 +613,8 @@ void Connect::GetClientCharactorAttribute()
 void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type)
 {
 
+//#ifdef DEBUG_OFF
+
 	Json obj = Json::object({
 		{ "InitEnemyPosX", x },
 		{ "InitEnemyPosY", y },
@@ -575,10 +627,14 @@ void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificat
 
 	SendMessageToServer(send);
 
+//#endif
+
 }
 
 void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationNum, int type)
 {
+
+//#ifdef DEBUG_OFF
 
 	Json obj = Json::object({
 		{ "EnemyPosX", x },
@@ -592,10 +648,14 @@ void Connect::SendClientEnemyInfo(float x, float y, int dir, int identificationN
 
 	SendMessageToServer(send);
 
+//#endif
+
 }
 
 void Connect::SendClientEnemyStatus(int identificationNum, float moveHP)
 {
+
+//#ifdef DEBUG_OFF
 
 	Json obj = Json::object({
 		{ "EnemyMoveHP", moveHP },
@@ -606,11 +666,12 @@ void Connect::SendClientEnemyStatus(int identificationNum, float moveHP)
 
 	SendMessageToServer(send);
 
+//#endif
+
 }
 
 void Connect::SendClientEnemyIsDead(int identificationNum, int isDead)
 {
-
 	Json obj = Json::object({
 		{ "isDead", isDead },
 		{ "identId",identificationNum},
@@ -654,6 +715,7 @@ void Connect::SendMessageToServer(std::string message)
 
 	auto fix = gManager->SjistoUTF8(message);
 	ws.write(net::buffer(fix));
+
 
 }
 

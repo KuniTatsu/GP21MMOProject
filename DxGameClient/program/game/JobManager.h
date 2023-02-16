@@ -48,6 +48,7 @@ private:
 	~JobManager();
 
 
+
 	//特定のJobに経験値を足す関数
 	void AddExpToJob(int jobId, int addExp);
 
@@ -56,6 +57,7 @@ private:
 
 	//  職によりそれに対する経験値を取得する関数
 	// void GetExpToJob(std::vector<int> jobId);
+
 
 
 private:

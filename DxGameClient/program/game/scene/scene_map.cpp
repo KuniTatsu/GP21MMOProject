@@ -40,9 +40,15 @@ void Scene_Map::initialzie()
 	//チャット接続
 	gManager->CreateChat();
 	player = GameManager::GetInstance()->CreatePlayer(0);
-#else
 
 #endif
+
+//#ifdef DEBUG_ON
+//
+//	gManager->CreatePlayer(0);
+//	player = gManager->GetPlayer();
+//#endif 
+
 
 	//マップの生成
 	gManager->CreateMap();

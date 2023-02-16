@@ -491,3 +491,10 @@ std::vector<tnl::Vector3> Actor::GetMeleeAttackBox()
 
 	return vectors;
 }
+
+float Actor::GetDisPlayerfromEnemy(tnl::Vector3& enemypos)
+{
+	auto& player = GameManager::GetInstance()->GetPlayer();
+	return gManager->GetLengthFromTwoPoint(player->GetPos() , enemypos);
+	
+}
