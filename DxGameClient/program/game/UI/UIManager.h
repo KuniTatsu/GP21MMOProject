@@ -52,6 +52,20 @@ public:
 	//現在描画中のUIを取得する関数
 	const std::vector<std::shared_ptr<GraphicUI>>& GetNowDrawGraphic(int series);
 
+	//ツールチップUI取得
+	inline const std::vector < std::shared_ptr<GraphicUI>>& GetToolTipUI() {
+		return makedToolTipUI;
+	}
+
+	//チャットエリアUI取得
+	inline const std::vector<std::shared_ptr<GraphicUI>>& GetChatAreaUI() {
+		return makedChatAreaUI;
+	}
+
+	inline const std::vector<std::shared_ptr<GraphicUI>>& GetWaitUI() {
+		return makedWaitUI;
+	}
+
 public:
 	//どの機能のUIか
 	enum class UISERIES :uint32_t {
@@ -114,6 +128,12 @@ private:
 	std::vector<std::vector<std::shared_ptr<GraphicUI>>> makedDisassemblyNPCUI;
 	std::vector<std::vector<std::shared_ptr<GraphicUI>>> makedGuardNPCUI;
 
+	std::vector<std::shared_ptr<GraphicUI>> makedToolTipUI;
+
+	std::vector<std::shared_ptr<GraphicUI>> makedChatAreaUI;
+
+	std::vector<std::shared_ptr<GraphicUI>> makedWaitUI;
+
 	//ダミー
 	std::vector<std::vector<std::shared_ptr<GraphicUI>>> errorVec;
 
@@ -127,6 +147,14 @@ private:
 																					"Csv/UI/NPC/DisAssemblyNPCCheck.csv","Csv/UI/NPC/DisAssemblyNPCResult.csv", };
 	//門番
 	const std::string GUARDNPCUIPASS[static_cast<uint32_t>(GUARDNPCUI::MAX)] = { "Csv/UI/NPC/GuardNPCFirstMenu.csv","Csv/UI/NPC/GuardNPCTalk.csv" };
+
+	//スキルツールチップ
+	const std::string TOOLTIPUIPASS = "csv/UI/UseUI/toolTipUI.csv";
+
+	//チャット欄
+	const std::string CHATAREAUIPASS = "csv/UI/UseUI/chatArea.csv";
+
+	const std::string WAIT = "csv/UI/UseUI/wait.csv";
 
 	//ロード時の拡大ありなし
 	enum class LOADMODE :uint32_t {
@@ -147,6 +175,9 @@ private:
 
 	//CsvからのUIロード関数
 	void LoadUI(std::string Pass, std::vector<std::vector<std::shared_ptr<GraphicUI>>>& putInVector, int UIType);
+
+	//単一のパスと入れ物で使うロード
+	void LoadUI(std::string Pass, std::vector<std::shared_ptr<GraphicUI>>& putInVector);
 
 	//UIの入れ物を取得する関数
 	std::vector<std::vector<std::shared_ptr<GraphicUI>>>& GetUIVector(int series);

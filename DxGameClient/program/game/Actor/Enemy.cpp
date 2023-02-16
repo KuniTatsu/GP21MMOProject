@@ -14,6 +14,8 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	gManager = GameManager::GetInstance();
 	TYPE = type;
 
+	SetActorType(1);
+
 	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
@@ -49,6 +51,9 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	SetCircleSize(hoge[type]);
+
+	TYPE = type;
+	SetActorType(1);
 
 	myAnimationGh = ghs;
 
@@ -148,6 +153,22 @@ void Enemy::EnemyMove() {
 
 void Enemy::Update()
 {
+	if (!init) {
+		if (isBig == 1) {
+			//巨大化の補正を行う
+			//HPを10倍
+			//movespeedを0.2に
+			auto fixHp = myData->GetHP() * 10;
+			myData->SetHP(fixHp);
+
+			myData->setMoveSpeed(0.2f);
+
+			//当たり判定を2倍に
+			circleSize = circleSize * 2;
+		}
+		init = true;
+	}
+
 	float deltatime = GameManager::GetInstance()->deltaTime;
 	//インターバル更新
 	UpdateAttackInterval(deltatime);
@@ -163,12 +184,16 @@ void Enemy::Update()
 
 	//通常攻撃
 	if (GetDisPlayerfromEnemy(drawPos) < 40) {
-		/*if(atackInterval % (60 * atackintervalLimit) == 0){
 
-			DefaultAttack();
+		//攻撃した直後なら行動を行わない
+		if (attackInterval > 0.0f)return;
 
-		
-		}*/
+
+		DefaultAttack();
+
+		//インターバルセット
+		attackInterval = atackintervalLimit;
+
 	}
 }
 
@@ -187,7 +212,10 @@ void Enemy::Draw(Camera* camera)
 	else {
 		Anim(myAnimationGh, 4);
 	}
-
+	if (isBig == 1) {
+		DrawRotaGraphF(x, y, 2.0, 0, drawGh, true);
+		return;
+	}
 	DrawRotaGraphF(x, y, 1.2, 0, drawGh, true);
 }
 

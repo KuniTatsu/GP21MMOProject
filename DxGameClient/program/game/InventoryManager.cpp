@@ -58,6 +58,16 @@ void InventoryManager::UpdateInventory()
 {
 	//選択中のインベントリを動かす
 	inventories[nowSelectInventoryNum]->Update();
+
+	//インベントリが一つなら下の処理を行わない
+	if (latestIntentoryNum == 0)return;
+	//インベントリのページを切り替える
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
+		nowSelectInventoryNum = (nowSelectInventoryNum + 1) % (latestIntentoryNum + 1);
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
+		nowSelectInventoryNum = (nowSelectInventoryNum + latestIntentoryNum) % (latestIntentoryNum + 1);
+	}
 }
 
 /*インベントリにアイテム追加*/

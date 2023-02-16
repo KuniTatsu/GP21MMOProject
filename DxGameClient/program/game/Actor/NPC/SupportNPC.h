@@ -6,7 +6,7 @@
 #include"NPC.h"
 
 
-
+class Camera;
 class SupportNPC :public NPC
 {
 public:
@@ -70,10 +70,26 @@ private:
 	int nowDrawPage = 0;
 
 	//メニューの1ページに描画する最大数
-	const int MAXDRAWNUM = 3;
+	const int MAXDRAWNUM = 6;
 
 	tnl::Vector3 drawSpeakTitlePos = {};
 	tnl::Vector3 drawSpeakPos = {};
+
+	std::vector<std::vector<int>>emotions = {};
+
+	//エモーションのアニメ関連
+	int emoteActIndex = 0;
+
+	int emoteActWait = 0;
+
+	const int emoteActSpeed = 30;
+
+	int emoteDrawGh = 0;
+
+	int returnKey = 0;
+
+	int escKey = 0;
+
 
 };
 

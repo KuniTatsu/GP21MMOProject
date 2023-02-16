@@ -4,6 +4,9 @@
 #include<stdio.h>
 #include"../json11.hpp"
 #include"DebugDef.h"
+#include"Actor/Player.h"
+#include"UI/GraphicUI.h"
+#include"UI/UIManager.h"
 
 using namespace json11;
 /*
@@ -20,7 +23,9 @@ ChatBase::ChatBase()
 	gManager = GameManager::GetInstance();
 
 	connect = gManager->GetConnection();
-	
+
+	inputChatArea = UIManager::GetInstance()->GetChatAreaUI()[0];
+
 	//const string test = "こんにちは";
 
 	////メッセージを送信
@@ -47,7 +52,7 @@ void ChatBase::DrawWritingMessage()
 	DrawKeyInputModeString(640, 480);
 
 	// 入力途中の文字列を描画
-	DrawKeyInputString(0, 0, g_InputHandle);
+	DrawKeyInputString(30, 700, g_InputHandle);
 }
 
 void ChatBase::Write()
@@ -74,23 +79,25 @@ void ChatBase::DrawAllMessage()
 
 			if (i + 1 > arrayNum)break;
 
-		/*	auto hoge = std::to_string(i) + "番目のメッセージを描画したよ";
-			tnl::DebugTrace(hoge.c_str());
-			tnl::DebugTrace("\n");*/
+			/*	auto hoge = std::to_string(i) + "番目のメッセージを描画したよ";
+				tnl::DebugTrace(hoge.c_str());
+				tnl::DebugTrace("\n");*/
+
+			SetFontSize(25);
 
 			if (arrayNum < 10) {
-				DrawStringEx(20, 10 + (i * 50), -1, savedMessage[i].c_str());
+				DrawStringEx(20, 10 + (i * 40), -1, savedMessage[i].c_str());
 			}
 			else {
 				int messageNum = i + (arrayNum - 10);
 
-				DrawStringEx(20, 10 + (i * 50), -1, savedMessage[messageNum].c_str());
+				DrawStringEx(20, 10 + (i * 40), -1, savedMessage[messageNum].c_str());
 			}
+			SetFontSize(16);
 		}
 	}
 
 	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
-
 
 	/*for (int i = 0; i < savedMessage.size(); ++i) {
 		DrawStringEx(20, 10 + i * 20, -1, savedMessage[i].c_str());
@@ -99,8 +106,8 @@ void ChatBase::DrawAllMessage()
 	//元の画面への出力に切り替え
 	SetDrawScreen(DX_SCREEN_BACK);
 	//チャットを描画するエリアを一枚絵として描画する
-	DrawGraph(10, 300, chatArea, true);
-
+	DrawGraph(10, 270, chatArea, true);
+	/*inputChatArea->Draw();*/
 }
 //引数で受け取った文字列をパースして登録する関数 チャット用
 void ChatBase::ParseMessage(const std::string message)
@@ -125,7 +132,7 @@ void ChatBase::ParseMessage(const std::string message)
 	if (chat != "") {
 		InsertStringToChatVector(chat);
 	}
-	
+
 }
 
 void ChatBase::InsertStringToChatVector(const std::string chat)
@@ -139,6 +146,7 @@ void ChatBase::InsertStringToChatVector(const std::string chat)
 
 void ChatBase::Update()
 {
+	inputChatArea->Draw();
 	sequence.update(gManager->deltaTime);
 	ParseMessage(getMessage);
 	SetGetMessage("");
@@ -168,16 +176,19 @@ bool ChatBase::SeqDrawMessage(const float deltatime)
 			GetKeyInputString(buffer, g_InputHandle);
 
 			std::string buf = buffer;
+			GameManager::GetInstance()->GetPlayer()->SetCanMove(true);
 
 			tnl::DebugTrace("-------------------");
 			tnl::DebugTrace("\n");
 
 			//空白文字なら登録しない
 			if (buf != "") {
-				//savedMessage.emplace_back(buf);
+				savedMessage.emplace_back(buf);
 				//サーバーにbufを送る
-				//connect->SendClientMessage(buf);
+#ifndef DEBUG_ON
+				connect->SendClientMessage(buf);
 				gManager->CreateSendThread(buf);
+#endif // !DEBUG_ON
 			}
 
 		}
@@ -204,6 +215,8 @@ bool ChatBase::SeqWait(const float deltatime)
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_TAB)) {
 		//シークエンスを移動する
 		sequence.change(&ChatBase::SeqDrawMessage);
+
+		GameManager::GetInstance()->GetPlayer()->SetCanMove(false);
 	}
 
 	return true;

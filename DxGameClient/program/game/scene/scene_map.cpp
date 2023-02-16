@@ -37,17 +37,17 @@ void Scene_Map::initialzie()
 {
 #ifndef DEBUG_ON //通信しない時
 
-	//チャット接続
-	gManager->CreateChat();
+
 	player = GameManager::GetInstance()->CreatePlayer(0);
 
 #endif
 
-//#ifdef DEBUG_ON
-//
-//	gManager->CreatePlayer(0);
-//	player = gManager->GetPlayer();
-//#endif 
+#ifdef DEBUG_ON
+
+
+	gManager->CreatePlayer(0);
+	player = gManager->GetPlayer();
+#endif 
 
 
 	//マップの生成
@@ -58,7 +58,7 @@ void Scene_Map::initialzie()
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
-#ifdef DEBUG_ON
+#ifndef DEBUG_ON
 	player = gManager->GetPlayer();
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
@@ -75,10 +75,20 @@ void Scene_Map::initialzie()
 	LoadMenuTextCsv();
 
 	cursorGh = GameManager::GetInstance()->LoadGraphEx("graphics/menuCursor.png");
+	defaultAttackIcon = GameManager::GetInstance()->LoadGraphEx("graphics/skillIcon/defaultAttack.png");
+	noneIcon = GameManager::GetInstance()->LoadGraphEx("graphics/skillIcon/none.png");
+	coolDawnFade = GameManager::GetInstance()->LoadGraphEx("graphics/skillIcon/coolDownFade.png");
+	escKey = GameManager::GetInstance()->LoadGraphEx("graphics/Key/button_Escape.png");
+
 	firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::MENU));
 	//MenuUIの左上を取得
 	auto& leftTopPos = firstMenuGraphics[0]->GetLeftTopPos();
 	bufPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y + 20, 0);
+
+	wait = UIManager::GetInstance()->GetWaitUI();
+
+	//チャット接続
+	gManager->CreateChat();
 }
 
 void Scene_Map::update(float delta_time)
@@ -122,6 +132,8 @@ void Scene_Map::update(float delta_time)
 	//debug
 	//ctrl+Jでデバッグ用職業リスト1を生成し付与する
 	if (tnl::Input::IsKeyDown(eKeys::KB_LCONTROL)) {
+
+		if (!player->GetmyJobs().empty())return;
 		if (tnl::Input::IsKeyDownTrigger(eKeys::KB_J)) {
 			auto job1 = JobManager::GetInstance()->CreateDebugJob(843, 4);
 			auto job2 = JobManager::GetInstance()->CreateDebugJob(830, 6);
@@ -185,7 +197,17 @@ void Scene_Map::render()
 	/*SetFontSize(50);
 	DrawStringEx(50, 50, -1, "Scene_map");*/
 
+	auto chat = gManager->GetChat();
+	if (chat) {
+		chat->Update();
+		chat->Draw();
+	}
+
+	//各種UI描画
 	UIManager::GetInstance()->Draw();
+
+	DrawToolTip();
+
 	NPCManager::GetInstance()->DrawSpeak();
 
 	//シークエンスごとの描画(UI)
@@ -197,6 +219,49 @@ void Scene_Map::render()
 	SetFontSize(30);
 	DrawStringEx(500, 500, -1, "%d", cursorNum);
 	SetFontSize(16);
+}
+
+void Scene_Map::DrawToolTip()
+{
+	std::vector<tnl::Vector3> toolTipPos;
+
+	//toolTipの描画
+	auto& toolTipUI = UIManager::GetInstance()->GetToolTipUI();
+
+	auto& leftTopPos1 = toolTipUI[1]->GetLeftTopPos();
+	toolTipPos.emplace_back(tnl::Vector3(leftTopPos1.x + 50, leftTopPos1.y + 50, 0));
+
+	auto& leftTopPos2 = toolTipUI[2]->GetLeftTopPos();
+	toolTipPos.emplace_back(tnl::Vector3(leftTopPos2.x + 50, leftTopPos2.y + 50, 0));
+
+	auto& leftTopPos3 = toolTipUI[3]->GetLeftTopPos();
+	toolTipPos.emplace_back(tnl::Vector3(leftTopPos3.x + 50, leftTopPos3.y + 50, 0));
+
+	auto& leftTopPos4 = toolTipUI[4]->GetLeftTopPos();
+	toolTipPos.emplace_back(tnl::Vector3(leftTopPos4.x + 50, leftTopPos4.y + 50, 0));
+
+
+	//各種スキルアイコンを並べる
+	//本来は職業のスキルを自分で選んでセットする
+	//今後実装予定
+	DrawRotaGraphF(toolTipPos[0].x, toolTipPos[0].y, 1, 0, defaultAttackIcon, true);
+
+	//クールダウン中なら黒でフェードさせる
+	float coolDawn = GameManager::GetInstance()->GetPlayer()->GetCoolDown();
+
+	if (coolDawn > 0) {
+		float max = GameManager::GetInstance()->GetPlayer()->GetMaxCoolDawn();
+		SetDrawBlendMode(DX_BLENDMODE_ALPHA, 170);
+		DrawExtendGraphF(toolTipPos[0].x - 50, toolTipPos[0].y - 50, (toolTipPos[0].x + 50), (toolTipPos[0].y - 50) + (100 * coolDawn / max), coolDawnFade, true);
+		SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
+	}
+
+
+	DrawRotaGraphF(toolTipPos[1].x, toolTipPos[1].y, 1, 0, noneIcon, true);
+	DrawRotaGraphF(toolTipPos[2].x, toolTipPos[2].y, 1, 0, noneIcon, true);
+	DrawRotaGraphF(toolTipPos[3].x, toolTipPos[3].y, 1, 0, noneIcon, true);
+
+
 }
 
 bool Scene_Map::SeqWait(const float DeltaTime)
@@ -374,6 +439,9 @@ bool Scene_Map::SeqEquip(const float DeltaTime)
 
 void Scene_Map::DrawWaitSequence()
 {
+	wait[0]->Draw();
+	DrawRotaGraphF(50, 50, 1, 0, escKey, true);
+	DrawStringEx(82, 40, -1, "でメニューを開く");
 }
 
 void Scene_Map::DrawFirstMenuSequence()
@@ -471,6 +539,10 @@ void Scene_Map::DrawStatusSequence()
 	for (int i = 0; i < jobs.size(); ++i) {
 		if (jobs.empty())break;
 		DrawStringEx(bufPoses[3].x, bufPoses[3].y + 40 + (i * 40), -1, jobs[i]->GetJobName().c_str());
+
+		std::string jobLevelText = "Level:" + std::to_string(jobs[i]->GetNowLevel());
+		//職レベル描画
+		DrawStringEx(bufPoses[3].x + 90, bufPoses[3].y + 40 + (i * 40), -1, jobLevelText.c_str());
 	}
 	//才能の描画
 	DrawStringEx(bufPoses[2].x, bufPoses[2].y, -1, "才能一覧");

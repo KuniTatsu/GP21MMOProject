@@ -192,11 +192,11 @@ bool LoginScene::SeqSelectGraphic(const float deltatime)
 	for (int i = 0; i < charaIcon.size(); ++i) {
 		//2段目
 		if (i > charaIcon.size() / 2) {
-			DrawRotaGraph(100 + 45 * i, 350, 1, 0, charaIcon[i], true);
+			DrawRotaGraph(100 + 45 * (i - 4), 350, 1, 0, charaIcon[i], true);
 		}
 		else {
 			//1段目
-			DrawRotaGraph(100 + 45 * (i - 4), 300, 1, 0, charaIcon[i], true);
+			DrawRotaGraph(100 + 45 * i, 300, 1, 0, charaIcon[i], true);
 		}
 	}
 
@@ -240,12 +240,12 @@ bool LoginScene::SeqCheckGraphic(const float deltatime)
 		gManager->GetMyUUID();
 
 		//playerの生成
-		auto player = GameManager::GetInstance()->CreatePlayer(charaIcon[selectCharaIconNum]);
+		auto player = GameManager::GetInstance()->CreatePlayer(selectCharaIconNum);
 
 		player->SetName(gManager->GetPlayerName());
 
-		////Player情報のサーバーへの送信--データベース登録とサーバーの一時データへの保存
-		//gManager->SendPlayerInfoToServer();
+		//Player情報のサーバーへの送信--データベース登録とサーバーの一時データへの保存
+		gManager->SendPlayerInfoToServer();
 
 		auto& data = player->GetActorData();
 		auto& attribute = data->GetAttribute();

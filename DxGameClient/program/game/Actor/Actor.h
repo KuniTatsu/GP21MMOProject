@@ -96,6 +96,27 @@ public:
 		return ghs;
 	}
 
+	//クールダウン取得
+	inline float GetCoolDown() {
+		return attackInterval;
+	}
+
+	//最大クールダウン取得
+	inline float GetMaxCoolDawn() {
+		return canAttackTime;
+	}
+
+	//移動可否セット
+	inline void SetCanMove(bool swich) {
+		if (canMove == swich)return;
+		canMove = swich;
+	}
+
+	//移動可否ゲット
+	inline bool GetCanMove() {
+		return canMove;
+	}
+
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
 
@@ -113,6 +134,9 @@ protected:
 
 	//test
 	std::vector<tnl::Vector3> bufPos;
+
+	//移動可否
+	bool canMove = true;
 
 	//名前
 	std::string name = "";

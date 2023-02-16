@@ -53,7 +53,7 @@ public:
 	void GetClientCharactorAttribute();
 
 	//エネミーの初期情報のサーバー登録
-	void SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type);
+	void SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type, int isBig);
 
 	//エネミーの位置座標の共有
 	void SendClientEnemyInfo(float x, float y, int dir, int identificationNum,int type);
@@ -78,9 +78,9 @@ private:
 private:
 
 	//サーバーのIPアドレス
-	//std::string host = "127.0.0.1";
+	std::string host = "127.0.0.1";
 	//std::string host = "192.168.80.129";
-	std::string host = "10.76.14.250";
+	//std::string host = "10.76.12.73";
 
 	//ポート
 	const std::string  port = "9001"; //80

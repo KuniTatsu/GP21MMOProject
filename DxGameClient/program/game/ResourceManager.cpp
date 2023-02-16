@@ -92,6 +92,7 @@ ResourceManager::ResourceManager()
 	playerGhs.resize(8);
 	enemyGhs.resize(5);
 	effectGhs.resize(5);
+	emotionGhs.resize(2);
 
 	LoadResouce(static_cast<int>(RESOUCETYPE::PLAYER));
 	LoadResouce(static_cast<int>(RESOUCETYPE::ENEMY));
@@ -99,6 +100,7 @@ ResourceManager::ResourceManager()
 	LoadResouce(static_cast<int>(RESOUCETYPE::EFFECT));
 	LoadResouce(static_cast<int>(RESOUCETYPE::CHARAICON));
 
+	LoadAnimGraphicCsv("csv/GraphicPassCsv/EmotionGraphics.csv", emotionGhs);
 }
 
 ResourceManager::~ResourceManager()
@@ -144,6 +146,22 @@ void ResourceManager::LoadAnimGraphicCsv(std::string pass, std::vector<std::vect
 		int heightSize = std::stoi(loadCsv[i][6]);
 
 		SetGraphicSize(type, widthSize, heightSize);
+
+		//取得した文字列の画像パスで画像データを生成する
+		gManager->LoadDivGraphEx(loadCsv[i][1], allNum, widthNum, heightNum, widthSize, heightSize, putInVector[i - 1]);
+	}
+}
+
+void ResourceManager::LoadAnimGraphicCsv(std::string pass, std::vector<std::vector<int>>& putInVector)
+{//引数のURLで指定されたCSVファイルの中身を文字列として取得する
+	auto loadCsv = tnl::LoadCsv(pass);
+	for (int i = 1; i < loadCsv.size(); ++i) {
+
+		int allNum = std::stoi(loadCsv[i][2]);
+		int widthNum = std::stoi(loadCsv[i][3]);
+		int heightNum = std::stoi(loadCsv[i][4]);
+		int widthSize = std::stoi(loadCsv[i][5]);
+		int heightSize = std::stoi(loadCsv[i][6]);
 
 		//取得した文字列の画像パスで画像データを生成する
 		gManager->LoadDivGraphEx(loadCsv[i][1], allNum, widthNum, heightNum, widthSize, heightSize, putInVector[i - 1]);

@@ -218,10 +218,12 @@ const std::string Connect::GetServerMessage()
 
 			type = map["type"].int_value();
 
+			int isBig = map["isBig"].int_value();
+
 			auto eManager = EnemyManager::GetInstance();
 
 			tnl::Vector3 pos(posX, posY, 0);
-			eManager->CreateEnemyFromServer(type, std::stoi(identNum), pos);
+			eManager->CreateEnemyFromServer(type, std::stoi(identNum), pos,isBig);
 		}
 		return "";
 	}
@@ -610,7 +612,7 @@ void Connect::GetClientCharactorAttribute()
 	SendMessageToServer(send);
 }
 
-void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type)
+void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type,int isBig)
 {
 
 //#ifdef DEBUG_OFF
@@ -621,6 +623,7 @@ void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificat
 		{ "Dir",dir},
 		{ "identId",identificationNum},
 		{ "type",type},
+		{"isBig",isBig}
 		});
 
 	std::string send = obj.dump();

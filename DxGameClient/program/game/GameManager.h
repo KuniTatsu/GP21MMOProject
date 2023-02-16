@@ -192,7 +192,7 @@ public:
 	std::shared_ptr<Player> CreatePlayer(int ghNum = 0);
 
 	//再ログイン時のプレイヤー生成
-	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum,std::string name);
+	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum, std::string name);
 
 	inline std::shared_ptr<Player>& GetPlayer() {
 		return player;
@@ -288,7 +288,7 @@ public:
 	}
 
 	//playerの職業を取得する関数
-	 std::vector<std::shared_ptr<Job>>& GetPlayerJobs();
+	std::vector<std::shared_ptr<Job>>& GetPlayerJobs();
 
 	//スレッド作成
 	void CreateThread();
@@ -308,7 +308,7 @@ public:
 	void GetServerOtherUser();
 
 	//enemyが生成された時にサーバーに登録する関数
-	void SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);
+	void SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1, int isBig = 0);
 
 	//enemyの情報をサーバーに送る関数 args1:x座標 args2:y座標HP args3:方角(8方向) args4:識別番号 args5:敵のタイプ
 	void SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);

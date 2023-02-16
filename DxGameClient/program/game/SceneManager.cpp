@@ -52,10 +52,11 @@ SceneManager::SceneManager()
 {
 	//imgBlack = LoadGraph("graphics/black.bmp");
 #ifndef DEBUG_ON
-	nowScene = new Scene_Map();
+	nowScene = new SceneTitle();
+	
 	
 #else
-	nowScene = new SceneTitle();
+	nowScene = new Scene_Map();
 #endif
 	nowScene->initialzie();
 }

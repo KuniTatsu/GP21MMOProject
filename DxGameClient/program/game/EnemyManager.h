@@ -94,7 +94,7 @@ public:
 	void ResetEnemyNum(int enemyNum);
 
 	//敵の識別番号を埋める関数
-	
+
 
 	//Enemyの位置座標の同期
 	void ShareEnemyPosFromServer(int identId, float x, float y, int dir, int type);
@@ -112,7 +112,7 @@ public:
 	/*エネミー生成関数*/
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);
 	//サーバーからの情報でのエネミー生成関数
-	void CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos);
+	void CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos, int IsBig = 0);
 
 	//Enemyの生成上限を取得する関数
 	inline const int GetLimitEnemySpawn() {

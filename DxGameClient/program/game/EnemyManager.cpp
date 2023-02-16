@@ -222,18 +222,27 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	int identId = SearchBlankEnemyNum();
 	//個体識別番号がエラー番号なら敵の生成を行わない
 	if (identId == -1)return;
-#ifdef DEBUG_ON
-	//サーバーに生成した敵の情報を送る
-	gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
-	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
 
-#endif
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], type);
 
-#ifndef DEBUG_ON
 	newEnemy->SetIdentId(identId);
+
+	int isBig = 0;
+
+	int rand = gManager->GetRandBetweenNum(0, 2000);
+	//1/200の確率で巨大化
+	if (rand < 20) {
+		newEnemy->SetIsBig();
+		isBig = 1;
+	}
+
+#ifndef DEBUG_ON
+	//サーバーに生成した敵の情報を送る
+	gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type, isBig);
+	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
+
 #endif
 
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
@@ -246,7 +255,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
 }
 
-void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos)
+void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos, int IsBig)
 {
 	auto data = GetEnemyData(type);
 
@@ -255,6 +264,8 @@ void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& sp
 	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type, identId);
 
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
+
+	if (IsBig == 1)newEnemy->SetIsBig();
 
 	SetEnemyList(newEnemy);
 	createCount++;

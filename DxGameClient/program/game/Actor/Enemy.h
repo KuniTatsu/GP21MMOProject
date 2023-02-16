@@ -25,6 +25,8 @@ public:
 
 	int createEnemy = 0;
 
+	bool init = false;
+
 	void Update()override;
 
 	void Draw(Camera* camera)override;
@@ -38,6 +40,12 @@ public:
 	inline void SetIdentId(int IdentId) {
 		identId = IdentId;
 	}
+
+	//一定確率でエネミーがデカくなる仕様のセット
+	inline void SetIsBig() {
+		isBig = 1;
+	}
+
 	//位置座標の同期
 	void MoveEnemyFromServerInfo(float x, float y, int dir);
 	//ステータスの同期
@@ -59,8 +67,10 @@ private:
 
 	/*攻撃インターバル*/
 	int atackInterval = 0;
-	int atackintervalLimit = 2;
+	float atackintervalLimit = 1.5f;
 
+	//デカ敵かどうか 0:通常 1:デカ
+	int isBig = 0;
 	
 	unsigned int ChangedColor();
 

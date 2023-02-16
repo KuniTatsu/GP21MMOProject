@@ -214,19 +214,26 @@ std::shared_ptr<Job> JobManager::CreateNewJob(int jobId)
 
 std::shared_ptr<Job> JobManager::CreateDebugJob(int jobId, int startJobLevel)
 {
-	if (jobId > jobMaster.size())return nullptr;
+	std::shared_ptr<Job> buf = nullptr;
+	for (int i = 0; i < jobMaster.size(); ++i) {
+		if (jobMaster[i]->GetId() == jobId) {
+			buf = jobMaster[i];
+		}
+	}
+
+	if (buf == nullptr)return nullptr;
 
 	// Job‚ÌCsv“à‚Ìƒf[ƒ^‚ð‚·‚×‚ÄŽ‚Á‚Ä‚­‚é
-	auto id = jobMaster[jobId]->GetId();
-	auto& name = jobMaster[jobId]->GetName();
-	auto str = jobMaster[jobId]->GetStr();
-	auto vit = jobMaster[jobId]->GetVit();
-	auto inteli = jobMaster[jobId]->GetInt();
-	auto min = jobMaster[jobId]->GetMin();
-	auto spd = jobMaster[jobId]->GetSpd();
-	auto dex = jobMaster[jobId]->GetDex();
+	auto id = buf->GetId();
+	auto& name = buf->GetName();
+	auto str = buf->GetStr();
+	auto vit = buf->GetVit();
+	auto inteli = buf->GetInt();
+	auto min = buf->GetMin();
+	auto spd = buf->GetSpd();
+	auto dex = buf->GetDex();
 
-	return std::make_shared<Job>(id, name, str, vit, inteli, min, spd, dex);
+	return std::make_shared<Job>(id, name, str, vit, inteli, min, spd, dex, startJobLevel);
 }
 
 void JobManager::AddExpToJob(int jobId, int addExp)

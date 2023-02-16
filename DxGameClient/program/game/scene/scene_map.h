@@ -14,6 +14,8 @@ class EnemyManager;
 class ResourceManager;
 class InventoryManager;
 
+class GraphicUI;
+
 class Scene_Map : public SceneBase {
 public:
 	Scene_Map();
@@ -48,6 +50,9 @@ private:
 		EQUIP,
 		MAX
 	};
+
+	//ツールチップの描画
+	void DrawToolTip();
 
 	//各シークエンスのUpdate関数
 	bool SeqWait(const float DeltaTime);
@@ -88,6 +93,18 @@ private:
 	};
 
 	int cursorGh = 0;
+
+	//ツールチップの通常攻撃アイコン
+	int defaultAttackIcon = 0;
+
+	int noneIcon = 0;
+
+	int coolDawnFade = 0;
+
+	int escKey = 0;
+
+	std::vector<std::shared_ptr<GraphicUI>>wait;
+
 
 	//menuテキストの配列
 	std::vector<std::string>menuText;

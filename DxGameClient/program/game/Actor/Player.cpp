@@ -185,6 +185,9 @@ void Player::Move()
 	moveX = 0;
 	moveY = 0;
 
+	//移動不可なら無視する
+	if (!canMove)return;
+
 	//どうにかしてまとめたい　関数化したいがうまく思いつかない
 	//上下キー感知
 	if (tnl::Input::IsKeyDown(eKeys::KB_W)) {
@@ -240,7 +243,7 @@ void Player::Move()
 		SetExDir(fixMoveX, fixMoveY);
 
 
-#ifdef DEBUG_ON
+#ifndef DEBUG_ON
 		gManager->SendPlayerInfoToServer();
 #endif
 
