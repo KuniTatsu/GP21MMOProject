@@ -12,8 +12,7 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 {
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
-	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
-
+	
 	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
@@ -148,7 +147,7 @@ void Enemy::Update()
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 
-	if (onFollowToPlayer /*&& !HitMaptoCharacter(drawPos)*/) {
+	if (onFollowToPlayer) {
 		EnemyMove();
 	}
 }
@@ -162,6 +161,7 @@ void Enemy::Draw(Camera* camera)
 	/*çıìGä÷êî*/
 	SearchBox(tnl::Vector3(x, y, 0), 50);
 
-	DrawRotaGraphF(x, y, 1.0f, 0, img_Ghost, true);
+	Anim(myAnimationGh, 3);
+	DrawRotaGraphF(x, y, 1.2, 0, drawGh, true);
 }
 

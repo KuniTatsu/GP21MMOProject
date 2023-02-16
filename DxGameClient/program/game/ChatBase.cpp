@@ -40,17 +40,6 @@ ChatBase::~ChatBase()
 	DeleteKeyInput(g_InputHandle);
 }
 
-void ChatBase::Init()
-{
-#ifndef DEBUG_ON
-
-	const string test = "こんにちは";
-
-	//メッセージを送信
-	connect->SendClientMessage(test);
-#endif
-}
-
 void ChatBase::DrawWritingMessage()
 {
 	//DrawStringEx(400, 500, -1, bufMessage.c_str());

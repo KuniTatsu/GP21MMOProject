@@ -53,7 +53,7 @@ private:
 	float SPEED = 0;
 
 	int identId = -1;
-
+	
 	unsigned int ChangedColor();
 
 	GameManager* gManager = nullptr;

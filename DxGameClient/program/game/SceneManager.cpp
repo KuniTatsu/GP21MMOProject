@@ -2,6 +2,7 @@
 #include "scene/scene_base.h"
 #include"scene/scene_title.h"
 #include"scene/scene_map.h"
+#include"DebugDef.h"
 
 /*デバック用*/
 //#define DEBUG_ON
@@ -52,9 +53,9 @@ SceneManager::SceneManager()
 	//imgBlack = LoadGraph("graphics/black.bmp");
 #ifndef DEBUG_ON
 	nowScene = new SceneTitle();
-#endif
+#else
 	nowScene = new Scene_Map();
-
+#endif
 	nowScene->initialzie();
 }
 

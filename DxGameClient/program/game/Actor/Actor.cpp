@@ -73,42 +73,52 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
 	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
-
-	std::vector<std::vector<int>>& hitMap = map->GetHitMap();
-	std::vector<std::vector<int>>& hitEnemyMap = mapenemy->GetHitMap();
-
-	//プレイヤーが村にいないなら
-	if (hitMap.empty())return true;
-	if (hitEnemyMap.empty())return true;
+	
+	std::vector<std::vector<int>>& hitMapEnemy = mapenemy->GetHitMap();
+	std::vector<std::vector<int>>& hitMapPlayer = map->GetHitMap();
+	
 
 	float x = std::floor(pos.x / 32);
 	float y = std::floor(pos.y / 32);
 
 	tnl::Vector3 localPos = tnl::Vector3(x + 1, y + 1, 0);
 
-	if ((localPos.x > 17 && localPos.y > -17) || (localPos.y > 17 && localPos.x > -17)) {
-		float hitArrayX = localPos.x + 16;
-		float hitArrayY = localPos.y + 16;
+	//hitMapPlayerが空でかつhitMapEnemyがからならtrue
+	// hitMapPlayerが空でないならHitMapPos
+	// hitMapEnemyが空でないならHitMapPos
+	//---------------------------------------------------------------------
+	if (!hitMapPlayer.empty()) {
+		return HitMapToPos(localPos, hitMapPlayer);
+	}
+
+	return true;
+}
+
+bool Actor::HitMapToPos(tnl::Vector3& pos, std::vector<std::vector<int>>& hitmap) {
+
+	if ((pos.x < 19 && pos.x > 17 && pos.y < 19 && pos.y > -17) ||
+		(pos.x < 19 && pos.x > -17) && pos.y < 19 && pos.y > 17) {
+		int hitArrayX = static_cast<int>(pos.x) + 16;
+		int hitArrayY = static_cast<int>(pos.y) + 16;
 		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
 			tnl::DebugTrace("1 Debug用マップの当たり判定がNULLを参照した\n");
-			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("POSy = %f POSx = %f\n", pos.y, pos.x);
 			tnl::DebugTrace("ゲーム落ちた\n");
 		}
-		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
+		if (hitmap[hitArrayY][hitArrayX] == 65)return false;
 	}
-	else if (localPos.x < 18 && localPos.y < 18)
-	{
-		float hitArrayX = localPos.x + 17;
-		float hitArrayY = localPos.y + 17;
+	else if (pos.x > -18 && pos.x < 18 && pos.y < 18 && pos.y > -18) {
+		int hitArrayX = static_cast<int>(pos.x) + 17;
+		int hitArrayY = static_cast<int>(pos.y) + 17;
 		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
 			tnl::DebugTrace("2 Debug用マップの当たり判定がNULLを参照した\n");
-			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("POSy = %f POSx = %f\n", pos.y, pos.x);
 			tnl::DebugTrace("ゲーム落ちた\n");
 		}
-		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
-
+		if (hitmap[hitArrayY][hitArrayX] == 65)return false;
 	}
 	return true;
+
 }
 
 //指定座標から指定距離離れた場所の座標を取得する関数 当たり判定の短形の各点座標を求めるのに使う

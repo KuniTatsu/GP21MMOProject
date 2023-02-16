@@ -21,14 +21,16 @@ void EnemySpawnManager::SpawnEnemy(tnl::Vector3& PlayerPos)
 	int x = 0;
 	int y = 0;
 
+	//DEBUG用
+	maxPos = PlayerPos + tnl::Vector3{ 200, 200, 0 };
+	minPos = PlayerPos + tnl::Vector3{ 20, 20, 0 };
 	//xが-200から200の間,yが-200から200の間のどこかをとる
 	//プレイヤーからの最低距離の絶対値
-	//minPos = PlayerPos + tnl::Vector3{ 20, 20, 0 };
 	float min = gManager->CHIPHEIGHT * gManager->MAPSIZE;
-	minPos = PlayerPos + tnl::Vector3{ min, min, 0 };
+	//minPos = PlayerPos + tnl::Vector3{ min, min, 0 };
 	//プレイヤーからの最大距離の絶対値
 	float max = gManager->CHIPHEIGHT * gManager->MAPSIZE + 200;
-	maxPos = PlayerPos + tnl::Vector3{ max,max,0 };
+	//maxPos = PlayerPos + tnl::Vector3{ max,max,0 };
 
 	/*beta用範囲縮小*/
 	//maxPos = PlayerPos + tnl::Vector3{ 100,100,0 };
@@ -67,22 +69,23 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 {
 	//敵を生成できるかチェック
 	if (!CheckCanCreateEnemy(posEnemy))return;
-	
+
 	srand(static_cast<unsigned int>(time(NULL)));
-	//random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX)-1);
-	
-	random = 0;
+	random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX) - 1);
+
+	/*DEBUG用*/
+	//random = 2;
 
 	switch (random)
 	{
-	case static_cast<uint32_t>(EnemyManager::EnemyType::GHOST):
-		eManager->CreateEnemy(static_cast<uint32_t>(EnemyManager::EnemyType::GHOST), posEnemy);
+	case static_cast<uint32_t>(EnemyManager::EnemyType::KOBOLD):
+		eManager->CreateEnemy(static_cast<uint32_t>(EnemyManager::EnemyType::KOBOLD), posEnemy);
 		break;
 	case static_cast<uint32_t>(EnemyManager::EnemyType::SLIME):
-		//スライムの生成
+		eManager->CreateEnemy(static_cast<uint32_t>(EnemyManager::EnemyType::SLIME), posEnemy);
 		break;
-	case static_cast<uint32_t>(EnemyManager::EnemyType::GOBLIN):
-		//ゴブリンの生成
+	case static_cast<uint32_t>(EnemyManager::EnemyType::SKULL):
+		eManager->CreateEnemy(static_cast<uint32_t>(EnemyManager::EnemyType::SKULL), posEnemy);
 		break;
 	}
 }
@@ -90,12 +93,12 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 bool EnemySpawnManager::CheckCanCreateEnemy(tnl::Vector3& Pos)
 {
 	bool canSpawn = true;
-	
+
 	if (!flagEnemyManager) {
 		eManager = EnemyManager::GetInstance();
 		flagEnemyManager = true;
 	}
-	
+
 	//既存の敵のポジションとかぶっていないかチェック
 	for (auto& enemy : eManager->EnemyList) {
 		auto listEnemyPos = enemy->GetPos();
