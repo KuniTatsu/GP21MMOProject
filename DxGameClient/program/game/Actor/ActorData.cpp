@@ -54,5 +54,31 @@ void ActorData::CalcMainStatus()
 
 	moveSpeed = spd * 3 - str * 2;
 
+	if (moveSpeed < 0)moveSpeed = 1;
+
 	HP = vit * 20 + str * 5;
+
+	mainStatus.emplace_back(attack);
+	mainStatus.emplace_back(defence);
+	mainStatus.emplace_back(mgAttack);
+	mainStatus.emplace_back(mgDefence);
+	mainStatus.emplace_back(moveSpeed);
+
+}
+
+void ActorData::CalcDefaultStatus()
+{
+	attack = str * 20 + dex * 5;
+	mgAttack = intelligence * 20 + mid * 5;
+
+	defence = vit * 20 + spd * 5;
+	mgDefence = mid * 20 + spd * 5;
+
+	moveSpeed = spd * 3 - str * 2;
+
+	mainStatus.emplace_back(attack);
+	mainStatus.emplace_back(defence);
+	mainStatus.emplace_back(mgAttack);
+	mainStatus.emplace_back(mgDefence);
+	mainStatus.emplace_back(moveSpeed);
 }

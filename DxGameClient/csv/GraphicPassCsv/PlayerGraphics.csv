@@ -1,2 +1,9 @@
 id,pass,allNum,widthNum,heightNum,widthSize,heightSize
 0,graphics/chara/Player1.png,24,3,8,32,32
+1,graphics/chara/Player2.png,24,3,8,32,32
+2,graphics/chara/Player3.png,24,3,8,32,32
+3,graphics/chara/Player4.png,24,3,8,32,32
+4,graphics/chara/Player5.png,24,3,8,32,32
+5,graphics/chara/Player6.png,24,3,8,32,32
+6,graphics/chara/Player7.png,24,3,8,32,32
+7,graphics/chara/Player8.png,24,3,8,32,32

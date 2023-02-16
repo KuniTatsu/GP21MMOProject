@@ -14,6 +14,7 @@ private:
 	int spd = 0;
 	int dex = 0;
 
+
 	int exp = 0;
 
 	int level = 0;
@@ -74,6 +75,16 @@ public:
 	inline void LevelUp() {
 		level++;
 	}
+
+	inline int GetJobLevel() {
+		return level;
+	}
+	inline std::string GetJobName() {
+		return name;
+	}
+
+private:
+
 
 	// Œ»İ‚Ìƒ‚ƒ“ƒXƒ^[“¢”°”æ“¾ŠÖ”
 	inline int GetMonsterKills() {

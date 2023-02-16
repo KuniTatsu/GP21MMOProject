@@ -4,28 +4,25 @@
 //ヒントをくれたりアイテムをくれたりする
 
 #include"NPC.h"
-#include<string>
-#include<vector>
+
 
 
 class SupportNPC :public NPC
 {
 public:
-	SupportNPC(float x, float y, float distance = 64.0f);
+	SupportNPC(float x, float y, int ghNum = 0, float distance = 64.0f);
 	~SupportNPC();
 
 	void Update()override;
+	void Draw(Camera* camera)override;
+	void Init() override;
 
-	//近くにプレイヤーがいるか返す関数 GameManagerを通してplayerから呼ぶ
-	bool CheckNearNPC(float PlayerX, float PlayerY);
+	void DrawNPCSpeak()override;
 
 public:
 
 
 private:
-
-	bool loadNPCHint();
-	
 
 	//初期シークエンスを設定
 	tnl::Sequence<SupportNPC> mainSequence =
@@ -37,8 +34,12 @@ private:
 	bool SeqHint(const float DeltaTime);
 
 	//シークエンスごとの描画関数
+	void DrawWaitSequence();
 	void DrawFirstMenuSequence();
 	void DrawHintSequence();
+
+	//現在のシークエンスの描画関数
+	const std::function< void(SupportNPC*) > DRAWSEQUENCE[3] = { &SupportNPC::DrawWaitSequence, &SupportNPC::DrawFirstMenuSequence,&SupportNPC::DrawHintSequence };
 
 	//シークエンス一覧
 	enum class SEQUENCE :uint32_t {
@@ -48,26 +49,31 @@ private:
 		MAX
 	};
 
-	SEQUENCE nowSequence = SEQUENCE::FIRSTMENU;
+	SEQUENCE nowSequence = SEQUENCE::WAIT;
 
 	//シークエンス変更関数
 	bool ChangeSequence(SEQUENCE NextSeq);
 
 private:
 
-	//npcの項目ごとのヒント文章
-	std::vector<std::string> hint;
-
-	//このnpcの話しかけられる距離(半径)
-	float canHearDistance = 64.0f;//デフォルトはキャラ２つ分
-
-	//近くにplayerがいるかどうか
-	bool isNearPlayer = false;
+	////npcの項目ごとのヒント文章
+	//std::vector<std::string> hint;
 
 	//メニュー番号
 	int cursorNum = 0;
 
-	
+	//選ばれたヒントの配列番号
+	int selectHint = 0;
+
+	//メニューのページ番号
+	int maxPageNum = 0;
+	int nowDrawPage = 0;
+
+	//メニューの1ページに描画する最大数
+	const int MAXDRAWNUM = 3;
+
+	tnl::Vector3 drawSpeakTitlePos = {};
+	tnl::Vector3 drawSpeakPos = {};
 
 };
 

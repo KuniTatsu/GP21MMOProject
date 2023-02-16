@@ -34,6 +34,10 @@ public:
 	inline int GetIdentId() {
 		return identId;
 	}
+
+	inline void SetIdentId(int IdentId) {
+		identId = IdentId;
+	}
 	//位置座標の同期
 	void MoveEnemyFromServerInfo(float x, float y, int dir);
 	//ステータスの同期

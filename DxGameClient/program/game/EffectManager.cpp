@@ -2,7 +2,6 @@
 #include"ResourceManager.h"
 #include"Effect.h"
 
-
 EffectManager* EffectManager::instance = nullptr;
 EffectManager* EffectManager::GetInstance()
 {
@@ -27,10 +26,34 @@ void EffectManager::CreateEffect(int type, tnl::Vector3& pos)
 
 void EffectManager::Update(const float deltatime)
 {
+	if (liveEffect.empty())return;
+	for (const auto& effect : liveEffect) {
+		effect->Update();
+	}
+
+	for (auto itr = liveEffect.begin(); itr != liveEffect.end(); ) {
+		bool isLive = (*itr)->GetIsLive();
+		if (!isLive) {
+			//生きているエフェクトリストから削除
+			itr = liveEffect.erase(itr);
+		}
+		else {
+			++itr;
+		}
+	}
+}
+
+void EffectManager::Draw(Camera* camera)
+{
+	if (liveEffect.empty())return;
+	for (const auto& effect : liveEffect) {
+		effect->Draw(camera);
+	}
 }
 
 EffectManager::EffectManager()
 {
+	LoadEffectCsv();
 }
 
 EffectManager::~EffectManager()

@@ -10,12 +10,9 @@ class Map;
 class Map {
 public:
 
-	Map(tnl::Vector3 centerPos);
+	Map(tnl::Vector3 centerPos,int type);
 
 	int test = 0;
-
-	void Update(const float deltatime);
-	void Draw(Camera* camera);
 
 	inline tnl::Vector3& GetMapCenterPos() {
 		return mapCenterPos;
@@ -30,15 +27,44 @@ public:
 	inline tnl::Vector3& GetMapRightBottomPos() {
 		return mapRightBottomPos;
 	}
+	
+	inline std::vector<std::vector<int>>& GetHitMap() {
+		return mapChipsVillageHit;
+	}
+
+	inline int GetMapType() {
+		return mapType;
+	}
+
+	/*レイヤー順序、FALSEなら後方、TRUEなら前方*/
+	inline bool SetIsDrawFront(bool isFront) {
+		return isDrawFront = isFront;
+	}
+
+	enum class MAPTYPE : uint32_t {
+		VILLAGE,
+		GRASS,
+		MAX
+	};
+
+	void Update(const float deltatime);
+	void Draw(Camera* camera);
 
 	void SetNearMap(int dirNum,std::shared_ptr<Map>map);
 private:
 	tnl::Vector3 PlayerPos;
 	GameManager* gManager = nullptr;
 
-
 	//マップチップの配列
+	//村
+	std::vector<std::vector<int>>mapChipsVillageHit;
+	std::vector<std::vector<int>>mapChipsVillageGround;
+	std::vector<std::vector<int>>mapChipsVillageBack;
+	std::vector<std::vector<int>>mapChipsVillageMiddle;
+	std::vector<std::vector<int>>mapChipsVillageFront;
+	//草原
 	std::vector<std::vector<int>> mapChips;
+
 	//マップの中心座標
 	tnl::Vector3 mapCenterPos;
 	//マップの左上の座標
@@ -49,22 +75,25 @@ private:
 	//周囲の8マップ
 	std::vector<std::shared_ptr<Map>>nearMaps;
 
-	void LoadMap();
-
 	/*画像ハンドル*/
 	int img_mapchip_grass = 0;
 	int img_mapchip_grass_line = 0;
 	int img_mapchip_sea = 0;
+	std::vector<int> img_mapchip_localmap;
 
 	/*チップサイズ、配置数*/
-	//const int MAPCHIP_SIZE = 32;
-	//const int ChipMax = 5;
-	//const int Margin = 2;
 	int chanknum = 0;
 
-	int ChipStartX = 0;
-	int ChipStartY = 0;
+	/*マップの種類*/
+	int mapType = 0;
 
+	/*最初の初期村をロードするマップフラグ*/
+	bool isLoadLocalMap = false;
+	/*レイヤー順序、FALSEなら後方、TRUEなら前方*/
+	bool isDrawFront = false;
+	/*マップのロード*/
+	void LoadMap();
 
-	void DrawMap(Camera* camera);
+	/*レイヤー階層関数（カメラ、レイヤー前方後方フラグ、マップタイプ、チャンクの中心座標）*/
+	void DrawLayer(Camera* camera, bool isFront, int maptype);
 };

@@ -54,7 +54,7 @@ private:
 
 	std::string clientUUID = "";
 
-
+	std::string playerName = "";
 
 
 	// ゲーム全体で参照したい変数はここで用意
@@ -125,6 +125,13 @@ public:
 	// 破棄
 	void Destroy();
 
+	inline void SetPlayerName(std::string name) {
+		playerName = name;
+	}
+	inline std::string GetPlayerName() {
+		return playerName;
+	}
+
 	//単位ベクトル取得関数
 	inline tnl::Vector3 GetFixVector(float X, float Y) {
 		float vecLength = std::sqrt(X * X + Y * Y);
@@ -140,9 +147,16 @@ public:
 
 	//2つの座標間の距離を求める関数
 	inline float GetLengthFromTwoPoint(tnl::Vector3& pos1, tnl::Vector3& pos2) {
-		auto defX = (pos2.x - pos1.x);
-		auto defY = (pos2.y - pos1.y);
-		return sqrtf((defX * defX) + (defY * defY));
+		tnl::Vector3 vec = pos2 - pos1;
+		return vec.length();
+	}
+
+	//4点の中央の座標を求める関数
+	inline tnl::Vector3 GetCenterPosRect(std::vector<tnl::Vector3>& rectPos) {
+
+		auto x = rectPos[1].x - rectPos[0].x;
+		auto y = rectPos[3].y - rectPos[0].y;
+		return tnl::Vector3(x, y, 0);
 	}
 
 	//画像を読み込んでmapに入れる関数
@@ -174,7 +188,10 @@ public:
 	tnl::Vector3 GetNearestPointLine(const tnl::Vector3& point, const tnl::Vector3& linePointA, const tnl::Vector3& linePointB);
 
 	//Player(このクライアントの)生成
-	std::shared_ptr<Player> CreatePlayer();
+	std::shared_ptr<Player> CreatePlayer(int ghNum = 0);
+
+	//再ログイン時のプレイヤー生成
+	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum,std::string name);
 
 	inline std::shared_ptr<Player>& GetPlayer() {
 		return player;
@@ -190,6 +207,8 @@ public:
 	void SetStayMap();
 	//Player(このクライアントの)がいるマップポインタを取得する関数
 	std::shared_ptr<Map>GetPlayerOnMap();
+	//Enemyがいるマップポインタを取得する関数
+	std::shared_ptr<Map>GetEnemyOnMap();
 
 	//指定座標からマップを取得する関数
 	std::shared_ptr<Map>GetMapOnPoint(tnl::Vector3& Point);
@@ -199,6 +218,8 @@ public:
 
 	//Mapポインタの中心座標からPlayerの中心座標への距離を求める関数
 	float GetMapToPlayerDistance(std::shared_ptr<Map> map);
+	//Mapポインタの中心座標からEnemyの中心座標への距離を求める関数
+	float GetMaptoEnemyDistance(std::shared_ptr<Map> map);
 
 	//チャンク中心からチャンク中心への距離を求める関数
 	inline float GetChunkDistance() {
@@ -212,6 +233,9 @@ public:
 
 	//マップリストの取得
 	std::list<std::shared_ptr<Map>> GetMapList();
+	inline std::list<std::shared_ptr<Map>>& GetMapsListForMap() {
+		return Maps;
+	}
 
 	//エネミーリストの取得
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
@@ -245,14 +269,39 @@ public:
 	inline std::string GetClientUUID() {
 		return clientUUID;
 	}
+	//connect取得
+	inline std::shared_ptr<Connect>GetConnection() {
+		if (connect)return connect;
+		return nullptr;
+	}
+
+	//サーバーに接続する関数
+	void ConnectServer();
+
+	//チャット作成
+	void CreateChat();
+
+	//チャットポインタ取得
+	inline ChatBase* GetChat() {
+		return chat;
+	}
+
+	//スレッド作成
+	void CreateThread();
+
+	//エネミーの情報を取得する関数
+	void GetServerEnemyInfo();
 
 	//サーバーから送られてきた他のプレイヤーの情報からDummyPlayerを生成し登録する関数
 	bool CreateDummyPlayer(std::string json);
 
 	bool CreateDummyPlayer(float posX, float posY, std::string UUID, int dir, float HP, int ghNum);
 
-	//プレイヤーの情報をサーバーに送る関数
-	void SendPlayerInfoToServer();
+	//プレイヤーの情報をサーバーに送る関数　args:再ログイン時か否か
+	void SendPlayerInfoToServer(bool isReLogin = false);
+
+	//他プレイヤーの情報を取得する関数
+	void GetServerOtherUser();
 
 	//enemyが生成された時にサーバーに登録する関数
 	void SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type = -1);
@@ -278,8 +327,26 @@ public:
 	//UUIDと合致するDummyPlayerのHPを変動させる関数
 	void UpdateDummyHP(std::string UUID, float moveHP);
 
+	//サーバーにAttributeのデータを送信する関数
+	void SendPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+	//サーバーから来たAttributeのデータをセットする関数
+	void SetPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
+
+	//サーバーにattributeを要求する関数
+	void GetPlayerAttribute();
+	//サーバーにPlayerデータを要求する関数
+	void GetPlayerInfo(std::string UUID);
+
+	//サーバーに名前を送る関数
+	void EntryServer();
+	//サーバーからUUIDを取得する関数
+	void GetMyUUID();
+
+
+
 	//四角形のマウスクリック感知
 	bool isClickedRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
+	bool isClickedRect(tnl::Vector3& CenterPos, int halfSize = 16);
 
 	//四角形のマウス範囲内感知
 	bool OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom);
@@ -287,5 +354,7 @@ public:
 	//マウス座標の取得
 	tnl::Vector3 GetMousePos();
 
+	//PlayerのHPを変動させる関数
+	void UpdatePlayerHP(double moveHp);
 
 };

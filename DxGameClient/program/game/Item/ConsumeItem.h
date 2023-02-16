@@ -6,8 +6,11 @@ class ConsumeItem :public Item
 {
 public:
 
-	ConsumeItem(int ID, std::string Name, int STR, int VIT, int INT, int MID, int SPD, int DEX, float moveHP = 0.0f);
+	ConsumeItem(int ID, std::string Name, int STR, int VIT, int INT, int MID, int SPD, int DEX, int Rare, double Recover,int MaxStack);
 	~ConsumeItem();
+
+	//アイテム使用
+	void UseItem();
 
 private:
 

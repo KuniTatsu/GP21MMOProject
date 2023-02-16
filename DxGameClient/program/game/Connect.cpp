@@ -11,6 +11,7 @@
 #include"EnemyManager.h"
 #include <cstdlib>
 #include <iostream>
+#include<fstream>
 
 #include"../json11.hpp"
 
@@ -167,7 +168,7 @@ const std::string Connect::GetServerMessage()
 			posX = static_cast<float>(map["posX"].number_value());
 			posY = static_cast<float>(map["posY"].number_value());
 			dir = map["dir"].int_value();
-			HP = static_cast<float>(map["startHP"].number_value());
+			HP = static_cast<float>(map["HP"].number_value());
 
 			//debug
 			HP = 1250;
@@ -228,7 +229,7 @@ const std::string Connect::GetServerMessage()
 
 
 	//プレイヤーのサーバー退出系の情報処理
-	if (hoge["ExitPlayerUUID"].string_value() != "") {
+	if (!hoge["ExitPlayerUUID"].is_null()) {
 		std::string message = "";
 		message = gManager->UTF8toSjis(hoge["ExitPlayerUUID"].string_value());
 
@@ -269,6 +270,21 @@ const std::string Connect::GetServerMessage()
 	if (hoge["isDead"].string_value() != "") {
 		auto enemyManager = EnemyManager::GetInstance();
 		int id = hoge["id"].int_value();
+
+		enemyManager->ShareEnemyDead(id);
+		return "";
+	}
+
+	//再ログイン時のattributeの取得
+	if (!hoge["Str"].is_null()) {
+
+		int STR = hoge["Str"].int_value();
+		int VIT = hoge["Vit"].int_value();
+		int INT = hoge["Int"].int_value();
+		int MID = hoge["Mid"].int_value();
+		int SPD = hoge["Spd"].int_value();
+		int DEX = hoge["Dex"].int_value();
+		gManager->SetPlayerAttribute(STR, VIT, INT, MID, SPD, DEX);
 		return "";
 	}
 
@@ -279,14 +295,32 @@ const std::string Connect::GetServerMessage()
 
 	//UUIDを含むメッセージかどうか判定 含まないならチャットメッセージなのでそのまま帰す
 	if (hoge["UUID"].string_value() == "")return getMessage;
-
 	//UUIDを含むならプレイヤーの情報なのでそっちの処理に進む
 
+	//再ログイン時の自分のデータ取得
+	if (!hoge["myPosX"].is_null()) {
+
+		float myPosX = hoge["myPosX"].number_value();
+		float myPosY = hoge["myPosY"].number_value();
+
+		double hp = hoge["HP"].number_value();
+		int ghNum = hoge["gh"].int_value();
+
+		std::string name = hoge["name"].string_value();
+
+		gManager->CreatePlayerFromServer(myPosX, myPosY, hp, ghNum, name);
+		return "";
+	}
+
+
 	//他プレイヤーのHP変動処理
-	if (hoge["PlayerMoveHP"].string_value() != "") {
+	if (!hoge["PlayerMoveHP"].is_null()) {
 		auto UUID = gManager->UTF8toSjis(hoge["UUID"].string_value());
 
+		auto moveHp = hoge["PlayerMoveHP"].number_value();
 
+		gManager->UpdateDummyHP(UUID, moveHp);
+		return "";
 	}
 
 
@@ -350,12 +384,41 @@ void Connect::GetEntryUserId()
 	//UUIDの登録
 	gManager->SetClientUUID(message);
 
-	bool check = WritePrivateProfileString("UUID", "data", message.data(), "clientUUID.ini");
+	//ofstream型の変数 開いたファイルが展開される
+	std::ofstream writingfile;
+	//相対パス
+	std::string filename = "save/myUUID.txt";
+
+	//パスから出力設定でファイルを開く
+	writingfile.open(filename, std::ios::out);
+
+	writingfile << message << std::endl;
+
+	//開いたファイルの開放
+	writingfile.close();
+
+
+	/*bool check = WritePrivateProfileString("UUID", "data", message.data(), "C:\Users\vantan\Documents\GitHub\GP21MMOProject\DxGameClient\save\clientUUID.ini");
 	if (!check) {
 		tnl::DebugTrace("書き込み失敗");
 		tnl::DebugTrace("\n");
+
 	}
+
+	}*/
 #endif
+}
+
+//サーバーからログイン済みの他ユーザーをすべて取得する関数
+void Connect::GetServerOtherUser()
+{
+	Json obj = Json::object({
+		{ "notify", 1 },
+		});
+
+	std::string send = obj.dump();
+
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientFieldItemInfo(float x, float y, int itemId)
@@ -466,6 +529,52 @@ void Connect::SendClientAttackEffectInfo(float x, float y, int effectNum, int di
 
 	SendMessageToServer(send);
 #endif
+}
+
+void Connect::SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX, int isCreated)
+{
+	std::string UUID = gManager->GetClientUUID();
+
+	Json obj = Json::object({
+		{ "Str", STR },
+		{ "Vit", VIT },
+		{ "Int",INT},
+		{ "Mid",MID},
+		{ "Spd",SPD},
+		{ "Dex",DEX},
+		{ "UUID",UUID},
+		{"isCreated",isCreated}
+		});
+
+	std::string send = obj.dump();
+
+	SendMessageToServer(send);
+}
+
+void Connect::GetClientCharactorInfo(std::string UUID)
+{
+	Json obj = Json::object({
+		{ "GetMyData", 1 },
+		{ "UUID",UUID},
+		});
+
+	std::string send = obj.dump();
+
+	SendMessageToServer(send);
+}
+
+void Connect::GetClientCharactorAttribute()
+{
+	std::string UUID = gManager->GetClientUUID();
+
+	Json obj = Json::object({
+		{ "GetMyAttribute", 1 },
+		{ "UUID",UUID},
+		});
+
+	std::string send = obj.dump();
+
+	SendMessageToServer(send);
 }
 
 void Connect::SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type)

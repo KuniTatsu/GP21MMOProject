@@ -1,12 +1,19 @@
 #include "SupportNPC.h"
+#include"NPCSpeak.h"
 #include"../../GameManager.h"
 #include"../../UI/UIManager.h"
+#include"../../UI/GraphicUI.h"
+#include"../Camera.h"
+#include"../player.h"
+#include<math.h>
 
-SupportNPC::SupportNPC(float x, float y, float distance) :NPC(x, y)
+SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y, ghNum)
 {
-
 	canHearDistance = distance;
-
+	//NPCの話す内容の読み込み
+	if (loadNPCHint(static_cast<int>(NPCTYPE::SUP))) {
+		maxPageNum = static_cast<int>(std::floor(npcSpeaks.size() / MAXDRAWNUM));
+	}
 }
 
 SupportNPC::~SupportNPC()
@@ -21,40 +28,43 @@ void SupportNPC::Update()
 
 }
 
-bool SupportNPC::CheckNearNPC(float PlayerX, float PlayerY)
+void SupportNPC::Draw(Camera* camera)
 {
-	bool ret = false;
-
-	auto gManager = GameManager::GetInstance();
-
-	tnl::Vector3 pPos(PlayerX, PlayerY, 0);
-
-	float distance = gManager->GetLength(pPos, GetDrawPos());
-
-	if (canHearDistance > distance)
-	{
-		isNearPlayer = true;
-		ret = true;
-	}
-	else {
-		isNearPlayer = false;
-	}
-
-	return ret;
+	DrawRotaGraphF(drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1), drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1),
+		1, 0, ghs[10], true);
 }
 
-bool SupportNPC::loadNPCHint()
+void SupportNPC::Init()
 {
-	return false;
+
+}
+
+void SupportNPC::DrawNPCSpeak()
+{
+	//シークエンスごとの描画
+	DRAWSEQUENCE[static_cast<uint32_t>(nowSequence)](this);
 }
 
 bool SupportNPC::SeqWait(const float DeltaTime)
 {
+	//このシークエンスに入った最初の一回だけ、プレイヤーがmenuを開ける状態に更新する
+	if (mainSequence.isStart()) {
+		auto& player = GameManager::GetInstance()->GetPlayer();
+		player->SetCanOpenMenu(true);
+	}
+
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer)return false;
 
+	//メニューを開けない状態なら無視する
+	if (!GameManager::GetInstance()->GetPlayer()->GetCanOpenMenu())return false;
+
 	//Enterを感知
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
+
+		auto& player = GameManager::GetInstance()->GetPlayer();
+		player->SetCanOpenMenu(false);
+
 		ChangeSequence(SEQUENCE::FIRSTMENU);
 	}
 
@@ -64,8 +74,10 @@ bool SupportNPC::SeqWait(const float DeltaTime)
 bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 {
 	if (mainSequence.isStart()) {
-		cursorNum = 0;
-		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		//SUPNPCのUIを描画状態にする
+		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC),true);
+		//描画するUIをFirstMenuに変更
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::FIRSTMENU));
 	}
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer) {
@@ -77,20 +89,31 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 
 	//上下にカーソル移動をさせ、項目を選ぶ
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_DOWN)) {
-		cursorNum = (cursorNum + 1) % hint.size();
+		cursorNum = (cursorNum + 1) % MAXDRAWNUM;
 	}
 	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_UP)) {
-		cursorNum = (cursorNum + hint.size() - 1) % hint.size();
+		cursorNum = (cursorNum + MAXDRAWNUM - 1) % MAXDRAWNUM;
+	}
+
+	//hintのページ切り替え
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
+		nowDrawPage = (nowDrawPage + 1) % maxPageNum;
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
+		nowDrawPage = (nowDrawPage + maxPageNum - 1) % maxPageNum;
 	}
 
 	//項目を決定
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 
+		//描画するUIをhintに変更
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::HINT));
 		ChangeSequence(SEQUENCE::HINT);
 	}
 	//会話をやめる
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		cursorNum = 0;
 		ChangeSequence(SEQUENCE::WAIT);
 	}
 	return true;
@@ -98,6 +121,11 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 
 bool SupportNPC::SeqHint(const float DeltaTime)
 {
+	if (mainSequence.isStart()) {
+		//描画するUIをhintに変更
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::HINT));
+	}
+
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer) {
 
@@ -115,16 +143,60 @@ bool SupportNPC::SeqHint(const float DeltaTime)
 	return false;
 }
 
+void SupportNPC::DrawWaitSequence()
+{
+	SetFontSize(50);
+//	DrawStringEx(20, 20, -1, "SupNPC:Wait");
+	SetFontSize(16);
+}
+
 void SupportNPC::DrawFirstMenuSequence()
 {
+	/*tnl::Vector3 drawPos = {};*/
+
 	//hintの数だけメニューを出す
+	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
+	if (mainSequence.isStart()) {
+		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
 
+		//2番がタイトルを描画するUI枠なのでそこだけ取得する
+		auto& leftTopPos = firstMenuGraphics[1]->GetLeftTopPos();
+		drawSpeakTitlePos = tnl::Vector3(leftTopPos.x + 50, leftTopPos.y+20, 0);
+	}
 
+	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawSpeakTitlePos);
 
+	DrawRotaGraph(drawSpeakTitlePos.x - 25, drawSpeakTitlePos.y + 10 + (cursorNum * 20), 0.25, 0, cursorGh, true);
+
+	SetFontSize(50);
+	//DrawStringEx(20, 20, -1, "SupNPC:MENU");
+	SetFontSize(16);
 }
 
 void SupportNPC::DrawHintSequence()
 {
+	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
+	std::vector<std::shared_ptr<GraphicUI>>hintMenuGraphics;
+	if (mainSequence.isStart()) {
+		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		hintMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::SUPNPC));
+
+		//2番がタイトルを描画するUI枠なのでそこだけ取得する
+		auto& titleLeftTopPos = firstMenuGraphics[1]->GetLeftTopPos();
+		drawSpeakTitlePos = tnl::Vector3(titleLeftTopPos.x + 50, titleLeftTopPos.y + 20, 0);
+
+		//3番が文字を描画するUI枠なのでそこだけ取得する
+		auto& leftTopPos = hintMenuGraphics[2]->GetLeftTopPos();
+		drawSpeakPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y+20, 0);
+
+		selectHint = nowDrawPage * MAXDRAWNUM + cursorNum;
+	}
+	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawSpeakTitlePos);
+	DrawNpcText(selectHint, drawSpeakPos);
+
+	SetFontSize(50);
+//	DrawStringEx(20, 20, -1, "SupNPC:Hint");
+	SetFontSize(16);
 }
 
 bool SupportNPC::ChangeSequence(SEQUENCE NextSeq)

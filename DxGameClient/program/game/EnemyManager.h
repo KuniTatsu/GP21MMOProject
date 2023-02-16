@@ -33,7 +33,7 @@ private:
 //生成回数
 	int createCount = 0;
 	//生成制限
-	const int SPAWNLIMIT = 5;
+	const int SPAWNLIMIT = 0;
 
 	int spawnLimit = 5;
 
@@ -91,6 +91,12 @@ public:
 	}
 	//敵の識別番号で開いている番号を調べ、返す関数
 	int SearchBlankEnemyNum();
+
+	//敵の識別番号を元に戻す関数
+	void ResetEnemyNum(int enemyNum);
+
+	//敵の識別番号を埋める関数
+	
 
 	//Enemyの位置座標の同期
 	void ShareEnemyPosFromServer(int identId, float x, float y, int dir, int type);

@@ -5,7 +5,7 @@
 #include<time.h>
 #include<random>
 #include"../ResourceManager.h"
-
+#include"../DebugDef.h"
 
 
 Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::vector<int>& ghs, int type)
@@ -38,7 +38,7 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
 
 	myData = std::make_shared<ActorData>();
-	myData->SetAllStatus( data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
+	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
 
 	auto& attribute = data->GetAttribute();
@@ -135,43 +135,20 @@ unsigned int Enemy::ChangedColor()
 }
 
 void Enemy::EnemyMove() {
-
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
 }
 
 void Enemy::Update()
 {
-	//debug
-	bool isMove = false;
+	float deltatime = GameManager::GetInstance()->deltaTime;
+	//インターバル更新
+	UpdateAttackInterval(deltatime);
 
-	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_W)) {
-		drawPos.y--;
-		myExDir = EXDIR::TOP;
-		isMove = true;
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_A)) {
-		drawPos.x--;
-		myExDir = EXDIR::LEFT;
-		isMove = true;
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_S)) {
-		drawPos.y++;
-		myExDir = EXDIR::BOTTOM;
-		isMove = true;
-	}
-	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_D)) {
-		drawPos.x++;
-		myExDir = EXDIR::RIGHT;
-		isMove = true;
-	}
-
-	if (!isMove)return;
-
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 
-	if (onFollowToPlayer) {
+	if (onFollowToPlayer /*&& !HitMaptoCharacter(drawPos)*/) {
 		EnemyMove();
 	}
 }
@@ -181,11 +158,9 @@ void Enemy::Draw(Camera* camera)
 	auto x = static_cast<int>(drawPos.x) - camera->pos.x + (gManager->SCREEN_WIDTH >> 1);
 	auto y = static_cast<int>(drawPos.y) - camera->pos.y + (gManager->SCREEN_HEIGHT >> 1);
 
-	//if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))x++;
-	if (tnl::Input::IsKeyDown(tnl::Input::eKeys::KB_SPACE))drawPos.x++;
 
 	/*索敵関数*/
-	SearchBox(tnl::Vector3(x, y, 0), myData->GetAttackRange());
+	SearchBox(tnl::Vector3(x, y, 0), 50);
 
 	DrawRotaGraphF(x, y, 1.0f, 0, img_Ghost, true);
 }

@@ -31,12 +31,14 @@ public:
 	void ChangeDrawUI(int MenuSeries, int UINum);
 
 	//UIの描画可否切り替え
-	inline void ChangeCanDrawUI(int series) {
-		if (!canDrawUI[series]) {
+	inline void ChangeCanDrawUI(int series, bool swich = false) {
+		//今がfalse&trueにしろと来たらtrueに変える
+		if (swich && !canDrawUI[series]) {
 			canDrawUI[series] = true;
 			return;
 		}
-		canDrawUI[series] = false;
+		//今がtrueならでfalseにしろと来たらfalseにする
+		else if (!swich && canDrawUI[series])canDrawUI[series] = false;
 	}
 
 	//描画可否取得
@@ -46,6 +48,9 @@ public:
 
 	//UIの入れ物を取得する関数
 	const std::vector<std::vector<std::shared_ptr<GraphicUI>>>& GetUI(int series);
+
+	//現在描画中のUIを取得する関数
+	const std::vector<std::shared_ptr<GraphicUI>>& GetNowDrawGraphic(int series);
 
 public:
 	//どの機能のUIか
@@ -57,21 +62,11 @@ public:
 		MAX
 	};
 
-private:
-	static UIManager* instance;
-
-	//現在表示中のUI番号の配列
-	std::vector<int> NOWDRAWUIs = { nowDrawMenuUI,nowDrawSupNPCUI,nowDrawDisassemblyNpcUI,nowDrawGuardNpcUI };
-
-
-	//機能ごとのUIの数の配列
-	const std::vector<int>SERIESINNUM = { static_cast<int>(MENUUI::MAX),static_cast<int>(SUPNPCUI::MAX),
-											static_cast<int>(DISASSEMBLYNPCUI::MAX),static_cast<int>(GUARDNPCUI::MAX) };
-
 	enum class MENUUI :uint32_t {
 		TOP,
 		STATUS,
 		INVENTORY,
+		USEITEM,
 		EQUIP,
 		MAX
 	};
@@ -94,6 +89,18 @@ private:
 		MAX
 	};
 
+private:
+	static UIManager* instance;
+
+	//現在表示中のUI番号の配列
+	std::vector<int> NOWDRAWUIs = { nowDrawMenuUI,nowDrawSupNPCUI,nowDrawDisassemblyNpcUI,nowDrawGuardNpcUI };
+
+
+	//機能ごとのUIの数の配列
+	const std::vector<int>SERIESINNUM = { static_cast<int>(MENUUI::MAX),static_cast<int>(SUPNPCUI::MAX),
+											static_cast<int>(DISASSEMBLYNPCUI::MAX),static_cast<int>(GUARDNPCUI::MAX) };
+
+
 
 	//-----現在選択中のui番号-----
 	int nowDrawMenuUI = static_cast<int>(MENUUI::TOP);
@@ -112,7 +119,7 @@ private:
 
 	//-----ロードするUIのパス配列-----
 	//UI
-	const std::string MENUPASS[static_cast<uint32_t>(MENUUI::MAX)] = { "Csv/UI/UseUI/TopUI.csv","Csv/UI/UseUI/StatusUI.csv","Csv/UI/UseUI/InventoryUI.csv","Csv/UI/UseUI/EquipUI.csv" };
+	const std::string MENUPASS[static_cast<uint32_t>(MENUUI::MAX)] = { "Csv/UI/UseUI/TopUI.csv","Csv/UI/UseUI/StatusUI.csv","Csv/UI/UseUI/InventoryUI.csv","Csv/UI/UseUI/UseItemUI.csv","Csv/UI/UseUI/EquipUI.csv" };
 	//Sup
 	const std::string SUPNPCUIPASS[static_cast<uint32_t>(SUPNPCUI::MAX)] = { "Csv/UI/NPC/SuportNPCFirstMenu.csv","Csv/UI/NPC/SuportNPCHintMenu.csv" };
 	//解体
@@ -130,6 +137,8 @@ private:
 
 	//UIを描画するかどうか 種類ごと
 	bool canDrawUI[static_cast<int>(UISERIES::MAX)] = { false,false,false,false };
+
+	const std::string err[2] = { "err","err" };
 
 private:
 

@@ -5,6 +5,9 @@
 #include"Actor/ActorData.h"
 #include"GameManager.h"
 #include"ResourceManager.h"
+#include"Actor/ActorDrawManager.h"
+#include"EffectManager.h"
+#include"Connect.h"
 #include<time.h>
 #include<random>
 
@@ -63,7 +66,7 @@ void EnemyManager::LoadEnemyMaster()
 		auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 		auto enemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, data, animList[i - 1], i - 1);
-		
+
 		enemyMaster.emplace_back(enemy);
 
 	}
@@ -99,6 +102,11 @@ int EnemyManager::SearchBlankEnemyNum() {
 	}
 	//開いている場所がないならエラーナンバーを返す
 	return -1;
+}
+void EnemyManager::ResetEnemyNum(int enemyNum)
+{
+	if (enemyNum > SPAWNLIMIT)return;
+	isUseEnemyIdentNum[enemyNum] = false;
 }
 //Enemyの位置座標の同期
 void EnemyManager::ShareEnemyPosFromServer(int identId, float x, float y, int dir, int type)
@@ -137,7 +145,7 @@ void EnemyManager::ShareEnemyStatusFromServer(int identId, float moveHP)
 		}
 	}
 }
-
+//サーバーから送られてきた情報を元に敵の死亡状況を更新する関数
 void EnemyManager::ShareEnemyDead(int identId, int isDead)
 {
 	//送られてきたのが死亡通知だったら
@@ -148,6 +156,22 @@ void EnemyManager::ShareEnemyDead(int identId, int isDead)
 			if (clientEnemyId == identId)
 			{
 				(*itr)->SetIsLive(false);
+				//死んだアニメーション
+				auto animPos = (*itr)->GetPos();
+				EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::DEATH), animPos);
+
+				//死んだ敵の個別番号を開放する
+				ResetEnemyNum((*itr)->GetIdentId());
+
+				//最近死んだ敵リストに登録
+				recentDeadEnemyList.emplace_back((*itr));
+				//描画対象から削除
+				ActorDrawManager::GetInstance()->RemoveDrawActorList((*itr));
+				//生きている敵リストから削除
+				itr = EnemyList.erase(itr);
+
+
+				createCount--;
 				break;
 			}
 		}
@@ -182,7 +206,7 @@ void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
 		auto distance1 = gManager->GetLengthFromTwoPoint(playerPos, left->GetPos());
 		auto distance2 = gManager->GetLengthFromTwoPoint(playerPos, right->GetPos());
 
-		if (distance1 > distance2)return true;
+		if (distance1 < distance2)return true;
 		return false;
 		});
 }
@@ -192,7 +216,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 
-#ifdef DEBUG_OFF
+#ifndef DEBUG_ON
 	//個体識別番号を取得
 	int identId = SearchBlankEnemyNum();
 	//個体識別番号がエラー番号なら敵の生成を行わない
@@ -206,6 +230,10 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], 0);
+
+	newEnemy->SetIdentId(identId);
+
+	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
 
 	SetEnemyList(newEnemy);
 	spawntiming = false;
@@ -221,7 +249,10 @@ void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& sp
 
 	auto& ghs = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
-	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type,identId);
+	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type, identId);
+
+	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
+
 	SetEnemyList(newEnemy);
 	createCount++;
 	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
@@ -237,15 +268,32 @@ void EnemyManager::Update(float deltatime)
 		enemy->Update();
 	}
 
-
 	//死んだ敵の処理
 	for (auto itr = EnemyList.begin(); itr != EnemyList.end(); ) {
 		bool& isLive = (*itr)->GetIsLive();
 		if (!isLive) {
+
+			//死んだアニメーション
+			auto animPos = (*itr)->GetPos();
+			EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::DEATH), animPos);
+
+			auto id = (*itr)->GetIdentId();
+			auto connect = GameManager::GetInstance()->GetConnection();
+			if (connect != nullptr) {
+				connect->SendClientEnemyIsDead(id);
+			}
+
+			//死んだ敵の個別番号を開放する
+			ResetEnemyNum(id);
+
 			//最近死んだ敵リストに登録
 			recentDeadEnemyList.emplace_back((*itr));
+			//描画対象から削除
+			ActorDrawManager::GetInstance()->RemoveDrawActorList((*itr));
 			//生きている敵リストから削除
 			itr = EnemyList.erase(itr);
+
+
 			createCount--;
 		}
 		else {
@@ -261,11 +309,7 @@ void EnemyManager::Update(float deltatime)
 
 void EnemyManager::Draw(Camera* camera)
 {
-
-	auto& list = GetEnemyList();
-	if (list.empty())return;
-
-	for (auto&& enemy : list) {
-		enemy->Draw(camera);
-	}
+	SetFontSize(50);
+	DrawStringEx(50, 50, -1, "%d", createCount);
+	SetFontSize(16);
 }

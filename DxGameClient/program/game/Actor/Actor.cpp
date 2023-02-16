@@ -6,12 +6,19 @@
 #include"Enemy.h"
 #include"Player.h"
 #include"../BattleLogic.h"
+#include"../EffectManager.h"
+#include<math.h>
 
+#include"../scene/Map.h"
+
+//村に下と右側から入ろうとするとゲームが落ちる件
+	//今度は草原から村に入ろうとすると村のcsvがnullのため落ちる？
 
 Actor::Actor()
 {
 	gManager = GameManager::GetInstance();
 	myData = std::make_shared<ActorData>();
+	SetDefaultAttackOffset();
 }
 
 std::vector<tnl::Vector3> Actor::GetCharaEdgePos()
@@ -43,13 +50,14 @@ void Actor::SetActorAttribute(int STR, int VIT, int INT, int MID, int SPD, int D
 
 void Actor::SetCircleSize(tnl::Vector3& size)
 {
-	if (size.x >= size.y)circleSize = size.x;
-	else circleSize = size.y;
+	if (size.x >= size.y)circleSize = size.x / 2;
+	else circleSize = size.y / 2;
 }
 
 void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 {
-	if (--actWait <= 0) {
+	actWait -= ANIMSPEED[nowAnimMode];
+	if (actWait <= 0) {
 		actIndex++;
 		actWait = Speed;
 		actIndex %= MaxIndex;
@@ -61,29 +69,48 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 	}
 }
 
-void Actor::MoveUp()
+bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
-	//ローカルポジションの移動
-	localPos += {0, -1, 0};
+	auto map = GameManager::GetInstance()->GetPlayerOnMap();
+	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
+
+	std::vector<std::vector<int>>& hitMap = map->GetHitMap();
+	std::vector<std::vector<int>>& hitEnemyMap = mapenemy->GetHitMap();
+
+	//プレイヤーが村にいないなら
+	if (hitMap.empty())return true;
+	if (hitEnemyMap.empty())return true;
+
+	float x = std::floor(pos.x / 32);
+	float y = std::floor(pos.y / 32);
+
+	tnl::Vector3 localPos = tnl::Vector3(x + 1, y + 1, 0);
+
+	if ((localPos.x > 17 && localPos.y > -17) || (localPos.y > 17 && localPos.x > -17)) {
+		float hitArrayX = localPos.x + 16;
+		float hitArrayY = localPos.y + 16;
+		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
+			tnl::DebugTrace("1 Debug用マップの当たり判定がNULLを参照した\n");
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("ゲーム落ちた\n");
+		}
+		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
+	}
+	else if (localPos.x < 18 && localPos.y < 18)
+	{
+		float hitArrayX = localPos.x + 17;
+		float hitArrayY = localPos.y + 17;
+		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
+			tnl::DebugTrace("2 Debug用マップの当たり判定がNULLを参照した\n");
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
+			tnl::DebugTrace("ゲーム落ちた\n");
+		}
+		if (hitMap[hitArrayY][hitArrayX] == 65)return false;
+
+	}
+	return true;
 }
 
-void Actor::MoveRight()
-{
-	//ローカルポジションの移動
-	localPos += {1, 0, 0};
-}
-
-void Actor::MoveDown()
-{
-	//ローカルポジションの移動
-	localPos += {0, 1, 0};
-}
-
-void Actor::MoveLeft()
-{
-	//ローカルポジションの移動
-	localPos += {-1, 0, 0};
-}
 //指定座標から指定距離離れた場所の座標を取得する関数 当たり判定の短形の各点座標を求めるのに使う
 tnl::Vector3 Actor::GetPositionToVector(tnl::Vector3& myPos, tnl::Vector3& distance)
 {
@@ -118,6 +145,20 @@ tnl::Vector3 Actor::GetNearestPoint(tnl::Vector3& Pos, std::vector<tnl::Vector3>
 		}
 	}
 	return nearPoses[mostNearNum];
+}
+void Actor::SetDefaultAttackOffset()
+{
+	auto range = myData->GetAttackRange();
+
+	EFFECTOFFSET[static_cast<int>(EXDIR::LEFTTOP)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(225)), (range / 2) * std::sin(tnl::ToRadian(225)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::LEFT)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(180)), (range / 2) * std::sin(tnl::ToRadian(180)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::LEFTBOTTOM)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(135)), (range / 2) * std::sin(tnl::ToRadian(135)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::BOTTOM)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(90)), (range / 2) * std::sin(tnl::ToRadian(90)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::RIGHTBOTTOM)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(45)), (range / 2) * std::sin(tnl::ToRadian(45)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::RIGHT)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(0)), (range / 2) * std::sin(tnl::ToRadian(0)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::RIGHTTOP)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(315)), (range / 2) * std::sin(tnl::ToRadian(315)), 0);
+	EFFECTOFFSET[static_cast<int>(EXDIR::TOP)] = tnl::Vector3((range / 2) * std::cos(tnl::ToRadian(270)), (range / 2) * std::sin(tnl::ToRadian(270)), 0);
+
 }
 uint32_t Actor::GetExDir(float x, float y)
 {
@@ -240,9 +281,38 @@ void Actor::SetExDir(int dir)
 		break;
 	}
 }
+void Actor::ChangeAnimMode(int changeMode)
+{
+	if (changeMode == nowAnimMode) return;
+
+	switch (changeMode)
+	{
+	case static_cast<int>(ANIMMODE::NORMAL):
+		nowAnimMode = static_cast<int>(ANIMMODE::NORMAL);
+		break;
+	case static_cast<int>(ANIMMODE::FAST2X):
+		nowAnimMode = static_cast<int>(ANIMMODE::FAST2X);
+		break;
+	case static_cast<int>(ANIMMODE::FAST3X):
+		nowAnimMode = static_cast<int>(ANIMMODE::FAST3X);
+		break;
+	case static_cast<int>(ANIMMODE::HALF):
+		nowAnimMode = static_cast<int>(ANIMMODE::HALF);
+		break;
+	case static_cast<int>(ANIMMODE::STOP):
+		nowAnimMode = static_cast<int>(ANIMMODE::STOP);
+		break;
+	default:
+		break;
+	}
+
+}
 //通常攻撃関数
 void Actor::DefaultAttack()
 {
+	//攻撃した直後なら行動を行わない
+	if (attackInterval > 0.0f)return;
+
 	//攻撃者
 	std::shared_ptr<Actor> attackActor = shared_from_this();
 	//防衛者
@@ -255,7 +325,16 @@ void Actor::DefaultAttack()
 		//左上, 右上, 左下, 右下の順で格納(回転済みの当たり判定座標)
 		auto boxPos = GetMeleeAttackBox();
 
+
+		//auto animPos = tnl::Vector3(50, 50, 0);
+
 		//攻撃アニメーションの生成
+
+		auto animPos = drawPos + EFFECTOFFSET[static_cast<int>(myExDir)];
+		EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::NORMAL), animPos);
+
+		//インターバルセット
+		attackInterval = canAttackTime;
 
 		bool isHit = false;
 
@@ -278,12 +357,15 @@ void Actor::DefaultAttack()
 				float pointToCircleCenter = gManager->GetLengthFromTwoPoint(mostNear, pos);
 				//この距離が敵の当たり判定の半径より小さいなら当たっている
 				if (enemy->GetCircleSize() > pointToCircleCenter)isHit = true;
+				else {
+					//内包している場合の判定
+					if (gManager->isHitRotateBox(boxPos, pos))isHit = true;
+				}
 
-				//内包している場合の判定
-				if (gManager->isHitRotateBox(boxPos, pos))isHit = true;
 				//当たっている場合ダメージ判定対象に入れる
 				if (isHit) {
 					defendActor.emplace_back(enemy);
+					isHit = false;
 					continue;
 					//bool successAttack = BattleLogic::GetInstance()->IsSuccessAttack();
 				}
@@ -327,10 +409,21 @@ void Actor::DefaultAttack()
 		bool successAttack = battleLogic->IsSuccessAttack(attackData, defendData, static_cast<int>(myType));
 
 		double damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
-		defendData->UpdateHp((damage * (-1)));
+		if (defendData->UpdateHp((damage * (-1)))) {
+			//trueで帰ってきたら死んでるので、isliveを変える
+			defender->SetIsLive(false);
+		}
 	}
+}
+void Actor::UpdateAttackInterval(const float deltatime)
+{
+	//インターバルが0以下なら減らさない
+	if (attackInterval <= 0.0f) return;
 
-
+	//インターバル更新
+	attackInterval -= deltatime;
+	//マイナスになっていたら0にする
+	if (attackInterval < 0.0f) attackInterval = 0.0f;
 }
 //向いている方向の当たり判定の四角形の四点を取得する関数 左上,右上,左下,右下の順で格納する
 std::vector<tnl::Vector3> Actor::GetMeleeAttackBox()

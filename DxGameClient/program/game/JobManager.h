@@ -15,8 +15,11 @@ class JobExpCondition;
 class JobManager
 {
 public:
+	static JobManager* GetInstance();
+private:
 	JobManager();
 	~JobManager();
+
 	static JobManager* GetInstance();
 	//V‚µ‚­E‚ğæ“¾‚·‚éŠÖ”
 	std::shared_ptr<Job>CreateNewJob(int jobId);

@@ -23,6 +23,8 @@ public:
 	static ItemManager* GetInstance();
 	void Destory();
 
+	void Init();
+
 private:
 
 	/*アイテム[装備or消費][ステータス]*/
@@ -35,6 +37,7 @@ public:
 	enum class ITEMTYPE :uint32_t {
 		CONSUME,
 		EQUIP,
+		MATERIAL,
 		MAX
 	};
 
