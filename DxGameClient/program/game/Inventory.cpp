@@ -75,7 +75,7 @@ void Inventory::DrawInventory(int x, int y)
 				DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
 			}
 		}
-		else if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::CONSUME))
+		else if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::CONSUME)|| item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::MATERIAL))
 		{
 			//ƒAƒCƒeƒ€–¼‚Ì•`‰æ
 			DrawStringEx(x + 80, y + 10 + 30 * i, -1, item->GetItemName().c_str());

@@ -117,6 +117,9 @@ void Scene_Map::update(float delta_time)
 		//–ò‘‚ðˆê‚Â’Ç‰Á
 		InventoryManager::GetInstance()->AddItemToInventory(1);
 	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_O)) {
+		InventoryManager::GetInstance()->AddItemToInventory(80000);
+	}
 
 }
 void Scene_Map::render()
