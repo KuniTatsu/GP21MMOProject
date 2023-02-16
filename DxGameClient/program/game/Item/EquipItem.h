@@ -16,28 +16,32 @@
 class EquipItem : public Item
 {
 public:
-	/*id = itemId;
-	name = itemName;
-	HP
-	str = itemStr;
-	vit = itemVit;
-	inteli = itemInt;
-	min = itemMin;
-	spd = itemSpd;
-	dex = itemDex;*/
-	EquipItem(int ID,std::string Name,float HP,int STR,int VIT,int INT,int MID,int SPD,int DEX);
+
+	EquipItem(int ID, std::string Name, float HP, int STR, int VIT, int INT, int MID, int SPD, int DEX, int EquipId = -1);
 	~EquipItem();
+
+	inline bool GetIsEquiped() {
+		return isEquiped;
+	}
+	void DrawEquipItemStatus(int x, int y, int GetSubId);
+
+	int GetSubId();
+
+	inline int GetEquipId() {
+		return equipId;
+	}
+
+public:
+
 
 private:
 
 	bool isEquiped = false;
 
-public:
-	
-	inline bool GetIsEquiped() {
-		return isEquiped;
-	}
-	void DrawEquipItemStatus(int x, int y, int GetSubId);
-	int GetSubId();
+	int equipId = -1;
+
+
+
+
 };
 

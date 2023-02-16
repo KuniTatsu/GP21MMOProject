@@ -159,6 +159,11 @@ void Player::SetTalent()
 	hoge++;
 }
 
+void Player::SetPlayerJob(std::shared_ptr<Job>job)
+{
+	myJobs.emplace_back(job);
+}
+
 // job‚Ìƒf[ƒ^‚ðŽæ“¾
 void Player::SetPlayerInitJob() {
 	auto jobManager = JobManager::GetInstance();
@@ -235,7 +240,7 @@ void Player::Move()
 		SetExDir(fixMoveX, fixMoveY);
 
 
-#ifndef DEBUG_ON
+#ifdef DEBUG_ON
 		gManager->SendPlayerInfoToServer();
 #endif
 

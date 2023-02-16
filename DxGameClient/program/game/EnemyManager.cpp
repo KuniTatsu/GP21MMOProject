@@ -217,12 +217,12 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 
-#ifndef DEBUG_ON
+
 	//個体識別番号を取得
 	int identId = SearchBlankEnemyNum();
 	//個体識別番号がエラー番号なら敵の生成を行わない
 	if (identId == -1)return;
-
+#ifdef DEBUG_ON
 	//サーバーに生成した敵の情報を送る
 	gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
 	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
@@ -279,10 +279,13 @@ void EnemyManager::Update(float deltatime)
 			EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::DEATH), animPos);
 
 			auto id = (*itr)->GetIdentId();
+#ifdef DEBUG_ON
 			auto connect = GameManager::GetInstance()->GetConnection();
 			if (connect != nullptr) {
 				connect->SendClientEnemyIsDead(id);
 			}
+#endif // DEBUG_ON
+
 
 			//死んだ敵の個別番号を開放する
 			ResetEnemyNum(id);

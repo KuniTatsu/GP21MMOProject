@@ -14,6 +14,7 @@ class Player;
 class Connect;
 class DummyPlayer;
 class UIEditor;
+class Job;
 
 class GameManager {
 private:
@@ -285,6 +286,9 @@ public:
 	inline ChatBase* GetChat() {
 		return chat;
 	}
+
+	//player‚ÌE‹Æ‚ğæ“¾‚·‚éŠÖ”
+	 std::vector<std::shared_ptr<Job>>& GetPlayerJobs();
 
 	//ƒXƒŒƒbƒhì¬
 	void CreateThread();

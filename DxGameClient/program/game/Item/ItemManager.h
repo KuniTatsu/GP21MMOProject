@@ -40,6 +40,35 @@ public:
 		MATERIAL,
 		MAX
 	};
+	/*
+	0	なし
+1	剣
+2	斧
+3	槍
+4	楯
+5	弓
+6	黒魔法
+7	白魔法
+8	青魔法
+9	緑魔法
+10	赤魔法
+11	全魔法
+12	全武器
+	*/
+	enum class WEAPONTYPE :uint32_t {
+		NONE,
+		SWORD,
+		AXE,
+		SPEAR,
+		SHIELD,
+		BOW,
+		BLACKMAGIC,
+		WHITEMAGIC,
+		BLUEMAGIC,
+		GREENMAGIC,
+		REDMAGIC,
+		MAX
+	};
 
 	std::shared_ptr<Item> CreateItem(int itemId, int itemType);
 	//void DrawItemStringData(int x, int y);

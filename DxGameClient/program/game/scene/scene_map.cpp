@@ -19,6 +19,7 @@
 #include"../Job.h"
 #include"../Talent.h"
 #include"../ChatBase.h"
+#include"../JobManager.h"
 
 Scene_Map::Scene_Map()
 {
@@ -34,22 +35,14 @@ Scene_Map::~Scene_Map()
 
 void Scene_Map::initialzie()
 {
-#ifndef DEBUG_ON
+#ifndef DEBUG_ON //通信しない時
 
 	//チャット接続
 	gManager->CreateChat();
-#else
-	//player = gManager->GetPlayer();
 	player = GameManager::GetInstance()->CreatePlayer(0);
+#else
+
 #endif
-
-#ifdef DEBUG_ON
-
-	gManager->CreatePlayer(0);
-	player = gManager->GetPlayer();
-#endif // DEBUG_ON
-
-
 
 	//マップの生成
 	gManager->CreateMap();
@@ -59,7 +52,7 @@ void Scene_Map::initialzie()
 	//playerの初期マップを登録
 	gManager->SetStayMap();
 
-#ifndef DEBUG_ON
+#ifdef DEBUG_ON
 	player = gManager->GetPlayer();
 	//Dummy生成完了
 	player->SetIsCreatedDummy();
@@ -70,8 +63,6 @@ void Scene_Map::initialzie()
 	//NPCの生成
 	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 180, 240, 5);
 
-	//chatの生成
-	gManager->CreateChat();
 
 	//UI系のinit
 	menuText.clear();
@@ -120,6 +111,44 @@ void Scene_Map::update(float delta_time)
 	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_O)) {
 		InventoryManager::GetInstance()->AddItemToInventory(80000);
 	}
+
+
+	//debug
+	//ctrl+Jでデバッグ用職業リスト1を生成し付与する
+	if (tnl::Input::IsKeyDown(eKeys::KB_LCONTROL)) {
+		if (tnl::Input::IsKeyDownTrigger(eKeys::KB_J)) {
+			auto job1 = JobManager::GetInstance()->CreateDebugJob(843, 4);
+			auto job2 = JobManager::GetInstance()->CreateDebugJob(830, 6);
+			auto job3 = JobManager::GetInstance()->CreateDebugJob(822, 10);
+			auto job4 = JobManager::GetInstance()->CreateDebugJob(800, 10);
+			auto job5 = JobManager::GetInstance()->CreateDebugJob(823, 9);
+			auto job6 = JobManager::GetInstance()->CreateDebugJob(825, 9);
+
+			player->SetPlayerJob(job1);
+			player->SetPlayerJob(job2);
+			player->SetPlayerJob(job3);
+			player->SetPlayerJob(job4);
+			player->SetPlayerJob(job5);
+			player->SetPlayerJob(job6);
+		}
+		else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_J)) {
+			auto job1 = JobManager::GetInstance()->CreateDebugJob(827, 8);
+			auto job2 = JobManager::GetInstance()->CreateDebugJob(831, 6);
+			auto job3 = JobManager::GetInstance()->CreateDebugJob(818, 10);
+			auto job4 = JobManager::GetInstance()->CreateDebugJob(810, 10);
+			auto job5 = JobManager::GetInstance()->CreateDebugJob(816, 9);
+			auto job6 = JobManager::GetInstance()->CreateDebugJob(819, 3);
+
+			player->SetPlayerJob(job1);
+			player->SetPlayerJob(job2);
+			player->SetPlayerJob(job3);
+			player->SetPlayerJob(job4);
+			player->SetPlayerJob(job5);
+			player->SetPlayerJob(job6);
+
+		}
+	}
+
 
 }
 

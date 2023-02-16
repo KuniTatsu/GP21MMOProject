@@ -8,8 +8,9 @@
 #include"../BattleLogic.h"
 #include"../EffectManager.h"
 #include<math.h>
-
+#include"../Job.h"
 #include"../scene/Map.h"
+#include"../JobManager.h"
 
 //村に下と右側から入ろうとするとゲームが落ちる件
 	//今度は草原から村に入ろうとすると村のcsvがnullのため落ちる？
@@ -73,10 +74,10 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
 	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
-	
+
 	std::vector<std::vector<int>>& hitMapEnemy = mapenemy->GetHitMap();
 	std::vector<std::vector<int>>& hitMapPlayer = map->GetHitMap();
-	
+
 
 	float x = std::floor(pos.x / 32);
 	float y = std::floor(pos.y / 32);
@@ -421,7 +422,18 @@ void Actor::DefaultAttack()
 		double damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
 		if (defendData->UpdateHp((damage * (-1)))) {
 			//trueで帰ってきたら死んでるので、isliveを変える
-			defender->SetIsLive(false);
+ 			defender->SetIsLive(false);
+			//プレイヤーが攻撃者なら職業のキルカウントを増やす
+			if (actorType == 0) {
+				auto& jobs = gManager->GetPlayerJobs();
+				for (auto job : jobs) {
+					job->AddKillCount(1);
+				}
+				//職業レベル上昇判定
+				JobManager::GetInstance()->UpdateJobInfo(static_cast<int>(JobManager::CONDITIONS::KILL));
+				//JobManager::GetInstance()->UpdateJobInfo(static_cast<int>(JobManager::CONDITIONS::KILLWEAPON));
+			}
+
 		}
 	}
 }

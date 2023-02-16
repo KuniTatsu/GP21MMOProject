@@ -96,7 +96,7 @@ void GameManager::Destroy() {
 
 	//サーバーに退室を通知
 
-	connect->SendExitServer()
+	connect->SendExitServer();
 	acceptThread.join();
 #endif
 
@@ -624,6 +624,11 @@ void GameManager::CreateChat()
 	if (chat == nullptr) {
 		chat = new ChatBase();
 	}
+}
+
+std::vector<std::shared_ptr<Job>>& GameManager::GetPlayerJobs()
+{
+	return player->GetmyJobs();
 }
 
 void GameManager::CreateThread()
