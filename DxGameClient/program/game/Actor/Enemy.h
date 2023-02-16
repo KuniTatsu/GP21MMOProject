@@ -56,6 +56,11 @@ private:
 	int identId = -1;
 	//エネミータイプの取得
 	int TYPE = 0;
+
+	/*攻撃インターバル*/
+	int atackInterval = 0;
+	int atackintervalLimit = 2;
+
 	
 	unsigned int ChangedColor();
 

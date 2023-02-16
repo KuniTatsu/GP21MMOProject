@@ -144,8 +144,6 @@ void Enemy::EnemyMove() {
 	drawPos += dirVecor * myData->GetMoveSpeed();
 
 	SetExDir(dirVecor.x, dirVecor.y);
-	//SetExDir(static_cast<int>(EXDIR::RIGHT));
-
 }
 
 void Enemy::Update()
@@ -161,6 +159,16 @@ void Enemy::Update()
 	if (onFollowToPlayer) {
 		/*í«è]*/
 		EnemyMove();
+	}
+
+	//í èÌçUåÇ
+	if (GetDisPlayerfromEnemy(drawPos) < 40) {
+		/*if(atackInterval % (60 * atackintervalLimit) == 0){
+
+			DefaultAttack();
+
+		
+		}*/
 	}
 }
 
