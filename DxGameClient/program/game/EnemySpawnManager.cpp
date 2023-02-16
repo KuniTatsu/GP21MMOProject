@@ -72,7 +72,7 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 	random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX));
 
 	/*DEBUG—p*/
-	//random = 0;
+	//random = 1;
 
 	switch (random)
 	{

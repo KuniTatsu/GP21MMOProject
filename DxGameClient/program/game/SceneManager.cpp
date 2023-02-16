@@ -4,9 +4,6 @@
 #include"scene/scene_map.h"
 #include"DebugDef.h"
 
-/*デバック用*/
-//#define DEBUG_ON
-
 SceneManager* SceneManager::instance = nullptr;
 
 SceneManager* SceneManager::GetInstance()

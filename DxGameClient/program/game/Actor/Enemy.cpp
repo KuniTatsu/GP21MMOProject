@@ -138,7 +138,7 @@ void Enemy::EnemyMove() {
 	//方向ベクトル取得
 	tnl::Vector3 dirVecor = gManager->GetVectorToPlayer(drawPos);
 
-	//エネミー座標がplayer座標のいっていの範囲に入ったら
+	//エネミー座標がplayer座標の一定の範囲に入ったら
 	if (GetDisPlayerfromEnemy(drawPos) < 40)return;
 
 	drawPos += dirVecor * myData->GetMoveSpeed();
@@ -163,12 +163,9 @@ void Enemy::Update()
 
 	//通常攻撃
 	if (GetDisPlayerfromEnemy(drawPos) < 40) {
-		/*if(atackInterval % (60 * atackintervalLimit) == 0){
-
-			DefaultAttack();
-
-		
-		}*/
+		if(atackInterval % (60 * atackintervalLimit) == 0){
+			//DefaultAttack();
+		}
 	}
 }
 
@@ -188,6 +185,6 @@ void Enemy::Draw(Camera* camera)
 		Anim(myAnimationGh, 4);
 	}
 
-	DrawRotaGraphF(x, y, 1.2, 0, drawGh, true);
+	DrawRotaGraphF(x, y, 1.2f, 0, drawGh, true);
 }
 

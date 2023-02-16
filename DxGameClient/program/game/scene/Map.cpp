@@ -47,8 +47,7 @@ Map::Map(tnl::Vector3 centerPos, int type)
 	if (type == static_cast<int>(MAPTYPE::VILLAGE)) {
 		gManager->LoadDivGraphEx("graphics/LocalMapChip.png", 1992, 8, 249, 32, 32, img_mapchip_localmap);
 	}
-	img_mapchip_grass = gManager->LoadGraphEx("graphics/mapchip_grass.png");
-	img_mapchip_grass_line = gManager->LoadGraphEx("graphics/mapchip_grass_line.png");
+	img_mapchip_grass = gManager->LoadGraphEx("graphics/LocalMapGrass.png");
 }
 
 void Map::Update(const float deltatime)

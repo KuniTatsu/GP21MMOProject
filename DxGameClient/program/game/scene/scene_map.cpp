@@ -158,7 +158,7 @@ void Scene_Map::render()
 
 	//debug
 	SetFontSize(30);
-	DrawStringEx(500, 500, -1, "%d", cursorNum);
+	//DrawStringEx(500, 500, -1, "%d", cursorNum);
 	SetFontSize(16);
 }
 
