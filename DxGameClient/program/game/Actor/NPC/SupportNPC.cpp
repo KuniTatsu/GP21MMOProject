@@ -56,6 +56,9 @@ bool SupportNPC::SeqWait(const float DeltaTime)
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer)return false;
 
+	//メニューを開けない状態なら無視する
+	if (!GameManager::GetInstance()->GetPlayer()->GetCanOpenMenu())return false;
+
 	//Enterを感知
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
 
@@ -71,7 +74,6 @@ bool SupportNPC::SeqWait(const float DeltaTime)
 bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 {
 	if (mainSequence.isStart()) {
-		cursorNum = 0;
 		//SUPNPCのUIを描画状態にする
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC),true);
 		//描画するUIをFirstMenuに変更
@@ -111,6 +113,7 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 	//会話をやめる
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC));
+		cursorNum = 0;
 		ChangeSequence(SEQUENCE::WAIT);
 	}
 	return true;

@@ -281,6 +281,11 @@ public:
 	//チャット作成
 	void CreateChat();
 
+	//チャットポインタ取得
+	inline ChatBase* GetChat() {
+		return chat;
+	}
+
 	//スレッド作成
 	void CreateThread();
 
@@ -349,5 +354,7 @@ public:
 	//マウス座標の取得
 	tnl::Vector3 GetMousePos();
 
+	//PlayerのHPを変動させる関数
+	void UpdatePlayerHP(double moveHp);
 
 };

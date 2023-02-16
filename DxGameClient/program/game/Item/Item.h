@@ -3,6 +3,7 @@
 #include<vector>
 #include<memory>
 #include<string>
+#include"../../dxlib_ext/dxlib_ext.h"
 
 /*
 全てのアイテムクラスの基底クラス
@@ -66,6 +67,19 @@ public:
 		return false;
 	}
 
+	//説明文の登録
+	inline void SetItemDesc(std::string Desc) {
+		desc = Desc;
+	}
+
+	//説明文の取得
+	inline std::string GetItemDesc() {
+		return desc;
+	}
+
+	//アイテムの説明を描画する関数
+	void DrawItemDesc(float x, float y);
+
 protected:
 
 	int id = 0;
@@ -91,6 +105,9 @@ protected:
 
 	//attribute
 	std::vector<int> attribute;
+
+	//アイテムの説明文
+	std::string desc = "";
 
 private:
 

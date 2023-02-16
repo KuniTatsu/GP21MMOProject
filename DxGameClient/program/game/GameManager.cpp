@@ -873,6 +873,13 @@ tnl::Vector3 GameManager::GetMousePos()
 	return tnl::Vector3(mousePosX, mousePosY, 0);
 }
 
+void GameManager::UpdatePlayerHP(double moveHp)
+{
+	auto& data = player->GetActorData();
+
+	data->UpdateHp(moveHp);
+}
+
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
 

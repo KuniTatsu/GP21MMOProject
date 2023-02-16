@@ -92,15 +92,15 @@ void InventoryManager::AddItemToInventory(const int ItemId)
 	if (inventories[latestIntentoryNum]->GetItemList().size() >= 10) {
 		//新しくinventoryのインスタンスを生成する
 		auto newInventory = std::make_shared<Inventory>(latestIntentoryNum + 1);
-		
+
 		//inventory配列に登録
 		inventories.emplace_back(newInventory);
-		
+
 		//登録するinventoryを更新する
 		latestIntentoryNum++;
 	}
 	auto item = iManager->GetItemFromId(ItemId);
-	
+
 	int type = item->GetItemType();
 
 	//データを取得して、アイテムを生成
@@ -112,28 +112,35 @@ void InventoryManager::AddItemToInventory(const int ItemId)
 }
 
 /*インベントリにあるアイテムを使用orトレードなど*/
-void InventoryManager::PopItemFromInventory(const int NowInventoryId)
+void InventoryManager::PopItemFromInventory()
 {
 	//今の位置の配列番号を取得
-	int selectNum = inventories[NowInventoryId]->GetCursorNum();
+	int selectNum = inventories[nowSelectInventoryNum]->GetCursorNum();
 
 	//表示中のインベントリを取得
-	auto itr = inventories[NowInventoryId]->GetItemList().begin();
+	auto itr = inventories[nowSelectInventoryNum]->GetItemList().begin();
 
 	//選択されたアイテムまでイテレータ移動
 	for (int i = 0; i < selectNum; ++i) {
 		itr++;
 	}
 
+	//選択中のアイテムが2個以上のスタック数なら
+	if ((*itr)->GetNowStackNum() >= 2) {
+		//個数を減らして終わる
+		(*itr)->MoveStackNum(-1);
+		return;
+	}
+
 	//アイテムを消去
-	itr = inventories[NowInventoryId]->GetItemList().erase(itr);
+	itr = inventories[nowSelectInventoryNum]->GetItemList().erase(itr);
 
 	//カーソルの位置をひとつ上に移動
-	inventories[NowInventoryId]->SetCursorNum(-1);
-	
+	inventories[nowSelectInventoryNum]->SetCursorNum(-1);
+
 	//popするアイテムがいる場所=今いるインベントリが最後のインベントリではない場合
-	if (NowInventoryId != latestIntentoryNum) {
-		int checkInventoryNum = NowInventoryId;
+	if (nowSelectInventoryNum != latestIntentoryNum) {
+		int checkInventoryNum = nowSelectInventoryNum;
 		while (1) {
 			if (inventories[checkInventoryNum + 1]->GetItemList().empty())break;
 			//if (sharedInventories[checkInventoryNum + 1]->inventoryList.empty())break;
@@ -155,7 +162,7 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 	//最初のインベントリ内なら
 	else {
 		//インベントリ内のアイテム数を1減らす
-		inventories[NowInventoryId]->SetItemNum(-1);
+		inventories[nowSelectInventoryNum]->SetItemNum(-1);
 	}
 
 	//からのインベントリを消したか
@@ -177,12 +184,35 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 	if (isDelete)return;
 
 	//カーソルの位置を一番上にリセット
-	if (inventories[NowInventoryId]->GetItemList().empty()) {
-		inventories[NowInventoryId]->CursorReset();
+	if (inventories[nowSelectInventoryNum]->GetItemList().empty()) {
+		inventories[nowSelectInventoryNum]->CursorReset();
 	}
+}
+
+void InventoryManager::UseCursorItem()
+{
+	//アイテムを使う処理
+	bool isUsed = inventories[nowSelectInventoryNum]->UseCursorItem();
+
+	//アイテムを使っていたら個数を減らすか消す処理をする
+	if (!isUsed)return;
+
+	PopItemFromInventory();
 }
 
 void InventoryManager::DrawInventory(float x, float y)
 {
 	inventories[nowSelectInventoryNum]->DrawInventory(x, y);
+}
+
+void InventoryManager::DrawCursorItemDesc(float x, float y)
+{
+	inventories[nowSelectInventoryNum]->DrawItemDesc(x, y);
+}
+
+bool InventoryManager::isEmptyAllInventory()
+{
+	//最初のインベントリのアイテムの個数が0なら
+	if (inventories[0]->GetItemCount() <= 0)return true;
+	return false;
 }

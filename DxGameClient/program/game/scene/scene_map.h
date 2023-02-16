@@ -95,9 +95,17 @@ private:
 	//menuテキストのロード
 	void LoadMenuTextCsv();
 
-	bool createChipRight = false;
+	//menuテキストの描画
+	void DrawFirstMenu();
 
+	//menuのグラフィック
+	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
+
+	//メインメニューのカーソルに使う番号
 	int cursorNum = 0;
+
+	//アイテム使用の部分のカーソルに使う番号
+	int subCursorNum = 0;
 
 	//描画のための一時保存座標
 	tnl::Vector3 bufPos = {};

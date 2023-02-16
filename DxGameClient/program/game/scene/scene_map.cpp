@@ -18,6 +18,7 @@
 #include"../DebugDef.h"
 #include"../Job.h"
 #include"../Talent.h"
+#include"../ChatBase.h"
 
 Scene_Map::Scene_Map()
 {
@@ -66,15 +67,27 @@ void Scene_Map::initialzie()
 	//エネミー取得
 	gManager->GetServerEnemyInfo();
 #endif
-	menuText.clear();
-	LoadMenuTextCsv();
 	//NPCの生成
 	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 180, 240, 5);
+
+	//chatの生成
+	gManager->CreateChat();
+
+	//UI系のinit
+	menuText.clear();
+	LoadMenuTextCsv();
+
 	cursorGh = GameManager::GetInstance()->LoadGraphEx("graphics/menuCursor.png");
+	firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::MENU));
+	//MenuUIの左上を取得
+	auto& leftTopPos = firstMenuGraphics[0]->GetLeftTopPos();
+	bufPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y + 20, 0);
 }
 
 void Scene_Map::update(float delta_time)
 {
+	mainSequence.update(gManager->deltaTime);
+
 	/*Player操作*/
 	player->Update();
 
@@ -99,7 +112,11 @@ void Scene_Map::update(float delta_time)
 
 	EffectManager::GetInstance()->Update(gManager->deltaTime);
 
-	mainSequence.update(gManager->deltaTime);
+	//debug
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_I)) {
+		//薬草を一つ追加
+		InventoryManager::GetInstance()->AddItemToInventory(1);
+	}
 
 }
 void Scene_Map::render()
@@ -157,6 +174,9 @@ bool Scene_Map::SeqWait(const float DeltaTime)
 		//menuを開けない状態なら無視する
 		if (!player->GetCanOpenMenu())return false;
 
+		//これから開くメニュー以外のメニューを開けなくする
+		player->SetCanOpenMenu(false);
+
 		ChangeSequence(SEQUENCE::FIRSTMENU);
 		return true;
 	}
@@ -168,7 +188,7 @@ bool Scene_Map::SeqFirstMenu(const float DeltaTime)
 {
 	if (mainSequence.isStart()) {
 		bufPoses.clear();
-		cursorNum = 0;
+		/*cursorNum = 0;*/
 		//MENUのUIを描画状態にする
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::MENU), true);
 		//描画するUIをTOPに変更
@@ -208,6 +228,10 @@ bool Scene_Map::SeqFirstMenu(const float DeltaTime)
 	//Menuを閉じる
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
 		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::MENU));
+		//他のメニューを開けるようにする
+		player->SetCanOpenMenu(true);
+
+		cursorNum = 0;
 		ChangeSequence(SEQUENCE::WAIT);
 	}
 	return true;
@@ -227,6 +251,7 @@ bool Scene_Map::SeqStatus(const float DeltaTime)
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
 		bufDataReset();
 		ChangeSequence(SEQUENCE::FIRSTMENU);
+		return true;
 	}
 
 	return true;
@@ -237,12 +262,27 @@ bool Scene_Map::SeqInventory(const float DeltaTime)
 	if (mainSequence.isStart()) {
 		//描画するUIをInventoryに変更
 		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), static_cast<int>(UIManager::MENUUI::INVENTORY));
-		bufDataReset();
 	}
+	//インベントリの更新関数 カーソルの移動,インベントリの切り替え
+	InventoryManager::GetInstance()->UpdateInventory();
+
+	//Enterを押したら使用確認へ移る
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
+
+		//インベントリが空なら無視する
+		if (InventoryManager::GetInstance()->isEmptyAllInventory())return true;
+
+		ChangeSequence(SEQUENCE::USEITEM);
+		//描画するUIをUseItemに変更
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), static_cast<int>(UIManager::MENUUI::USEITEM));
+		bufPoses.clear();
+		return true;
+	}
+
 	//トップに戻る
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
-		bufDataReset();
 		ChangeSequence(SEQUENCE::FIRSTMENU);
+		return true;
 	}
 
 	return true;
@@ -251,13 +291,37 @@ bool Scene_Map::SeqInventory(const float DeltaTime)
 bool Scene_Map::SeqUseInventoryItem(const float Deltatime)
 {
 	if (mainSequence.isStart()) {
-		//描画するUIをInventoryに変更
-		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), static_cast<int>(UIManager::MENUUI::USEITEM));
-		bufDataReset();
 	}
-	//トップに戻る
+
+	//はい と やめる　を選ぶ
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT) || tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
+		subCursorNum = (subCursorNum + 1) % 2;
+	}
+
+	//Enterをおしたら
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
+		//はいを選んでいたらアイテムを使う
+		if (subCursorNum == 0) {
+			InventoryManager::GetInstance()->UseCursorItem();
+			UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), static_cast<int>(UIManager::MENUUI::INVENTORY));
+			ChangeSequence(SEQUENCE::INVENTORY);
+			subCursorNum = 0;
+			bufPoses.clear();
+			return true;
+		}
+		else {
+			ChangeSequence(SEQUENCE::INVENTORY);
+			UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), static_cast<int>(UIManager::MENUUI::INVENTORY));
+			subCursorNum = 0;
+			bufPoses.clear();
+			return true;
+		}
+	}
+
+	//インベントリに戻る
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
-		bufDataReset();
+		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::MENU), static_cast<int>(UIManager::MENUUI::INVENTORY));
+		bufPoses.clear();
 		ChangeSequence(SEQUENCE::INVENTORY);
 	}
 
@@ -266,6 +330,11 @@ bool Scene_Map::SeqUseInventoryItem(const float Deltatime)
 
 bool Scene_Map::SeqEquip(const float DeltaTime)
 {
+	//トップに戻る
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_ESCAPE)) {
+		bufDataReset();
+		ChangeSequence(SEQUENCE::FIRSTMENU);
+	}
 	return false;
 }
 
@@ -275,20 +344,10 @@ void Scene_Map::DrawWaitSequence()
 
 void Scene_Map::DrawFirstMenuSequence()
 {
-	std::vector<std::shared_ptr<GraphicUI>>firstMenuGraphics;
 	if (mainSequence.isStart()) {
-		firstMenuGraphics = UIManager::GetInstance()->GetNowDrawGraphic(static_cast<int>(UIManager::UISERIES::MENU));
 
-		//UIの左上を取得
-		auto& leftTopPos = firstMenuGraphics[0]->GetLeftTopPos();
-		bufPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y + 20, 0);
 	}
-	for (int i = 0; i < menuText.size(); ++i) {
-		SetFontSize(22);
-		DrawStringEx(bufPos.x, bufPos.y + (25 * i), -1, menuText[i].c_str());
-		SetFontSize(16);
-	}
-	DrawRotaGraphF(bufPos.x - 10, bufPos.y + 10 + (cursorNum * 25), 0.5, 0, cursorGh, true);
+	DrawFirstMenu();
 }
 
 void Scene_Map::DrawStatusSequence()
@@ -346,6 +405,9 @@ void Scene_Map::DrawStatusSequence()
 		names = data->GetStatusName();
 	}
 
+	DrawFirstMenu();
+
+	//プレイヤー画像の外枠
 	DrawBox(bufPoses[1].x - 37, bufPoses[1].y - 37, bufPoses[1].x + 37, bufPoses[1].y + 37, -1, false);
 	//プレイヤーの画像の描画
 	DrawRotaGraph(bufPoses[1].x, bufPoses[1].y, 2, 0, ghs[10], true);
@@ -403,12 +465,20 @@ void Scene_Map::DrawInventorySequence()
 		auto& leftTopPos2 = inventoryGraphics[1]->GetLeftTopPos();
 		bufPoses.emplace_back(tnl::Vector3(leftTopPos2.x, leftTopPos2.y + 10, 0));
 
+		//説明文の枠のポジション
+		auto& leftTopPos3 = inventoryGraphics[2]->GetLeftTopPos();
+		bufPoses.emplace_back(tnl::Vector3(leftTopPos3.x + 10, leftTopPos3.y + 20, 0));
 	}
+
+	DrawFirstMenu();
+
 	SetFontSize(25);
 	DrawStringEx(bufPoses[1].x + 30, bufPoses[1].y, -1, "所持アイテム一覧");
 	SetFontSize(20);
 
 	InventoryManager::GetInstance()->DrawInventory(bufPoses[1].x, bufPoses[1].y + 25);
+
+	InventoryManager::GetInstance()->DrawCursorItemDesc(bufPoses[2].x, bufPoses[2].y);
 	SetFontSize(16);
 }
 
@@ -427,13 +497,31 @@ void Scene_Map::DrawUseInventoryItemSequence()
 		auto& leftTopPos2 = inventoryGraphics[1]->GetLeftTopPos();
 		bufPoses.emplace_back(tnl::Vector3(leftTopPos2.x, leftTopPos2.y + 10, 0));
 
+		//説明文の枠のポジション
+		auto& leftTopPos3 = inventoryGraphics[2]->GetLeftTopPos();
+		bufPoses.emplace_back(tnl::Vector3(leftTopPos3.x + 10, leftTopPos3.y + 20, 0));
+
+		//使用確認の枠のポジション
+		auto& leftTopPos4 = inventoryGraphics[3]->GetLeftTopPos();
+		bufPoses.emplace_back(tnl::Vector3(leftTopPos4.x + 10, leftTopPos4.y + 10, 0));
 	}
+	DrawFirstMenu();
 	SetFontSize(25);
 	DrawStringEx(bufPoses[1].x + 30, bufPoses[1].y, -1, "所持アイテム一覧");
 	SetFontSize(20);
-
 	InventoryManager::GetInstance()->DrawInventory(bufPoses[1].x, bufPoses[1].y + 25);
+
+	InventoryManager::GetInstance()->DrawCursorItemDesc(bufPoses[2].x, bufPoses[2].y);
+
+	//アイテムを使うか確認メッセージを出す
+	DrawStringEx(bufPoses[3].x, bufPoses[3].y, -1, "アイテムを使いますか？");
 	SetFontSize(16);
+
+	DrawStringEx(bufPoses[3].x + 20, bufPoses[3].y + 30, -1, "はい");
+	DrawStringEx(bufPoses[3].x + 80, bufPoses[3].y + 30, -1, "いいえ");
+
+	DrawRotaGraphF(bufPoses[3].x + (subCursorNum * 70), bufPoses[3].y + 40, 0.5, 0, cursorGh, true);
+
 }
 
 void Scene_Map::DrawEquipSequence()
@@ -450,6 +538,9 @@ void Scene_Map::DrawEquipSequence()
 		auto& leftTopPos2 = inventoryGraphics[1]->GetLeftTopPos();
 		bufPoses.emplace_back(tnl::Vector3(leftTopPos2.x + 20, leftTopPos2.y + 20, 0));
 	}
+
+	DrawFirstMenu();
+
 	DrawStringEx(bufPoses[1].x, bufPoses[1].y, -1, "未実装です！");
 
 }
@@ -501,4 +592,14 @@ void Scene_Map::LoadMenuTextCsv()
 		menuText.emplace_back(csv[i][1]);
 	}
 
+}
+
+void Scene_Map::DrawFirstMenu()
+{
+	for (int i = 0; i < menuText.size(); ++i) {
+		SetFontSize(22);
+		DrawStringEx(bufPos.x, bufPos.y + (25 * i), -1, menuText[i].c_str());
+		SetFontSize(16);
+	}
+	DrawRotaGraphF(bufPos.x - 10, bufPos.y + 10 + (cursorNum * 25), 0.5, 0, cursorGh, true);
 }

@@ -21,22 +21,27 @@ void ItemManager::LoadCsv()
 	auto loadCounsumeCsv = tnl::LoadCsv("csv/Item/ConsumeItem.csv");
 	for (int i = 1; i < loadCounsumeCsv.size(); ++i) {
 
-		auto itemId = std::stoi(loadCounsumeCsv[i][0]);
-		auto itemName = loadCounsumeCsv[i][1];
-		auto itemRare = std::stoi(loadCounsumeCsv[i][2]);
-		auto itemRecovery = std::stoi(loadCounsumeCsv[i][3]);
-		auto itemStr = std::stoi(loadCounsumeCsv[i][4]);
-		auto itemVit = std::stoi(loadCounsumeCsv[i][5]);
-		auto itemInt = std::stoi(loadCounsumeCsv[i][6]);
-		auto itemMin = std::stoi(loadCounsumeCsv[i][7]);
-		auto itemSpd = std::stoi(loadCounsumeCsv[i][8]);
-		auto itemDex = std::stoi(loadCounsumeCsv[i][9]);
-		auto itemStock = std::stoi(loadCounsumeCsv[i][10]);
+		int itemId = std::stoi(loadCounsumeCsv[i][0]);
+		std::string itemName = loadCounsumeCsv[i][1];
+		int itemRare = std::stoi(loadCounsumeCsv[i][2]);
+		double itemRecovery = std::stod(loadCounsumeCsv[i][3]);
+		int itemStr = std::stoi(loadCounsumeCsv[i][4]);
+		int itemVit = std::stoi(loadCounsumeCsv[i][5]);
+		int itemInt = std::stoi(loadCounsumeCsv[i][6]);
+		int itemMin = std::stoi(loadCounsumeCsv[i][7]);
+		int itemSpd = std::stoi(loadCounsumeCsv[i][8]);
+		int itemDex = std::stoi(loadCounsumeCsv[i][9]);
+		int itemStock = std::stoi(loadCounsumeCsv[i][10]);
+		std::string desc = loadCounsumeCsv[i][11];
 
 
-		auto item = std::make_shared<ConsumeItem>(itemId, itemName, itemStr, itemVit, itemInt, itemMin, itemSpd, itemDex, itemRare, itemRecovery);
 
+		auto item = std::make_shared<ConsumeItem>(itemId, itemName, itemStr, itemVit, itemInt, itemMin, itemSpd, itemDex, itemRare, itemRecovery, itemStock);
+
+		//アイテムタイプの登録
 		item->SetItemType(static_cast<int>(ITEMTYPE::CONSUME));
+		//説明文の登録
+		item->SetItemDesc(desc);
 
 		itemMaster[static_cast<int>(ITEMTYPE::CONSUME)].emplace_back(item);
 	}
@@ -50,6 +55,8 @@ void ItemManager::LoadCsv()
 		auto itemRare = std::stoi(loadEquipCsv[i][2]);
 		auto itemStr = std::stoi(loadEquipCsv[i][3]);
 		auto itemVit = std::stoi(loadEquipCsv[i][4]);
+
+
 
 
 		auto item = std::make_shared<Item>();
@@ -66,7 +73,13 @@ void ItemManager::LoadCsv()
 		int rare = std::stoi(loadMaterialCsv[i][3]);
 		int maxStack = std::stoi(loadMaterialCsv[i][4]);
 
+		std::string desc = loadMaterialCsv[i][5];
+
 		auto item = std::make_shared<MaterialItem>(id, name, materialType, rare, maxStack);
+
+		item->SetItemType(static_cast<int>(ITEMTYPE::MATERIAL));
+
+		item->SetItemDesc(desc);
 
 		itemMaster[static_cast<int>(ITEMTYPE::MATERIAL)].emplace_back(item);
 	}
@@ -94,6 +107,8 @@ std::shared_ptr<Item> ItemManager::CreateItem(int itemId, int itemType)
 
 	//マスターからデータ取得
 	auto data = GetItemFromId(itemId);
+	
+	std::string desc = data->GetItemDesc();
 
 	//素材アイテムの場合は必要なステータスが少ないので先に作る
 	if (itemType == static_cast<int>(ITEMTYPE::MATERIAL)) {
@@ -106,6 +121,7 @@ std::shared_ptr<Item> ItemManager::CreateItem(int itemId, int itemType)
 		int max = matItem->GetMaxStack();
 
 		item = std::make_shared<MaterialItem>(id, name, type, rare, max);
+		item->SetItemType(static_cast<int>(ITEMTYPE::MATERIAL));
 	}
 	else {
 		//アイテムの各種データの取得
@@ -116,16 +132,19 @@ std::shared_ptr<Item> ItemManager::CreateItem(int itemId, int itemType)
 
 		int rare = data->GetRare();
 
+		int maxStack = data->GetMaxStack();
+
 		if (itemType == static_cast<int>(ITEMTYPE::CONSUME)) {
 			//消費アイテムを作る
 			//追加で必要な情報があればここでGetterを呼ぶ
-
 
 			float heal = data->GetItemRecover();
 
 			//								int ID, std::string Name, int STR, int VIT, int INT, int MID, int SPD, int DEX, int Rare, double Recover
 			item = std::make_shared<ConsumeItem>(id, name, attirbute[0], attirbute[1], attirbute[2], attirbute[3]
-				, attirbute[4], attirbute[5],rare, heal);
+				, attirbute[4], attirbute[5], rare, heal, maxStack);
+
+			item->SetItemType(static_cast<int>(ITEMTYPE::CONSUME));
 		}
 		else if (itemType == static_cast<int>(ITEMTYPE::EQUIP)) {
 			//装備アイテムを作る
@@ -135,8 +154,14 @@ std::shared_ptr<Item> ItemManager::CreateItem(int itemId, int itemType)
 
 			item = std::make_shared<EquipItem>(id, name, hp, attirbute[0], attirbute[1], attirbute[2], attirbute[3]
 				, attirbute[4], attirbute[5]);
+
+			item->SetItemType(static_cast<int>(ITEMTYPE::EQUIP));
+
+
 		}
+
 	}
+	item->SetItemDesc(desc);
 	return item;
 }
 

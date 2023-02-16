@@ -14,7 +14,7 @@ public:
 
 	//インベントリ内のアイテム数を取得する関数
 	inline int GetItemCount() {
-		return static_cast<int>(inventoryItemList.size());
+		return inventoryItemList.size();
 	}
 
 	//インベントリにアイテムを追加する関数
@@ -23,7 +23,7 @@ public:
 
 	//インベントリのUpdate
 	void Update();
-	
+
 	//カーソルを上下に動かす関数
 	void CursorMove();
 	//カーソルを一番上に戻す関数
@@ -31,11 +31,14 @@ public:
 	//インベントリ内のアイテム名を描画する関数
 	void DrawInventory(int x, int y);
 	//カーソルで選択中のアイテムの説明を描画する関数
-	void DrawItemDesc(const int x, const int y);
+	void DrawItemDesc(float x, float y);
 	//カーソルで選択中の装備アイテムのステータスを描画する関数
 	void DrawEquipItemStatus(const int x, const int y);
 	//ショップインベントリ用 購入額の表示
 	void DrawNeedCoin(int x, int y);
+
+	//カーソル中のアイテムを使う関数
+	bool UseCursorItem();
 
 	//カーソルの位置を取得する関数
 	int GetCursorNum();

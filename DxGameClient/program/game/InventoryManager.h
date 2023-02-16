@@ -38,9 +38,17 @@ public:
 	void AddItemToInventory(const int ItemId);
 
 	//アイテムを特定のインベントリから削除する関数 args:消すアイテムがあるインベントリの番号
-	void PopItemFromInventory(const int NowInventoryId);
+	void PopItemFromInventory();
 
+	//選択中のアイテムを使用する関数
+	void UseCursorItem();
 
 	//インベントリの描画
 	void DrawInventory(float x,float y);
+
+	//カーソル中のアイテムの説明文を表示する関数
+	void DrawCursorItemDesc(float x, float y);
+
+	//すべてのインベントリが空か返す関数
+	bool isEmptyAllInventory();
 };
