@@ -30,7 +30,7 @@ public:
 	}
 
 	//才能一覧を取得する関数
-	inline const std::vector<std::shared_ptr<Talent>>&GetMyTalents() {
+	inline const std::vector<std::shared_ptr<Talent>>& GetMyTalents() {
 		return myTalents;
 	}
 
@@ -50,6 +50,9 @@ public:
 
 	void SetTalent();
 
+
+	// 職のデータを取得する関数
+	void SetPlayerInitJob();
 	//Menuを開ける状況かどうか
 	inline bool GetCanOpenMenu() {
 		return canOpenMenu;
@@ -58,6 +61,8 @@ public:
 		if (canOpenMenu == swich)return;
 		canOpenMenu = swich;
 	}
+
+
 
 private:
 
@@ -95,7 +100,7 @@ private:
 	//プレイヤーが持っているタレントの配列
 	std::vector<std::shared_ptr<Talent>>myTalents;
 
-	//プレイヤーが持っているジョブの配列
+	//	プレイヤーが持っている職の配列
 	std::vector<std::shared_ptr<Job>>myJobs;
 
 	//すでにDummyが作られているか

@@ -83,6 +83,9 @@
     <ClCompile Include="program\game\Actor\NPC\DisassemblyNPC.cpp" />
     <ClCompile Include="program\game\Disassembly.cpp" />
     <ClCompile Include="program\game\Item\MaterialItem.cpp" />
+    <ClCompile Include="program\game\JobLevelConverter.cpp" />
+    <ClCompile Include="program\game\JobLevelInfo.cpp" />
+    <ClCompile Include="program\game\JobExpCondition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -171,6 +174,9 @@
     <ClInclude Include="program\game\Actor\NPC\DisassemblyNPC.h" />
     <ClInclude Include="program\game\Disassembly.h" />
     <ClInclude Include="program\game\Item\MaterialItem.h" />
+    <ClInclude Include="program\game\JobLevelConverter.h" />
+    <ClInclude Include="program\game\JobLevelInfo.h" />
+    <ClInclude Include="program\game\JobExpCondition.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

@@ -16,3 +16,4 @@ Job::Job(int jobId, std::string jobName, int jobStr, int jobVit, int jobInt, int
 Job::~Job()
 {
 }
+
