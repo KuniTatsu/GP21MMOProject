@@ -69,11 +69,12 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 {
 	//敵を生成できるかチェック
 	if (!CheckCanCreateEnemy(posEnemy))return;
-	
+
 	srand(static_cast<unsigned int>(time(NULL)));
-	//random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX)-1);
-	
-	random = 0;
+	random = static_cast<uint32_t>(rand()) % (static_cast<uint32_t>(EnemyManager::EnemyType::MAX) - 1);
+
+	/*DEBUG用*/
+	//random = 2;
 
 	switch (random)
 	{
@@ -92,12 +93,12 @@ void EnemySpawnManager::SelectEnemy(tnl::Vector3 posEnemy)
 bool EnemySpawnManager::CheckCanCreateEnemy(tnl::Vector3& Pos)
 {
 	bool canSpawn = true;
-	
+
 	if (!flagEnemyManager) {
 		eManager = EnemyManager::GetInstance();
 		flagEnemyManager = true;
 	}
-	
+
 	//既存の敵のポジションとかぶっていないかチェック
 	for (auto& enemy : eManager->EnemyList) {
 		auto listEnemyPos = enemy->GetPos();

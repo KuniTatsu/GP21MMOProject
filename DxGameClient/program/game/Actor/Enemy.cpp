@@ -12,8 +12,7 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 {
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
-	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
-
+	
 	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
@@ -25,7 +24,7 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 
 	auto rManager = ResourceManager::GetInstance();
 	auto& hoge = rManager->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
-	
+
 	SetCircleSize(hoge[type]);
 
 	myAnimationGh = ghs;
@@ -135,11 +134,7 @@ unsigned int Enemy::ChangedColor()
 }
 
 void Enemy::EnemyMove() {
-
-	ChangeAnimMode(static_cast<int>(ANIMMODE::NORMAL));
-	SetExDir(static_cast<int>(EXDIR::BOTTOM));
 	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
-
 }
 
 void Enemy::Update()
@@ -166,7 +161,7 @@ void Enemy::Draw(Camera* camera)
 	/*çıìGä÷êî*/
 	SearchBox(tnl::Vector3(x, y, 0), 50);
 
-	Anim(myAnimationGh, 6);
-	DrawRotaGraphF(x, y, 1.0f, 0, drawGh, false);
+	Anim(myAnimationGh, 3);
+	DrawRotaGraphF(x, y, 1.2, 0, drawGh, true);
 }
 
