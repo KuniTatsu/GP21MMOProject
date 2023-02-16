@@ -16,13 +16,16 @@ class JobManager
 {
 public:
 	static JobManager* GetInstance();
+
+	inline int GetJobMasterCount() {
+		return jobMaster.size();
+	}
+
+	//新しく職を取得する関数
+	std::shared_ptr<Job>CreateNewJob(int jobId);
 private:
 	JobManager();
 	~JobManager();
-
-	static JobManager* GetInstance();
-	//新しく職を取得する関数
-	std::shared_ptr<Job>CreateNewJob(int jobId);
 
 	//特定のJobに経験値を足す関数
 	void AddExpToJob(std::shared_ptr<Job> job,int jobId, int addExp);
@@ -33,9 +36,7 @@ private:
 	//  職によりそれに対する経験値を取得する関数
 	// void GetExpToJob(std::vector<int> jobId);
 
-	inline int GetJobMasterCount() {
-		return jobMaster.size();
-	}
+	
 
 private:
 

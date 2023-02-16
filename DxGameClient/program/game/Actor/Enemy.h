@@ -44,7 +44,8 @@ public:
 	void ChangeStatusFromServerInfo(float moveHP);
 
 private:
-	int img_Ghost = 0;
+	
+	//索敵範囲に入ったらTRUE
 	bool onFollowToPlayer = false;
 
 	std::vector<int>myAnimationGh;
@@ -53,6 +54,8 @@ private:
 	float SPEED = 0;
 
 	int identId = -1;
+	//エネミータイプの取得
+	int TYPE = 0;
 	
 	unsigned int ChangedColor();
 
@@ -62,6 +65,8 @@ private:
 	//void Move();
 
 	void SearchBox(tnl::Vector3 SpawnPos, double atackRange);
+	
+	/*Playeへの追従処理*/
 	void EnemyMove();
 
 };

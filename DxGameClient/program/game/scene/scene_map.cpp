@@ -43,13 +43,11 @@ void Scene_Map::initialzie()
 	player = GameManager::GetInstance()->CreatePlayer(0);
 #endif
 
-#ifdef DEBUG_ON
-
-	gManager->CreatePlayer(0);
-	player = gManager->GetPlayer();
-#endif // DEBUG_ON
-
-
+//#ifdef DEBUG_ON
+//
+//	gManager->CreatePlayer(0);
+//	player = gManager->GetPlayer();
+//#endif 
 
 	//ƒ}ƒbƒv‚Ì¶¬
 	gManager->CreateMap();
