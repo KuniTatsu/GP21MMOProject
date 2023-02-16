@@ -96,7 +96,7 @@ void GameManager::Destroy() {
 
 	//サーバーに退室を通知
 
-	connect->SendExitServer()
+	connect->SendExitServer();
 	acceptThread.join();
 #endif
 
@@ -807,7 +807,7 @@ bool GameManager::isClickedRect(tnl::Vector3& CenterPos, int halfSize)
 	int bottom = CenterPos.y + halfSize;
 	return isClickedRect(left, top, right, bottom);
 }
-#ifndef DEBUG_ON
+
 
 void GameManager::SendPlayerInfoToServer(bool isReLogin)
 {
@@ -838,7 +838,7 @@ void GameManager::SendPlayerInfoToServer(bool isReLogin)
 	}
 
 }
-#endif
+
 
 void GameManager::GetServerOtherUser()
 {
@@ -848,24 +848,17 @@ void GameManager::GetServerOtherUser()
 
 void GameManager::SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
 {
-#ifdef DEBUG_OFF
 	connect->SendClientEnemyInitInfo(x, y, dir, identNum, type);
-#endif
 }
-
-
 
 void GameManager::SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
 {
-#ifdef DEBUG_OFF
 	connect->SendClientEnemyInfo(x, y, dir, identNum, type);
-#endif
 }
 
 
 void GameManager::SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool isPlus)
 {
-#ifdef DEBUG_OFF
 	//HP減少だったら
 	if (!isPlus) {
 		float decreaseHP = moveHP * -1;
@@ -873,7 +866,6 @@ void GameManager::SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool i
 		return;
 	}
 	connect->SendClientEnemyStatus(identNum, moveHP);
-#endif
 }
 
 

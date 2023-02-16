@@ -12,7 +12,8 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 {
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
-	
+	TYPE = type;
+
 	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
 	myData->SetAttackRange(data->GetAttackRange());
@@ -34,7 +35,6 @@ Enemy::Enemy(tnl::Vector3 SpawnPos, const std::shared_ptr<ActorData> data, std::
 {
 	drawPos = SpawnPos;
 	gManager = GameManager::GetInstance();
-	img_Ghost = gManager->LoadGraphEx("graphics/GhostEnemy.png");
 
 	myData = std::make_shared<ActorData>();
 	myData->SetAllStatus(data->GetAttack(), data->GetDefence(), data->GetMoveSpeed());
@@ -129,12 +129,23 @@ unsigned int Enemy::ChangedColor()
 		return GetColor(255, 255, 255);
 	}
 	else {
-		GetColor(244, 167, 167);
+		return GetColor(244, 167, 167);
 	}
+	return 0;
 }
 
 void Enemy::EnemyMove() {
-	drawPos += gManager->GetVectorToPlayer(drawPos) * myData->GetMoveSpeed();
+	//方向ベクトル取得
+	tnl::Vector3 dirVecor = gManager->GetVectorToPlayer(drawPos);
+
+	//エネミー座標がplayer座標のいっていの範囲に入ったら
+	if (GetDisPlayerfromEnemy(drawPos) < 40)return;
+
+	drawPos += dirVecor * myData->GetMoveSpeed();
+
+	SetExDir(dirVecor.x, dirVecor.y);
+	//SetExDir(static_cast<int>(EXDIR::RIGHT));
+
 }
 
 void Enemy::Update()
@@ -148,6 +159,7 @@ void Enemy::Update()
 #endif
 
 	if (onFollowToPlayer) {
+		/*追従*/
 		EnemyMove();
 	}
 }
@@ -161,7 +173,13 @@ void Enemy::Draw(Camera* camera)
 	/*索敵関数*/
 	SearchBox(tnl::Vector3(x, y, 0), 50);
 
-	Anim(myAnimationGh, 3);
+	if (TYPE == 0) {
+		Anim(myAnimationGh, 6);
+	}
+	else {
+		Anim(myAnimationGh, 4);
+	}
+
 	DrawRotaGraphF(x, y, 1.2, 0, drawGh, true);
 }
 

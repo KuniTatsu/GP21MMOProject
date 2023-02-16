@@ -232,7 +232,9 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], type);
 
+#ifndef DEBUG_ON
 	newEnemy->SetIdentId(identId);
+#endif
 
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
 
