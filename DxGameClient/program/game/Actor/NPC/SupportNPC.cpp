@@ -4,6 +4,7 @@
 #include"../../UI/UIManager.h"
 #include"../../UI/GraphicUI.h"
 #include"../Camera.h"
+#include"../player.h"
 #include<math.h>
 
 SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y, ghNum)
@@ -46,12 +47,21 @@ void SupportNPC::DrawNPCSpeak()
 
 bool SupportNPC::SeqWait(const float DeltaTime)
 {
+	//このシークエンスに入った最初の一回だけ、プレイヤーがmenuを開ける状態に更新する
+	if (mainSequence.isStart()) {
+		auto& player = GameManager::GetInstance()->GetPlayer();
+		player->SetCanOpenMenu(true);
+	}
 
 	//近くにplayerがいなかったら無視する
 	if (!isNearPlayer)return false;
 
 	//Enterを感知
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RETURN)) {
+
+		auto& player = GameManager::GetInstance()->GetPlayer();
+		player->SetCanOpenMenu(false);
+
 		ChangeSequence(SEQUENCE::FIRSTMENU);
 	}
 

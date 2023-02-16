@@ -7,7 +7,6 @@
 #include<string>
 #include<unordered_map>
 
-class Inventory;
 class DisassemblyData;
 
 class Disassembly
@@ -18,7 +17,7 @@ public:
 	static Disassembly* GetInstance();
 
 	//死骸Idを受け取り、引数のインベントリに素材アイテムを追加する関数 --アイテムに死骸IDというデータがあることを前提
-	void DisassemblyDeadBody(int deadId, std::shared_ptr<Inventory>inventory);
+	void DisassemblyDeadBody(int deadId);
 
 
 private:

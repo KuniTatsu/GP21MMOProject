@@ -2,6 +2,8 @@
 #include "Inventory.h"
 #include"Item/ItemManager.h"
 #include"Item/EquipItem.h"
+#include"Item/ConsumeItem.h"
+#include"Item/MaterialItem.h"
 //#include<string>
 
 InventoryManager* InventoryManager::instance = nullptr;
@@ -11,6 +13,10 @@ InventoryManager::InventoryManager() {
 }
 
 InventoryManager::~InventoryManager()
+{
+}
+
+void InventoryManager::MoveSelectInventory()
 {
 }
 
@@ -33,30 +39,75 @@ void InventoryManager::Destory()
 	}
 }
 
+void InventoryManager::Init()
+{
+	//新しくinventoryのインスタンスを生成する
+	auto newInventory = std::make_shared<Inventory>(0);
+
+	//inventory配列に登録
+	inventories.emplace_back(newInventory);
+
+	//debug
+	AddItemToInventory(1);
+
+
+}
+
+
+void InventoryManager::UpdateInventory()
+{
+	//選択中のインベントリを動かす
+	inventories[nowSelectInventoryNum]->Update();
+}
 
 /*インベントリにアイテム追加*/
-void InventoryManager::AddItemToInventory(const int ItemId, std::vector<std::shared_ptr<Inventory>>& Inventories, int& InventoryNum)
+void InventoryManager::AddItemToInventory(const int ItemId)
 {
+	//スタックを増やして終わるかどうか
+	bool canFinishAddStack = false;
+
+	//すべてのインベントリのアイテムのIdを検索して、既に持っているかどうか確かめる
+	for (auto& inventory : inventories) {
+		auto& itemList = inventory->GetItemList();
+
+		for (auto itr = itemList.begin(); itr != itemList.end(); ++itr) {
+
+			int id = (*itr)->GetItemId();
+			//Idが違ったら次
+			if (ItemId != id)continue;
+			//Idがあっていて、スタックが余裕あったらここで終わる
+			if (!(*itr)->IsMaxStack()) {
+
+				(*itr)->MoveStackNum(+1);
+				canFinishAddStack = true;
+				break;
+			}
+		}
+		if (canFinishAddStack)break;
+	}
+	//既に持っているアイテムのスタック数を増やしていたらアイテムを新規生成せずに終わる
+	if (canFinishAddStack)return;
+
 	//今のinventoryの持つアイテム配列がいっぱいなら
-	if (Inventories[InventoryNum]->inventoryItemList.size() >= 10) {
+	if (inventories[latestIntentoryNum]->GetItemList().size() >= 10) {
 		//新しくinventoryのインスタンスを生成する
-		auto newInventory = std::make_shared<Inventory>(InventoryNum + 1);
+		auto newInventory = std::make_shared<Inventory>(latestIntentoryNum + 1);
 		
 		//inventory配列に登録
-		Inventories.emplace_back(newInventory);
+		inventories.emplace_back(newInventory);
 		
 		//登録するinventoryを更新する
-		InventoryNum++;
+		latestIntentoryNum++;
 	}
 	auto item = iManager->GetItemFromId(ItemId);
 	
 	int type = item->GetItemType();
 
-	//データを取得して、アイテムを生成し、インベントリに追加する
+	//データを取得して、アイテムを生成
 	auto createItem = iManager->CreateItem(ItemId, type);
 
-	//インベントリ追加
-	Inventories[InventoryNum]->AddInventory(createItem);
+	//アイテム追加
+	inventories[latestIntentoryNum]->AddInventory(createItem);
 
 }
 
@@ -67,7 +118,7 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 	int selectNum = inventories[NowInventoryId]->GetCursorNum();
 
 	//表示中のインベントリを取得
-	auto itr = inventories[NowInventoryId]->inventoryItemList.begin();
+	auto itr = inventories[NowInventoryId]->GetItemList().begin();
 
 	//選択されたアイテムまでイテレータ移動
 	for (int i = 0; i < selectNum; ++i) {
@@ -75,29 +126,29 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 	}
 
 	//アイテムを消去
-	itr = inventories[NowInventoryId]->inventoryItemList.erase(itr);
+	itr = inventories[NowInventoryId]->GetItemList().erase(itr);
 
 	//カーソルの位置をひとつ上に移動
 	inventories[NowInventoryId]->SetCursorNum(-1);
 	
 	//popするアイテムがいる場所=今いるインベントリが最後のインベントリではない場合
-	if (NowInventoryId != inventoryLastNum) {
+	if (NowInventoryId != latestIntentoryNum) {
 		int checkInventoryNum = NowInventoryId;
 		while (1) {
-			if (inventories[checkInventoryNum + 1]->inventoryItemList.empty())break;
+			if (inventories[checkInventoryNum + 1]->GetItemList().empty())break;
 			//if (sharedInventories[checkInventoryNum + 1]->inventoryList.empty())break;
 
 			//次のページの最初のアイテムをコピーして消したアイテムのリストの末尾に加える
-			auto item = inventories[checkInventoryNum + 1]->inventoryItemList.begin();
+			auto item = inventories[checkInventoryNum + 1]->GetItemList().begin();
 
 			//アイテム追加
-			inventories[checkInventoryNum]->inventoryItemList.emplace_back((*item));
+			inventories[checkInventoryNum]->GetItemList().emplace_back((*item));
 
 			//次のページの最初のアイテムをpopする
-			inventories[checkInventoryNum + 1]->inventoryItemList.pop_front();
+			inventories[checkInventoryNum + 1]->GetItemList().pop_front();
 
 			//最後のインベントリページにたどり着いたらbreak
-			if (checkInventoryNum + 1 == inventoryLastNum)break;
+			if (checkInventoryNum + 1 == latestIntentoryNum)break;
 			checkInventoryNum++;
 		}
 	}
@@ -107,23 +158,31 @@ void InventoryManager::PopItemFromInventory(const int NowInventoryId)
 		inventories[NowInventoryId]->SetItemNum(-1);
 	}
 
+	//からのインベントリを消したか
+	bool isDelete = false;
+
 	//空のインベントリを消す処理
-	if (inventories[inventoryLastNum]->inventoryItemList.empty()) {
-		if (inventoryLastNum != 0) {
-			inventories[inventoryLastNum]->inventoryItemList.clear();
-			inventories[inventoryLastNum] = nullptr;
+	if (inventories[latestIntentoryNum]->GetItemList().empty()) {
+		if (latestIntentoryNum != 0) {
+			inventories[latestIntentoryNum]->GetItemList().clear();
+			inventories[latestIntentoryNum] = nullptr;
 			inventories.pop_back();
-			inventoryLastNum--;
+			latestIntentoryNum--;
 
 			//fukushi_isDelteteInventoryがfalesになる場合の処理がどこかで必要
-			isDeleteInventory = true;
+			isDelete = true;
 		}
 	}
 
-	if (isDeleteInventory)return;
+	if (isDelete)return;
 
 	//カーソルの位置を一番上にリセット
-	if (inventories[NowInventoryId]->inventoryItemList.empty()) {
+	if (inventories[NowInventoryId]->GetItemList().empty()) {
 		inventories[NowInventoryId]->CursorReset();
 	}
+}
+
+void InventoryManager::DrawInventory(float x, float y)
+{
+	inventories[nowSelectInventoryNum]->DrawInventory(x, y);
 }

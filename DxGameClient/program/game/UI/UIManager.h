@@ -66,6 +66,7 @@ public:
 		TOP,
 		STATUS,
 		INVENTORY,
+		USEITEM,
 		EQUIP,
 		MAX
 	};
@@ -118,7 +119,7 @@ private:
 
 	//-----ロードするUIのパス配列-----
 	//UI
-	const std::string MENUPASS[static_cast<uint32_t>(MENUUI::MAX)] = { "Csv/UI/UseUI/TopUI.csv","Csv/UI/UseUI/StatusUI.csv","Csv/UI/UseUI/InventoryUI.csv","Csv/UI/UseUI/EquipUI.csv" };
+	const std::string MENUPASS[static_cast<uint32_t>(MENUUI::MAX)] = { "Csv/UI/UseUI/TopUI.csv","Csv/UI/UseUI/StatusUI.csv","Csv/UI/UseUI/InventoryUI.csv","Csv/UI/UseUI/UseItemUI.csv","Csv/UI/UseUI/EquipUI.csv" };
 	//Sup
 	const std::string SUPNPCUIPASS[static_cast<uint32_t>(SUPNPCUI::MAX)] = { "Csv/UI/NPC/SuportNPCFirstMenu.csv","Csv/UI/NPC/SuportNPCHintMenu.csv" };
 	//解体

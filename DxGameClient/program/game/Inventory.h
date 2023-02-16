@@ -20,13 +20,16 @@ public:
 	//インベントリにアイテムを追加する関数
 	void AddInventory(std::shared_ptr<Item> item);
 	//void AddSharedInventory(std::shared_ptr<Item>item);
+
+	//インベントリのUpdate
+	void Update();
 	
 	//カーソルを上下に動かす関数
 	void CursorMove();
 	//カーソルを一番上に戻す関数
 	void CursorReset();
 	//インベントリ内のアイテム名を描画する関数
-	void DrawInventory(const int x, const int y);
+	void DrawInventory(int x, int y);
 	//カーソルで選択中のアイテムの説明を描画する関数
 	void DrawItemDesc(const int x, const int y);
 	//カーソルで選択中の装備アイテムのステータスを描画する関数
@@ -46,12 +49,13 @@ public:
 		itemNum += num;
 	}
 
+	inline std::list<std::shared_ptr<Item>>& GetItemList() {
+		return inventoryItemList;
+	}
+
 public:
 
 	//std::shared_ptr<Item>inventory[10] = { nullptr,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr ,nullptr };
-
-	////内部にItemを10個もつlist
-	std::list<std::shared_ptr<Item>> inventoryItemList;
 
 private:
 
@@ -70,5 +74,6 @@ private:
 	int myInventoryNum = 0;
 
 
-
+	//内部にItemを10個もつlist
+	std::list<std::shared_ptr<Item>> inventoryItemList;
 };

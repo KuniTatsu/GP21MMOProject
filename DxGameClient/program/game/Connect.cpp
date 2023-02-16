@@ -293,7 +293,9 @@ const std::string Connect::GetServerMessage()
 		double hp = hoge["HP"].number_value();
 		int ghNum = hoge["gh"].int_value();
 
-		gManager->CreatePlayerFromServer(myPosX, myPosY, hp, ghNum);
+		std::string name = hoge["name"].string_value();
+
+		gManager->CreatePlayerFromServer(myPosX, myPosY, hp, ghNum, name);
 		return "";
 	}
 

@@ -3,11 +3,15 @@
 
 
 class Talent;
+class Job;
+class Inventory;
 class Player :public Actor
 {
 public:
-	Player(int startX, int startY,int type);
-	Player(int startX, int startY, double HP,int ghNum);
+	//初回ログイン時のプレイヤー作成コンストラクタ
+	Player(int startX, int startY, int type);
+	//再ログイン時はこっち
+	Player(int startX, int startY, double HP, int ghNum);
 	~Player();
 
 	void Update()override;
@@ -25,6 +29,16 @@ public:
 		remainRankNum -= minusNum;
 	}
 
+	//才能一覧を取得する関数
+	inline const std::vector<std::shared_ptr<Talent>>&GetMyTalents() {
+		return myTalents;
+	}
+
+	//職一覧を取得する関数
+	inline const std::vector<std::shared_ptr<Job>>& GetmyJobs() {
+		return myJobs;
+	}
+
 	inline bool GetIsCreatedDummy() {
 		return isCreatedDummy;
 	}
@@ -35,6 +49,15 @@ public:
 	void SetAttributeFromServer(int STR, int VIT, int INT, int MID, int SPD, int DEX);
 
 	void SetTalent();
+
+	//Menuを開ける状況かどうか
+	inline bool GetCanOpenMenu() {
+		return canOpenMenu;
+	}
+	inline void SetCanOpenMenu(bool swich) {
+		if (canOpenMenu == swich)return;
+		canOpenMenu = swich;
+	}
 
 private:
 
@@ -72,8 +95,12 @@ private:
 	//プレイヤーが持っているタレントの配列
 	std::vector<std::shared_ptr<Talent>>myTalents;
 
+	//プレイヤーが持っているジョブの配列
+	std::vector<std::shared_ptr<Job>>myJobs;
+
 	//すでにDummyが作られているか
 	bool isCreatedDummy = false;
-
+	//menuが開けるか
+	bool canOpenMenu = true;
 };
 

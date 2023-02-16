@@ -1,3 +1,4 @@
 id,pass,allNum,widthNum,heightNum,widthSize,heightSize
 0,graphics/Effect/defaultAttack_normal.png,9,9,1,120,120
 1,graphics/Effect/defaultAttack_water.png,9,9,1,120,120
+2,graphics/Effect/enemyDeath.png,10,10,1,120,120

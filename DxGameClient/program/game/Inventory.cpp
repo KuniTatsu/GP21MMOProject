@@ -10,6 +10,8 @@ Inventory::Inventory(int MyInventorynum)
 	gManager = GameManager::GetInstance();
 	iManager = ItemManager::GetInstance();
 
+	cursorGh = gManager->LoadGraphEx("graphics/menuCursor.png");
+
 	selectItemBackGh = gManager->LoadGraphEx("graphics/FrameWhite.png");
 	myInventoryNum = myInventoryNum + 1;
 }
@@ -26,14 +28,19 @@ void Inventory::AddInventory(std::shared_ptr<Item> item)
 	itemNum++;
 }
 
+void Inventory::Update()
+{
+	CursorMove();
+}
+
 /*カーソルの動き（key版）*/
 void Inventory::CursorMove()
 {
-	if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_UP)) {
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_UP)) {
 		itemNum = GetItemCount();
 		selectCursor = (selectCursor + (itemNum - 1)) % itemNum;
 	}
-	else if (tnl::Input::IsKeyDownTrigger(tnl::Input::eKeys::KB_DOWN)) {
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_DOWN)) {
 		itemNum = GetItemCount();
 		selectCursor = (selectCursor + 1) % itemNum;
 	}
@@ -46,11 +53,12 @@ void Inventory::CursorReset()
 }
 
 //インベントリ内のアイテム名を描画する関数
-void Inventory::DrawInventory(const int x, const int y)
+void Inventory::DrawInventory(int x, int y)
 {
+	if (inventoryItemList.empty())return;
 	int i = 0;
 
-	for (auto item : inventoryItemList) {
+	for (auto& item : inventoryItemList) {
 	
 		//装備アイテムなら
 		if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::EQUIP)) {
@@ -68,16 +76,21 @@ void Inventory::DrawInventory(const int x, const int y)
 		else if(item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::CONSUME))
 		{
 			//アイテム名の描画
-			DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
+			DrawStringEx(x + 80, y + 10 + 30 * i, -1, item->GetItemName().c_str());
 		}
+		//個数の取得
+		int stackNum = item->GetNowStackNum();
+		std::string stackText = "所持数:" + std::to_string(stackNum) + "個";
+			//個数の描画
+		DrawStringEx(x + 200, y + 10 + 30 * i, -1, stackText.c_str());
+
 		++i;
 	}
+	
+
 
 	//選択中アイテムの横にカーソルを描画する
 	DrawRotaGraph(x + 30, y + 20 + selectCursor * 30, 0.7, 0, cursorGh, true);
-	SetDrawBlendMode(DX_BLENDMODE_ALPHA, 30);
-	DrawRotaGraph(x + 220, y + 20 + selectCursor * 30, 1, 0, selectItemBackGh, true);
-	SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 255);
 }
 
 //アイテムの説明を描画する関数

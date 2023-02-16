@@ -14,11 +14,18 @@ private:
 	int spd = 0;
 	int dex = 0;
 
-
+	int level = 0;
 public:
 	Job(int id, std::string name,int str, int vit,
 		int inteli, int min, int spd, int dex);
 	~Job();
+
+	inline int GetJobLevel() {
+		return level;
+	}
+	inline std::string GetJobName() {
+		return name;
+	}
 
 private:
 

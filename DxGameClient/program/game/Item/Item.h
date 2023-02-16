@@ -25,6 +25,10 @@ public:
 	inline int GetItemType() {
 		return itemType;
 	}
+	inline void SetItemType(int type) {
+		itemType = type;
+	}
+
 	std::vector<int>& GetAllIntData();
 
 	inline std::vector<int>& GetAttributeData() {
@@ -40,8 +44,29 @@ public:
 		return hp;
 	}
 
+	inline int GetRare() {
+		return rare;
+	}
 
-private:
+	inline int GetMaxStack() {
+		return stockMax;
+	}
+	//スタック数を変動させる関数
+	inline void MoveStackNum(int num) {
+		nowStackNum += num;
+	}
+	//スタック数を取得する関数
+	inline int GetNowStackNum() {
+		return nowStackNum;
+	}
+
+	//Maxスタックかどうか返す関数
+	inline bool IsMaxStack() {
+		if (nowStackNum >= stockMax)return true;
+		return false;
+	}
+
+protected:
 
 	int id = 0;
 	std::string name = "";
@@ -59,6 +84,8 @@ private:
 
 	float hp = 0;
 
+	//現在のスタック数
+	int nowStackNum = 1;
 	//attribute以外のintData
 	std::vector<int> intData;
 

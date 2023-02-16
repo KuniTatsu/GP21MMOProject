@@ -191,7 +191,7 @@ public:
 	std::shared_ptr<Player> CreatePlayer(int ghNum = 0);
 
 	//再ログイン時のプレイヤー生成
-	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum);
+	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum,std::string name);
 
 	inline std::shared_ptr<Player>& GetPlayer() {
 		return player;
