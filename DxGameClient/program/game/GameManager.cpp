@@ -7,8 +7,10 @@
 #include"scene/Map.h"
 #include"Actor/Enemy.h"
 #include<algorithm>
+
 #include"ChatBase.h"
 #include"Connect.h"
+
 #include<math.h>
 #include"UI/UIEditor.h"
 #include<random>
@@ -21,7 +23,7 @@ GameManager* GameManager::instance = nullptr;
 volatile bool isEnd = false;
 
 /*fukushi_デバック用*/
-//#define DEBUG_OFF
+ //#define DEBUG_OFF
 
 //-----------------------------------------------------------------------------------------
 // コンストラクタ
@@ -41,12 +43,14 @@ volatile int num1 = 0;
 
 void GameManager::Accept()
 {
+#ifdef DEBUG_OFF
 	while (isEnd == false)
 	{
 		auto get = connect->GetServerMessage();
 		if (get == "")continue;
 		chat->SetGetMessage(get);
 	}
+#endif
 }
 
 void GameManager::Send(const std::string sendMessage)
@@ -82,7 +86,9 @@ void GameManager::Destroy() {
 
 	isEnd = true;
 	//acceptThread->join();
+#ifdef DEBUG_OFF
 	connect->SendExitServer();
+#endif
 	acceptThread.join();
 
 	UIManager::GetInstance()->Destroy();
@@ -662,8 +668,10 @@ bool GameManager::isClickedRect(int RectLeft, int RectTop, int RectRight, int Re
 	return ret;
 }
 
+
 void GameManager::SendPlayerInfoToServer()
 {
+#ifdef DEBUG_FF
 	//他のプレイヤーにDummyを作るための処理
 	const auto& pos = player->GetPos();
 	auto dir = player->GetDir();
@@ -681,21 +689,30 @@ void GameManager::SendPlayerInfoToServer()
 		connect->SendClientPlayerInitInfo(pos.x, pos.y, data->GetHP(),type);
 	}
 
-
+#endif
 }
+
 
 void GameManager::SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
 {
+#ifdef DEBUG_OFF
 	connect->SendClientEnemyInitInfo(x, y, dir, identNum, type);
+#endif
 }
+
+
 
 void GameManager::SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
 {
+#ifdef DEBUG_OFF
 	connect->SendClientEnemyInfo(x, y, dir, identNum, type);
+#endif
 }
+
 
 void GameManager::SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool isPlus)
 {
+#ifdef DEBUG_OFF
 	//HP減少だったら
 	if (!isPlus) {
 		float decreaseHP = moveHP * -1;
@@ -703,7 +720,9 @@ void GameManager::SendEnemyMoveHPInfoToServer(int identNum, float moveHP, bool i
 		return;
 	}
 	connect->SendClientEnemyStatus(identNum, moveHP);
+#endif
 }
+
 
 bool GameManager::OnMouseRect(int RectLeft, int RectTop, int RectRight, int RectBottom)
 {

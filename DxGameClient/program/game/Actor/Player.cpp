@@ -6,6 +6,11 @@
 #include"../ResourceManager.h"
 #include"ActorData.h"
 
+
+#include "../Job.h"
+#include "../JobManager.h"
+#include "../JobLevelConverter.h"
+
 Player::Player(int startX, int startY, int type)
 {
 	drawPos.x = static_cast<float>(startX);
@@ -32,7 +37,7 @@ Player::Player(int startX, int startY, int type)
 
 Player::~Player()
 {
-
+	myJobs.clear();
 }
 
 void Player::Update()
@@ -96,6 +101,21 @@ void Player::SetTalent()
 	}
 	int hoge = 0;
 	hoge++;
+}
+
+// jobのデータを取得
+void Player::SetPlayerInitJob() {
+	auto jobManager = JobManager::GetInstance();
+
+
+	auto jobCount = jobManager->GetJobMasterCount();
+
+	// 空のmyJobsに職のデータ全てを格納する
+	for (int i = 1; i < jobCount; i++) {
+		auto jobData = jobManager->CreateNewJob(i);
+
+		myJobs.emplace_back(jobData);
+	}
 }
 
 void Player::Move()

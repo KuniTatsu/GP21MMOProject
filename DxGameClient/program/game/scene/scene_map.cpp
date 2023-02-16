@@ -112,6 +112,8 @@ void Scene_Map::render()
 	}
 
 
-	UIManager::GetInstance()->Draw();
+	
 #endif
+
+	UIManager::GetInstance()->Draw();
 }

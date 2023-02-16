@@ -14,10 +14,16 @@ private:
 	int spd = 0;
 	int dex = 0;
 
-	// 職レベルの条件を決める変数
-	int conditions = 0;
+	int exp = 0;
 
+	int level = 0;
 
+	//モンスターのキル数
+	int monsterKills = 0;
+	// 現在の移動距離
+	int MovingDistance = 0;
+	// 使用したアイテム数
+	int useItem = 0;
 
 public:
 	Job(int id, std::string name,int str, int vit,
@@ -48,6 +54,38 @@ public:
 
 	inline const std::string& GetName() {
 		return name;
+	}
+
+	//現在の経験値取得関数
+	inline int GetNowExp() {
+		return exp;
+	}
+	//現在の経験値セット関数
+	inline void SetNowExp(int nowExp) {
+		exp = nowExp;
+	}
+
+	//現在のレベル取得関数
+	inline int GetNowLevel() {
+		return level;
+	}
+
+	//レベルアップ
+	inline void LevelUp() {
+		level++;
+	}
+
+	// 現在のモンスター討伐数取得関数
+	inline int GetMonsterKills() {
+		return monsterKills;
+	}
+	// 現在の移動距離を取得する関数
+	inline int GetMovingDistance() {
+		return MovingDistance;
+	}
+	// 現在のアイテムの使用数
+	inline int GetUseItem() {
+		return useItem;
 	}
 };
 

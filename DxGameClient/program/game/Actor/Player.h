@@ -3,6 +3,7 @@
 
 
 class Talent;
+class Job;
 class Player :public Actor
 {
 public:
@@ -32,6 +33,10 @@ public:
 	}
 
 	void SetTalent();
+
+	// 職のデータを取得する関数
+	void SetPlayerInitJob();
+
 
 private:
 
@@ -68,6 +73,9 @@ private:
 
 	//プレイヤーが持っているタレントの配列
 	std::vector<std::shared_ptr<Talent>>myTalents;
+
+	//	プレイヤーが持っている職の配列
+	std::vector<std::shared_ptr<Job>>myJobs;
 
 	//すでにDummyが作られているか
 	bool isCreatedDummy = false;

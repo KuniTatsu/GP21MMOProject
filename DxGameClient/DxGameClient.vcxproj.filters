@@ -76,6 +76,9 @@
     <ClCompile Include="program\game\Actor\NPC\NPC.cpp" />
     <ClCompile Include="program\game\Actor\NPC\SupportNPC.cpp" />
     <ClCompile Include="program\game\Item\ConsumeItem.cpp" />
+    <ClCompile Include="program\game\JobLevelConverter.cpp" />
+    <ClCompile Include="program\game\JobLevelInfo.cpp" />
+    <ClCompile Include="program\game\JobExpCondition.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="DxGameClient.rc" />
@@ -156,6 +159,9 @@
     <ClInclude Include="program\game\Actor\NPC\NPC.h" />
     <ClInclude Include="program\game\Actor\NPC\SupportNPC.h" />
     <ClInclude Include="program\game\Item\ConsumeItem.h" />
+    <ClInclude Include="program\game\JobLevelConverter.h" />
+    <ClInclude Include="program\game\JobLevelInfo.h" />
+    <ClInclude Include="program\game\JobExpCondition.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DxGameClient.cpp">

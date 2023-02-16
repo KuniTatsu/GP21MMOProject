@@ -88,7 +88,7 @@ std::shared_ptr<Talent> TalentManager::CreateNewTalent(int id, int remainRank)
 	if (remainRank <= 0)return nullptr;
 
 
-	auto name = talentMaster[id]->GetName();
+	auto& name = talentMaster[id]->GetName();
 	auto rare = talentMaster[id]->GetRare();
 	auto lowestRank = talentMaster[id]->GetLowestTalentRank();
 	auto str = talentMaster[id]->GetStr();
