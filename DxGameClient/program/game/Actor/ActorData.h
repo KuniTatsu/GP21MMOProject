@@ -4,6 +4,7 @@
 */
 #pragma once
 #include<vector>
+#include<string>
 
 class ActorData
 {
@@ -44,7 +45,7 @@ public:
 
 	void SetAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX);
 
-	inline std::vector<int>& GetAttribute() {
+	inline const std::vector<int>& GetAttribute() {
 		return attribute;
 	}
 	inline int GetLevel() {
@@ -68,6 +69,17 @@ public:
 	inline const float GetHP() {
 		return HP;
 	}
+	//HP以外のステータスを返す関数
+	inline const std::vector<float>& GetMainStatus() {
+		return mainStatus;
+	}
+
+	//ステータスの名前を返す関数
+	inline const std::vector<std::string>& GetStatusName() {
+		return STATUSNAME;
+	}
+
+
 	//攻撃力などの基本ステータスの計算と代入
 	void CalcMainStatus();
 
@@ -92,6 +104,9 @@ private:
 
 	//通常攻撃の当たる距離(レンジ)基本値
 	float attackRange = 50.0f;
+
+	//status
+	std::vector<float>mainStatus;
 
 	//攻撃力
 	float attack = 0.0f;
@@ -122,5 +137,6 @@ private:
 
 	int level = 100;
 
+	const std::vector<std::string>STATUSNAME = { "物理攻撃","物理防御","魔法攻撃","魔法簿御","移動スピード" };
 };
 

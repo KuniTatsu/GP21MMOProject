@@ -103,9 +103,6 @@ bool LoginScene::SeqCheckHaveUUID(const float deltatime)
 		//UUIDを登録
 		gManager->SetClientUUID(UUID);
 
-
-
-
 		ChangeSequence(static_cast<int>(SEQUENCE::WAITCHANGESCENE));
 	}
 	//初めてのログインだったら
@@ -244,6 +241,8 @@ bool LoginScene::SeqCheckGraphic(const float deltatime)
 
 		//playerの生成
 		auto player = GameManager::GetInstance()->CreatePlayer(charaIcon[selectCharaIconNum]);
+
+		player->SetName(gManager->GetPlayerName());
 
 		////Player情報のサーバーへの送信--データベース登録とサーバーの一時データへの保存
 		//gManager->SendPlayerInfoToServer();

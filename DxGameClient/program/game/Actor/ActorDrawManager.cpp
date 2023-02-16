@@ -28,7 +28,9 @@ void ActorDrawManager::AddDrawActorList(std::shared_ptr<Actor> actor)
 void ActorDrawManager::RemoveDrawActorList(std::shared_ptr<Actor> removeActor)
 {
 	for (auto itr = drawActorList.begin(); itr != drawActorList.end(); ) {
-		if ((*itr) == removeActor)itr = drawActorList.erase(itr);
+		if ((*itr) == removeActor) {
+			itr = drawActorList.erase(itr);
+		}
 		else ++itr;
 	}
 }

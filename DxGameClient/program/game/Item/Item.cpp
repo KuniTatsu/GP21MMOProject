@@ -20,6 +20,12 @@ std::vector<int>& Item::GetAllIntData()
 	return intData;
 }
 
+void Item::DrawItemDesc(float x, float y)
+{
+	DrawStringEx(x, y, -1, "ÉAÉCÉeÉÄê‡ñæ:");
+	DrawStringEx(x, y + 30, -1, desc.c_str());
+}
+
 void Item::SetIntData()
 {
 	intData.emplace_back(id);

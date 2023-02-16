@@ -84,6 +84,17 @@ public:
 		return canAttackTime;
 	}
 
+	inline void SetName(std::string Name) {
+		name = Name;
+	}
+
+	inline std::string GetName() {
+		return name;
+	}
+
+	inline const std::vector<int>& GetGhs() {
+		return ghs;
+	}
 
 	//*******純粋仮想関数 継承先で実装************//
 	virtual void Update() = 0;
@@ -102,6 +113,9 @@ protected:
 
 	//test
 	std::vector<tnl::Vector3> bufPos;
+
+	//名前
+	std::string name = "";
 
 	//プレイヤーか敵か
 	int actorType = 0;//デフォルトはプレイヤー

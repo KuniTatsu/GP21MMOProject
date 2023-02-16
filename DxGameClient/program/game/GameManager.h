@@ -191,7 +191,7 @@ public:
 	std::shared_ptr<Player> CreatePlayer(int ghNum = 0);
 
 	//再ログイン時のプレイヤー生成
-	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum);
+	std::shared_ptr<Player>CreatePlayerFromServer(int posX, int posY, double HP, int ghNum,std::string name);
 
 	inline std::shared_ptr<Player>& GetPlayer() {
 		return player;
@@ -281,6 +281,11 @@ public:
 	//チャット作成
 	void CreateChat();
 
+	//チャットポインタ取得
+	inline ChatBase* GetChat() {
+		return chat;
+	}
+
 	//スレッド作成
 	void CreateThread();
 
@@ -349,5 +354,7 @@ public:
 	//マウス座標の取得
 	tnl::Vector3 GetMousePos();
 
+	//PlayerのHPを変動させる関数
+	void UpdatePlayerHP(double moveHp);
 
 };

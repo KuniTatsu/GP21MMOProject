@@ -18,6 +18,8 @@
 #include"Actor/ActorDrawManager.h"
 #include"Actor/NPC/NPCManager.h"
 #include"DebugDef.h"
+#include"InventoryManager.h"
+#include"Item/ItemManager.h"
 
 
 
@@ -139,9 +141,10 @@ std::shared_ptr<Player> GameManager::CreatePlayer(int ghNum)
 	return player;
 }
 
-std::shared_ptr<Player> GameManager::CreatePlayerFromServer(int posX, int posY, double HP, int ghNum)
+std::shared_ptr<Player> GameManager::CreatePlayerFromServer(int posX, int posY, double HP, int ghNum, std::string name)
 {
 	player = std::make_shared<Player>(posX, posY, HP, ghNum);
+	player->SetName(name);
 	ActorDrawManager::GetInstance()->AddDrawActorList(player);
 	return player;
 }
@@ -867,13 +870,21 @@ tnl::Vector3 GameManager::GetMousePos()
 	return tnl::Vector3(mousePosX, mousePosY, 0);
 }
 
+void GameManager::UpdatePlayerHP(double moveHp)
+{
+	auto& data = player->GetActorData();
+
+	data->UpdateHp(moveHp);
+}
+
 //-----------------------------------------------------------------------------------------
 void GameManager::Update(float delta_time) {
 
 
 	if (!init) {
 		sManager = SceneManager::GetInstance();
-
+		ItemManager::GetInstance()->Init();
+		InventoryManager::GetInstance()->Init();
 		//connect = std::make_shared<Connect>();
 #ifndef DEBUG_ON
 		connect = std::make_shared<Connect>();

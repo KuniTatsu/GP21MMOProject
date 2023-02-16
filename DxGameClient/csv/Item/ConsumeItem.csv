@@ -1,2 +1,2 @@
-id,name,rare,RECOVERY,STR,VIT,INT,MIN,SPD,DEX,weight
-1,è–¬è‰,1,100,0,0,0,0,0,0,1000
+id,name,rare,RECOVERY,STR,VIT,INT,MIN,SPD,DEX,maxStack,Desc
+1,–ò‘,1,100,0,0,0,0,0,0,99,‘Ì‚ğ–ü‚â‚·–ò‘

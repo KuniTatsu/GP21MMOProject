@@ -186,6 +186,7 @@
     <ClInclude Include="program\game\Item\Item.h" />
     <ClInclude Include="program\game\Item\ItemManager.h" />
     <ClInclude Include="program\game\Item\ItemSpawnManager.h" />
+    <ClInclude Include="program\game\Item\MaterialItem.h" />
     <ClInclude Include="program\game\Job.h" />
     <ClInclude Include="program\game\JobManager.h" />
     <ClInclude Include="program\game\main.h" />
@@ -284,6 +285,7 @@
     <ClCompile Include="program\game\Item\Item.cpp" />
     <ClCompile Include="program\game\Item\ItemManager.cpp" />
     <ClCompile Include="program\game\Item\ItemSpawnManager.cpp" />
+    <ClCompile Include="program\game\Item\MaterialItem.cpp" />
     <ClCompile Include="program\game\Job.cpp" />
     <ClCompile Include="program\game\JobManager.cpp" />
     <ClCompile Include="program\game\main.cpp" />

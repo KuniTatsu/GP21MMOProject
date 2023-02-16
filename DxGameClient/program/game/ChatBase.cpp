@@ -3,6 +3,7 @@
 #include"Connect.h"
 #include<stdio.h>
 #include"../json11.hpp"
+#include"DebugDef.h"
 
 using namespace json11;
 /*
@@ -73,9 +74,9 @@ void ChatBase::DrawAllMessage()
 
 			if (i + 1 > arrayNum)break;
 
-			auto hoge = std::to_string(i) + "番目のメッセージを描画したよ";
+		/*	auto hoge = std::to_string(i) + "番目のメッセージを描画したよ";
 			tnl::DebugTrace(hoge.c_str());
-			tnl::DebugTrace("\n");
+			tnl::DebugTrace("\n");*/
 
 			if (arrayNum < 10) {
 				DrawStringEx(20, 10 + (i * 50), -1, savedMessage[i].c_str());

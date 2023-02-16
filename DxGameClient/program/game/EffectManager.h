@@ -21,6 +21,7 @@ public:
 	enum class EFFECTTYPE:uint32_t {
 		NORMAL,
 		WATER,
+		DEATH,
 		MAX
 	};
 	

@@ -3,9 +3,10 @@
 #include"Camera.h"
 #include"../Talent.h"
 #include"../TalentManager.h"
+#include"../JobManager.h"
 #include"../ResourceManager.h"
 #include"ActorData.h"
-
+#include"../Inventory.h"
 #include"../scene/Map.h"
 #include"../DebugDef.h"
 
@@ -23,6 +24,10 @@ Player::Player(int startX, int startY, int type)
 
 	SetTalent();
 
+	//----debug----
+
+
+
 	myData = std::make_shared<ActorData>();
 	//本来はTalentとJobから取得する
 
@@ -34,9 +39,10 @@ Player::Player(int startX, int startY, int type)
 
 	SetCircleSize(hoge[type]);
 
+
 }
 
-Player::Player(int startX, int startY, double HP,  int ghNum)
+Player::Player(int startX, int startY, double HP, int ghNum)
 {
 	drawPos.x = static_cast<float>(startX);
 	drawPos.y = static_cast<float>(startY);
@@ -60,6 +66,8 @@ Player::Player(int startX, int startY, double HP,  int ghNum)
 
 	//HPを設定
 	myData->SetHP(HP);
+
+	//ToDo サーバーから職と才能を取得してセットする
 
 	auto& hoge = ResourceManager::GetInstance()->GetGraphicSize(static_cast<int>(ResourceManager::RESOUCETYPE::PLAYER));
 
@@ -165,7 +173,7 @@ void Player::Move()
 	}
 
 	//左右キー感知
-	if ( tnl::Input::IsKeyDown(eKeys::KB_D)) {
+	if (tnl::Input::IsKeyDown(eKeys::KB_D)) {
 		moveX += MOVEAMOUNT[static_cast<int>(DIR::RIGHT)];
 		//myDir = DIR::RIGHT;
 	}
