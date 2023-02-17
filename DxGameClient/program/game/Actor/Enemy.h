@@ -46,6 +46,15 @@ public:
 		isBig = 1;
 	}
 
+	inline void SetEnemyId(int EnemyId) {
+		if (enemyId != -1)return;
+		enemyId = EnemyId;
+	}
+
+	inline int GetEnemyId() {
+		return enemyId;
+	}
+
 	//位置座標の同期
 	void MoveEnemyFromServerInfo(float x, float y, int dir);
 	//ステータスの同期
@@ -56,6 +65,9 @@ private:
 	//索敵範囲に入ったらTRUE
 	bool onFollowToPlayer = false;
 
+	//追尾ターゲット
+	std::shared_ptr<Actor> followTarget = nullptr;
+
 	std::vector<int>myAnimationGh;
 
 	/*移動スピード*/
@@ -65,12 +77,16 @@ private:
 	//エネミータイプの取得
 	int TYPE = 0;
 
+
 	/*攻撃インターバル*/
 	int atackInterval = 0;
 	float atackintervalLimit = 1.5f;
 
 	//デカ敵かどうか 0:通常 1:デカ
 	int isBig = 0;
+
+	//enemyId
+	int enemyId = -1;
 	
 	unsigned int ChangedColor();
 

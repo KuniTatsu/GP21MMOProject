@@ -15,6 +15,7 @@ class Connect;
 class DummyPlayer;
 class UIEditor;
 class Job;
+class Actor;
 
 class GameManager {
 private:
@@ -56,6 +57,9 @@ private:
 	std::string clientUUID = "";
 
 	std::string playerName = "";
+
+	//playerとDummyが入った配列(Enemyのターゲット用)
+	std::list<std::shared_ptr<Actor>> liveActors;
 
 
 	// ゲーム全体で参照したい変数はここで用意
@@ -242,6 +246,12 @@ public:
 	inline std::list<std::shared_ptr<Enemy>>& GetEnemyList() {
 		return Enemys;
 	}
+
+	//playerとdummyのリストの取得
+	inline std::list<std::shared_ptr<Actor>>& GetLiveActor() {
+		return liveActors;
+	}
+
 
 	//送信用スレッドを作成する関数
 	void CreateSendThread(const std::string sendMessage);

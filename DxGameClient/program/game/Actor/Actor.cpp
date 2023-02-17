@@ -11,6 +11,8 @@
 #include"../Job.h"
 #include"../scene/Map.h"
 #include"../JobManager.h"
+#include"../Item/ItemManager.h"
+#include"../InventoryManager.h"
 
 //‘º‚É‰º‚Æ‰E‘¤‚©‚ç“ü‚ë‚¤‚Æ‚·‚é‚ÆƒQ[ƒ€‚ª—Ž‚¿‚éŒ
 	//¡“x‚Í‘Œ´‚©‚ç‘º‚É“ü‚ë‚¤‚Æ‚·‚é‚Æ‘º‚Ìcsv‚ªnull‚Ì‚½‚ß—Ž‚¿‚éH
@@ -429,11 +431,20 @@ void Actor::DefaultAttack()
 				for (auto job : jobs) {
 					job->AddKillCount(1);
 				}
+
+				tnl::DebugTrace("“G‚ªŽ€‚ñ‚¾‚æ");
+
+				auto enemy = std::dynamic_pointer_cast<Enemy>(defender);
+
 				//E‹ÆƒŒƒxƒ‹ã¸”»’è
 				JobManager::GetInstance()->UpdateJobInfo(static_cast<int>(JobManager::CONDITIONS::KILL));
 				//JobManager::GetInstance()->UpdateJobInfo(static_cast<int>(JobManager::CONDITIONS::KILLWEAPON));
-			}
 
+				//Ž€‚ñ‚¾“G‚ÌŽ€Š[‚ð“|‚µ‚½l‚ÌƒCƒ“ƒxƒ“ƒgƒŠ‚É“ü‚ê‚é –{—ˆ‚Í‚»‚Ìê‚É—Ž‚Æ‚µ‚½‚¢
+				int dropItemId = ItemManager::GetInstance()->GetBaseBodyId(enemy->GetEnemyId());
+
+				InventoryManager::GetInstance()->AddItemToInventory(dropItemId);
+			}
 		}
 	}
 }

@@ -68,9 +68,16 @@ void EnemyManager::LoadEnemyMaster()
 
 		auto enemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, data, animList[i - 1], i - 1);
 
+		enemy->SetEnemyId(id);
+
 		enemyMaster.emplace_back(enemy);
 
 	}
+
+	//€Š[Id‚Ì“o˜^@‚¢‚¸‚êCsv‚É¬‚º‚é
+	matchDeadBodyId.insert(std::make_pair(100, 2000));
+	matchDeadBodyId.insert(std::make_pair(101, 2001));
+	matchDeadBodyId.insert(std::make_pair(102, 2002));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -201,6 +208,16 @@ std::shared_ptr<ActorData> EnemyManager::GetEnemyData(int type)
 	return data;
 }
 
+int EnemyManager::GetEnemyIdFromType(int type)
+{
+	return enemyMaster[type]->GetEnemyId();
+}
+
+int EnemyManager::GetDeadBodyId(int enemyId)
+{
+	return matchDeadBodyId.at(enemyId);
+}
+
 void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
 {
 	EnemyList.sort([&](std::shared_ptr<Enemy>left, std::shared_ptr<Enemy>right) {
@@ -217,6 +234,7 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 
+	int id = GetEnemyIdFromType(type);
 
 	//ŒÂ‘Ì¯•Ê”Ô†‚ğæ“¾
 	int identId = SearchBlankEnemyNum();
@@ -228,6 +246,8 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], type);
 
 	newEnemy->SetIdentId(identId);
+
+	newEnemy->SetEnemyId(id);
 
 	int isBig = 0;
 
@@ -259,9 +279,13 @@ void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& sp
 {
 	auto data = GetEnemyData(type);
 
+	int id = GetEnemyIdFromType(type);
+
 	auto& ghs = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type, identId);
+
+	newEnemy->SetEnemyId(id);
 
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
 

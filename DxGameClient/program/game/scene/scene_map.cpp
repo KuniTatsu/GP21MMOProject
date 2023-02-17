@@ -20,6 +20,7 @@
 #include"../Talent.h"
 #include"../ChatBase.h"
 #include"../JobManager.h"
+#include"../Disassembly.h"
 
 Scene_Map::Scene_Map()
 {
@@ -165,9 +166,14 @@ void Scene_Map::update(float delta_time)
 			player->SetPlayerJob(job6);
 
 		}
+		//Ž€Š[ƒAƒCƒeƒ€‚ð‰ð‘Ì
+		else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_1)) {
+
+			Disassembly::GetInstance()->DisassemblyDeadBody(2001);
+		}
+
+
 	}
-
-
 }
 
 void Scene_Map::render()

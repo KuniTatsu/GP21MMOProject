@@ -84,7 +84,7 @@ void Inventory::DrawInventory(int x, int y)
 		int stackNum = item->GetNowStackNum();
 		std::string stackText = "Š”:" + std::to_string(stackNum) + "ŒÂ";
 		//ŒÂ”‚Ì•`‰æ
-		DrawStringEx(x + 200, y + 10 + 30 * i, -1, stackText.c_str());
+		DrawStringEx(x + 300, y + 10 + 30 * i, -1, stackText.c_str());
 
 		++i;
 	}

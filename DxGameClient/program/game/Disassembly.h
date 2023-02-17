@@ -7,7 +7,7 @@
 #include<string>
 #include<unordered_map>
 
-class DisassemblyData;
+class MaterialConverter;
 
 class Disassembly
 {
@@ -24,29 +24,14 @@ private:
 	Disassembly();
 	~Disassembly();
 
-	//死骸Idと解体後アイテムのマスターをCsvから読み取り
-	void LoadDisassemblyResult();
+
 
 private:
 	static Disassembly* instance;
 
-	std::vector<std::shared_ptr<DisassemblyData>>disassemblyMaster;
+	//死骸IDと情報を合わせたオブジェクトの入れ物
+	std::vector<std::shared_ptr<MaterialConverter>> convertMaster;
 
 };
 
 
-class DisassemblyData
-{
-public:
-	DisassemblyData(int id,std::string Name,int id1,int weight1, int id2, int weight2, int id3, int weight3, int id4, int weight4);
-	~DisassemblyData();
-
-public:
-
-	//死骸Id	名前	解体後アイテムId1	ウェイト1	解体後アイテムId2	ウェイト2	解体後アイテムId3	ウェイト3	解体後アイテムId4	ウェイト4
-
-	int fromId = 0;
-	std::string name;
-	std::unordered_map<int, int>disassemblyResult;
-
-};
