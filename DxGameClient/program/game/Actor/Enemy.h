@@ -25,6 +25,8 @@ public:
 
 	int createEnemy = 0;
 
+	bool init = false;
+
 	void Update()override;
 
 	void Draw(Camera* camera)override;
@@ -38,6 +40,21 @@ public:
 	inline void SetIdentId(int IdentId) {
 		identId = IdentId;
 	}
+
+	//一定確率でエネミーがデカくなる仕様のセット
+	inline void SetIsBig() {
+		isBig = 1;
+	}
+
+	inline void SetEnemyId(int EnemyId) {
+		if (enemyId != -1)return;
+		enemyId = EnemyId;
+	}
+
+	inline int GetEnemyId() {
+		return enemyId;
+	}
+
 	//位置座標の同期
 	void MoveEnemyFromServerInfo(float x, float y, int dir);
 	//ステータスの同期
@@ -48,6 +65,9 @@ private:
 	//索敵範囲に入ったらTRUE
 	bool onFollowToPlayer = false;
 
+
+	//追尾ターゲット
+	std::shared_ptr<Actor> followTarget = nullptr;
 	//グラフハンドルの配列
 	std::vector<int>myAnimationGh;
 
@@ -59,10 +79,16 @@ private:
 	//エネミータイプ
 	int TYPE = 0;
 
+
 	/*攻撃インターバル*/
 	int atackInterval = 0;
-	int atackintervalLimit = 2;
+	float atackintervalLimit = 1.5f;
 
+	//デカ敵かどうか 0:通常 1:デカ
+	int isBig = 0;
+
+	//enemyId
+	int enemyId = -1;
 	
 	unsigned int ChangedColor();
 

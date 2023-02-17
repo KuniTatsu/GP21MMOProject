@@ -68,9 +68,16 @@ void EnemyManager::LoadEnemyMaster()
 
 		auto enemy = std::make_shared<Enemy>(tnl::Vector3{ 0,0,0 }, data, animList[i - 1], i - 1);
 
+		enemy->SetEnemyId(id);
+
 		enemyMaster.emplace_back(enemy);
 
 	}
+
+	//死骸Idの登録　いずれCsvに混ぜる
+	matchDeadBodyId.insert(std::make_pair(100, 2000));
+	matchDeadBodyId.insert(std::make_pair(101, 2001));
+	matchDeadBodyId.insert(std::make_pair(102, 2002));
 }
 
 //-----------------------------------------------------------------------------------------
@@ -201,6 +208,16 @@ std::shared_ptr<ActorData> EnemyManager::GetEnemyData(int type)
 	return data;
 }
 
+int EnemyManager::GetEnemyIdFromType(int type)
+{
+	return enemyMaster[type]->GetEnemyId();
+}
+
+int EnemyManager::GetDeadBodyId(int enemyId)
+{
+	return matchDeadBodyId.at(enemyId);
+}
+
 void EnemyManager::SortEnemyList(tnl::Vector3& playerPos)
 {
 	EnemyList.sort([&](std::shared_ptr<Enemy>left, std::shared_ptr<Enemy>right) {
@@ -217,23 +234,35 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 {
 	auto data = GetEnemyData(type);
 
-#ifndef DEBUG_ON
+	int id = GetEnemyIdFromType(type);
+
 	//個体識別番号を取得
 	int identId = SearchBlankEnemyNum();
 	//個体識別番号がエラー番号なら敵の生成を行わない
 	if (identId == -1)return;
 
-	//サーバーに生成した敵の情報を送る
-	gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
-	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
-
-#endif
 	auto& animList = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	auto newEnemy = std::make_shared<Enemy>(posEnemy, data, animList[type], type);
 
-#ifndef DEBUG_ON
 	newEnemy->SetIdentId(identId);
+
+	newEnemy->SetEnemyId(id);
+
+	int isBig = 0;
+
+	int rand = gManager->GetRandBetweenNum(0, 2000);
+	//1/200の確率で巨大化
+	if (rand < 20) {
+		newEnemy->SetIsBig();
+		isBig = 1;
+	}
+
+#ifndef DEBUG_ON
+	//サーバーに生成した敵の情報を送る
+	gManager->SendInitEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type, isBig);
+	gManager->SendEnemyInfoToServer(posEnemy.x, posEnemy.y, 1, identId, type);
+
 #endif
 
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
@@ -246,15 +275,21 @@ void EnemyManager::CreateEnemy(int type, tnl::Vector3& posEnemy)
 	tnl::DebugTrace("エネミー生成された：%d\n", createCount);
 }
 
-void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos)
+void EnemyManager::CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos, int IsBig)
 {
 	auto data = GetEnemyData(type);
+
+	int id = GetEnemyIdFromType(type);
 
 	auto& ghs = ResourceManager::GetInstance()->GetAnimVector(static_cast<int>(ResourceManager::RESOUCETYPE::ENEMY));
 
 	auto newEnemy = std::make_shared<Enemy>(spawnPos, data, ghs[type], type, identId);
 
+	newEnemy->SetEnemyId(id);
+
 	ActorDrawManager::GetInstance()->AddDrawActorList(newEnemy);
+
+	if (IsBig == 1)newEnemy->SetIsBig();
 
 	SetEnemyList(newEnemy);
 	createCount++;
@@ -281,10 +316,13 @@ void EnemyManager::Update(float deltatime)
 			EffectManager::GetInstance()->CreateEffect(static_cast<int>(EffectManager::EFFECTTYPE::DEATH), animPos);
 
 			auto id = (*itr)->GetIdentId();
+#ifdef DEBUG_ON
 			auto connect = GameManager::GetInstance()->GetConnection();
 			if (connect != nullptr) {
 				connect->SendClientEnemyIsDead(id);
 			}
+#endif // DEBUG_ON
+
 
 			//死んだ敵の個別番号を開放する
 			ResetEnemyNum(id);

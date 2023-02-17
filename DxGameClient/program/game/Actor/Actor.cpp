@@ -8,8 +8,11 @@
 #include"../BattleLogic.h"
 #include"../EffectManager.h"
 #include<math.h>
-
+#include"../Job.h"
 #include"../scene/Map.h"
+#include"../JobManager.h"
+#include"../Item/ItemManager.h"
+#include"../InventoryManager.h"
 
 //村に下と右側から入ろうとするとゲームが落ちる件
 	//今度は草原から村に入ろうとすると村のcsvがnullのため落ちる？
@@ -72,6 +75,7 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
+
 	//auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
 	
 	//std::vector<std::vector<int>>& hitMapEnemy = mapenemy->GetHitMap();
@@ -81,6 +85,7 @@ bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 	if (!hitMapPlayer.empty()) {
 		return HitMapToPos(pos, hitMapPlayer);
 	}
+
 
 	return true;
 }
@@ -430,7 +435,27 @@ void Actor::DefaultAttack()
 		double damage = battleLogic->CalcDefaultDamage(attackData->GetAttack(), defendData->GetDefence(), attackData->GetLevel(), successAttack);
 		if (defendData->UpdateHp((damage * (-1)))) {
 			//trueで帰ってきたら死んでるので、isliveを変える
-			defender->SetIsLive(false);
+ 			defender->SetIsLive(false);
+			//プレイヤーが攻撃者なら職業のキルカウントを増やす
+			if (actorType == 0) {
+				auto& jobs = gManager->GetPlayerJobs();
+				for (auto job : jobs) {
+					job->AddKillCount(1);
+				}
+
+				tnl::DebugTrace("敵が死んだよ");
+
+				auto enemy = std::dynamic_pointer_cast<Enemy>(defender);
+
+				//職業レベル上昇判定
+				JobManager::GetInstance()->UpdateJobInfo(static_cast<int>(JobManager::CONDITIONS::KILL));
+				//JobManager::GetInstance()->UpdateJobInfo(static_cast<int>(JobManager::CONDITIONS::KILLWEAPON));
+
+				//死んだ敵の死骸を倒した人のインベントリに入れる 本来はその場に落としたい
+				int dropItemId = ItemManager::GetInstance()->GetBaseBodyId(enemy->GetEnemyId());
+
+				InventoryManager::GetInstance()->AddItemToInventory(dropItemId);
+			}
 		}
 	}
 }

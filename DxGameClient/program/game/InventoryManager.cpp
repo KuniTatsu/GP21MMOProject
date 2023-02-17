@@ -58,6 +58,16 @@ void InventoryManager::UpdateInventory()
 {
 	//選択中のインベントリを動かす
 	inventories[nowSelectInventoryNum]->Update();
+
+	//インベントリが一つなら下の処理を行わない
+	if (latestIntentoryNum == 0)return;
+	//インベントリのページを切り替える
+	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_RIGHT)) {
+		nowSelectInventoryNum = (nowSelectInventoryNum + 1) % (latestIntentoryNum + 1);
+	}
+	else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_LEFT)) {
+		nowSelectInventoryNum = (nowSelectInventoryNum + latestIntentoryNum) % (latestIntentoryNum + 1);
+	}
 }
 
 /*インベントリにアイテム追加*/
@@ -186,6 +196,80 @@ void InventoryManager::PopItemFromInventory()
 	//カーソルの位置を一番上にリセット
 	if (inventories[nowSelectInventoryNum]->GetItemList().empty()) {
 		inventories[nowSelectInventoryNum]->CursorReset();
+	}
+}
+
+void InventoryManager::PopAllDeadBodyFromInventory()
+{
+	//今見ているアイテムが最後のインベントリの最後のアイテムでなければ続ける
+
+	//すべてのインベントリをなめる
+	for (int i = 0; i < inventories.size(); ++i) {
+		//今の位置の配列番号を取得
+		auto& list = inventories[i]->GetItemList();
+		//listのなかをすべて舐める
+		for (auto item = list.begin(); item != list.end();) {
+
+			//死骸アイテムなら消す
+			if ((*item)->GetItemId() == 90000 || (*item)->GetItemId() == 90001 || (*item)->GetItemId() == 90002) {
+
+				//アイテムを消去
+				item = inventories[nowSelectInventoryNum]->GetItemList().erase(item);
+
+				//popするアイテムがいる場所=今いるインベントリが最後のインベントリではない場合
+				if (i != latestIntentoryNum) {
+					int checkInventoryNum = i;
+					while (1) {
+						if (inventories[checkInventoryNum + 1]->GetItemList().empty())break;
+						//if (sharedInventories[checkInventoryNum + 1]->inventoryList.empty())break;
+
+						//次のページの最初のアイテムをコピーして消したアイテムのリストの末尾に加える
+						auto item = inventories[checkInventoryNum + 1]->GetItemList().begin();
+
+						//アイテム追加
+						inventories[checkInventoryNum]->GetItemList().emplace_back((*item));
+
+						//次のページの最初のアイテムをpopする
+						inventories[checkInventoryNum + 1]->GetItemList().pop_front();
+
+						//最後のインベントリページにたどり着いたらbreak
+						if (checkInventoryNum + 1 == latestIntentoryNum)break;
+						checkInventoryNum++;
+					}
+				}
+				//最初のインベントリ内なら
+				else {
+					//インベントリ内のアイテム数を1減らす
+					inventories[i]->SetItemNum(-1);
+				}
+				//からのインベントリを消したか
+				bool isDelete = false;
+
+				//空のインベントリを消す処理
+				if (inventories[latestIntentoryNum]->GetItemList().empty()) {
+					if (latestIntentoryNum != 0) {
+						inventories[latestIntentoryNum]->GetItemList().clear();
+						inventories[latestIntentoryNum] = nullptr;
+						inventories.pop_back();
+						latestIntentoryNum--;
+
+						//fukushi_isDelteteInventoryがfalesになる場合の処理がどこかで必要
+						isDelete = true;
+					}
+				}
+
+				if (isDelete)return;
+
+				//カーソルの位置を一番上にリセット
+				if (inventories[nowSelectInventoryNum]->GetItemList().empty()) {
+					inventories[nowSelectInventoryNum]->CursorReset();
+				}
+			}
+			else {
+				//死骸じゃないなら次を見る
+				++item;
+			}
+		}
 	}
 }
 

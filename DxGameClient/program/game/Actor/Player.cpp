@@ -159,6 +159,11 @@ void Player::SetTalent()
 	hoge++;
 }
 
+void Player::SetPlayerJob(std::shared_ptr<Job>job)
+{
+	myJobs.emplace_back(job);
+}
+
 // jobのデータを取得
 void Player::SetPlayerInitJob() {
 	auto jobManager = JobManager::GetInstance();
@@ -179,6 +184,9 @@ void Player::Move()
 	//移動量リセット
 	moveX = 0;
 	moveY = 0;
+
+	//移動不可なら無視する
+	if (!canMove)return;
 
 	//どうにかしてまとめたい　関数化したいがうまく思いつかない
 	//上下キー感知

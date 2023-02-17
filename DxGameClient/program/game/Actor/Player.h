@@ -5,6 +5,8 @@
 class Talent;
 class Job;
 class Inventory;
+class EquipItem;
+
 class Player :public Actor
 {
 public:
@@ -35,7 +37,7 @@ public:
 	}
 
 	//職一覧を取得する関数
-	inline const std::vector<std::shared_ptr<Job>>& GetmyJobs() {
+	inline std::vector<std::shared_ptr<Job>>& GetmyJobs() {
 		return myJobs;
 	}
 
@@ -50,6 +52,8 @@ public:
 
 	void SetTalent();
 
+	void SetPlayerJob(std::shared_ptr<Job>job);
+
 
 	// 職のデータを取得する関数
 	void SetPlayerInitJob();
@@ -62,7 +66,10 @@ public:
 		canOpenMenu = swich;
 	}
 
-
+	//装備アイテムの一覧を取得する関数
+	inline std::vector<std::shared_ptr<EquipItem>>& GetEquipItems() {
+		return myEquipItem;
+	}
 
 private:
 
@@ -107,5 +114,7 @@ private:
 	bool isCreatedDummy = false;
 	//menuが開けるか
 	bool canOpenMenu = true;
+
+	std::vector<std::shared_ptr<EquipItem>>myEquipItem;
 };
 

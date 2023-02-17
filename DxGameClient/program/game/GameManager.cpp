@@ -46,7 +46,7 @@ volatile int num1 = 0;
 
 void GameManager::Accept()
 {
-#ifdef DEBUG_OFF
+#ifndef DEBUG_OFF
 	while (isEnd == false)
 	{
 		auto get = connect->GetServerMessage();
@@ -625,6 +625,11 @@ void GameManager::CreateChat()
 	}
 }
 
+std::vector<std::shared_ptr<Job>>& GameManager::GetPlayerJobs()
+{
+	return player->GetmyJobs();
+}
+
 void GameManager::CreateThread()
 {
 	acceptThread = std::thread([this] {GameManager::Accept(); });
@@ -845,9 +850,9 @@ void GameManager::GetServerOtherUser()
 }
 
 
-void GameManager::SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
+void GameManager::SendInitEnemyInfoToServer(float x, float y, int dir, int identNum, int type,int isBig)
 {
-	connect->SendClientEnemyInitInfo(x, y, dir, identNum, type);
+	connect->SendClientEnemyInitInfo(x, y, dir, identNum, type,isBig);
 }
 
 void GameManager::SendEnemyInfoToServer(float x, float y, int dir, int identNum, int type)
@@ -915,15 +920,6 @@ void GameManager::Update(float delta_time) {
 
 	sManager->Update(delta_time);
 	sManager->Draw();
-
-#ifndef DEBUG_ON
-	if (chat) {
-		chat->Update();
-		chat->Draw();
-	}
-#endif
-
-
 
 	if (tnl::Input::IsKeyDownTrigger(eKeys::KB_E)) {
 		uiEditor->ChangeEnable();

@@ -79,6 +79,9 @@ public:
 		return STATUSNAME;
 	}
 
+	inline void setMoveSpeed(float fixMoveSpeed) {
+		moveSpeed = fixMoveSpeed;
+	}
 
 	//攻撃力などの基本ステータスの計算と代入
 	void CalcMainStatus();

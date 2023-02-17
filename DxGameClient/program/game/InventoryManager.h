@@ -35,10 +35,18 @@ public:
 	//インベントリ更新
 	void UpdateInventory();
 
+	//すべてのインベントリを取得
+	inline std::vector<std::shared_ptr<Inventory>>& GetInventory() {
+		return inventories;
+	}
+
 	void AddItemToInventory(const int ItemId);
 
 	//アイテムを特定のインベントリから削除する関数 args:消すアイテムがあるインベントリの番号
 	void PopItemFromInventory();
+
+	//インベントリ内のすべての死骸アイテムを消去する関数
+	void PopAllDeadBodyFromInventory();
 
 	//選択中のアイテムを使用する関数
 	void UseCursorItem();

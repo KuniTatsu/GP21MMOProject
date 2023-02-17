@@ -2,6 +2,7 @@
 
 #include<vector>
 #include<memory>
+#include<unordered_map>
 #include "../dxlib_ext/dxlib_ext.h"
 
 class Camera;
@@ -46,6 +47,9 @@ private:
 
 	std::vector<bool>isUseEnemyIdentNum;
 
+	//enemyの死体Id
+	std::unordered_map<int, int>matchDeadBodyId;
+
 	//private関数群
 private:
 	void LoadEnemyMaster();
@@ -77,6 +81,14 @@ public:
 	//Enemyデータ取得
 	std::shared_ptr<ActorData> GetEnemyData(int type);
 
+	//enemyId取得
+	int GetEnemyIdFromType(int type);
+
+	//enemyごとの死体Idの取得
+	int GetDeadBodyId(int enemyId);
+
+	//
+
 	//Enemyスポーン範囲検索
 	void SpawnEnemy(tnl::Vector3& PlayerPos);
 
@@ -94,7 +106,7 @@ public:
 	void ResetEnemyNum(int enemyNum);
 
 	//敵の識別番号を埋める関数
-	
+
 
 	//Enemyの位置座標の同期
 	void ShareEnemyPosFromServer(int identId, float x, float y, int dir, int type);
@@ -112,7 +124,7 @@ public:
 	/*エネミー生成関数*/
 	void CreateEnemy(int type, tnl::Vector3& posEnemy);
 	//サーバーからの情報でのエネミー生成関数
-	void CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos);
+	void CreateEnemyFromServer(int type, int identId, tnl::Vector3& spawnPos, int IsBig = 0);
 
 	//Enemyの生成上限を取得する関数
 	inline const int GetLimitEnemySpawn() {

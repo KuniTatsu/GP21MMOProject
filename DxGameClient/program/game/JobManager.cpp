@@ -2,6 +2,8 @@
 #include "Job.h"
 #include "GameManager.h"
 #include "JobExpCondition.h"
+#include"Actor/Player.h"
+#include"Item/EquipItem.h"
 
 
 
@@ -11,10 +13,72 @@ JobManager::JobManager()
 {
 	gManager = GameManager::GetInstance();
 	LoadCsv();
+	doneCondition.clear();
 }
 
 JobManager::~JobManager()
 {
+}
+//外から呼ぶ職の更新関数
+bool JobManager::UpdateJobInfo(int condition)
+{
+	//コンディションIdに対応するコンディションオブジェクトを取得
+	std::vector<std::shared_ptr<JobExpCondition>> conditions;
+
+	for (int i = 0; i < JobExpConditionMaster.size(); ++i) {
+		if (condition == JobExpConditionMaster[i]->GetCondition()) {
+			conditions.emplace_back(JobExpConditionMaster[i]);
+		}
+	}
+
+	//playerの職業一覧
+	auto& jobs = GameManager::GetInstance()->GetPlayerJobs();
+
+	bool isContain = false;
+
+	switch (condition)
+	{
+		//無条件で経験値追加
+	case static_cast<int>(CONDITIONS::NONE):
+
+		break;
+		//killで経験値追加
+	case static_cast<int>(CONDITIONS::KILL):
+		isContain = CheckConditionKill(conditions, jobs);
+		break;
+		//無条件で経験値追加
+	case static_cast<int>(CONDITIONS::KILLWEAPON):
+		isContain = CheckConditionKillWeapon(conditions, jobs);
+		break;
+		//無条件で経験値追加
+	case static_cast<int>(CONDITIONS::USEITEM):
+
+		break;
+		//無条件で経験値追加
+	case static_cast<int>(CONDITIONS::GETITEM):
+
+		break;
+		//無条件で経験値追加
+	case static_cast<int>(CONDITIONS::MOVE):
+
+		break;
+	default:
+		break;
+	}
+
+	//一つでも経験値を上げる対象があるか
+	if (isContain) {
+		for (int i = 0; i < doneCondition.size(); ++i) {
+			//jobID
+			int jobId = doneCondition[i]->GetJobId();
+
+			//足す経験値
+			int addExp = doneCondition[i]->GetExp();
+
+			AddExpToJob(jobId, addExp);
+		}
+	}
+	return false;
 }
 
 JobManager* JobManager::GetInstance()
@@ -70,15 +134,70 @@ void JobManager::LoadCsvJobLevelCondition()
 		int weapon = std::stoi(loadCsv[i][4]);
 		int exp = std::stoi(loadCsv[i][5]);
 
-		auto jobLevelCondition = std::make_shared<JobExpCondition>(id, name, condition, requiredAmount, weapon, exp);
+		auto jobLevelCondition = std::make_shared<JobExpCondition>(id, name, condition, requiredAmount, exp);
+
+		if (weapon != -1)jobLevelCondition->SetWeaponId(weapon);
+
 		JobExpConditionMaster.emplace_back(jobLevelCondition);
 	}
+}
+
+bool JobManager::CheckConditionKill(const std::vector<std::shared_ptr<JobExpCondition>>& conditions, std::vector<std::shared_ptr<Job>>& playerJobs)
+{
+	bool isContain = false;
+	//持ってきたコンディションの必要討伐数とプレイヤージョブの討伐数を比べて、満たしていたらおｋリストに入れる
+	for (int i = 0; i < conditions.size(); ++i) {
+		int needKillCount = conditions[i]->GetRequiredAmount();
+		//debug
+		std::string jobName = conditions[i]->GetJobName();
+
+		//プレイヤーの職の今のキルカウント
+		int nowKillCount = playerJobs[i]->GetMonsterKills();
+
+		if (needKillCount <= nowKillCount) {
+			doneCondition.emplace_back(conditions[i]);
+
+			//キルカウントをリセットする
+			playerJobs[i]->ResetKillCount();
+
+			isContain = true;
+		}
+	}
+	return isContain;
+}
+
+bool JobManager::CheckConditionKillWeapon(const std::vector<std::shared_ptr<JobExpCondition>>& conditions, std::vector<std::shared_ptr<Job>>& playerJobs)
+{
+	bool isContain = false;
+	//持ってきたコンディションの必要討伐数とプレイヤージョブの討伐数を比べて、満たしていたらおｋリストに入れる
+	for (int i = 0; i < conditions.size(); ++i) {
+
+
+
+	}
+
+
+	return isContain;
+}
+
+bool JobManager::CheckConditionUseItem()
+{
+	return false;
+}
+
+bool JobManager::CheckConditionGetItem()
+{
+	return false;
+}
+
+bool JobManager::CheckConditionMove()
+{
+	return false;
 }
 
 std::shared_ptr<Job> JobManager::CreateNewJob(int jobId)
 {
 	if (jobId > jobMaster.size())return nullptr;
-
 
 	// JobのCsv内のデータをすべて持ってくる
 	auto id = jobMaster[jobId]->GetId();
@@ -93,8 +212,36 @@ std::shared_ptr<Job> JobManager::CreateNewJob(int jobId)
 	return std::make_shared<Job>(id, name, str, vit, inteli, min, spd, dex);
 }
 
-void JobManager::AddExpToJob(std::shared_ptr<Job> job, int jobId, int addExp)
+std::shared_ptr<Job> JobManager::CreateDebugJob(int jobId, int startJobLevel)
 {
+	std::shared_ptr<Job> buf = nullptr;
+	for (int i = 0; i < jobMaster.size(); ++i) {
+		if (jobMaster[i]->GetId() == jobId) {
+			buf = jobMaster[i];
+		}
+	}
+
+	if (buf == nullptr)return nullptr;
+
+	// JobのCsv内のデータをすべて持ってくる
+	auto id = buf->GetId();
+	auto& name = buf->GetName();
+	auto str = buf->GetStr();
+	auto vit = buf->GetVit();
+	auto inteli = buf->GetInt();
+	auto min = buf->GetMin();
+	auto spd = buf->GetSpd();
+	auto dex = buf->GetDex();
+
+	return std::make_shared<Job>(id, name, str, vit, inteli, min, spd, dex, startJobLevel);
+}
+
+void JobManager::AddExpToJob(int jobId, int addExp)
+{
+	//jobIdから対応する今のプレイヤーの職を取得する
+	auto& job = GameManager::GetInstance()->GetPlayer()->GetmyJobs()[jobId];
+
+
 	//今たまっている経験値を取得
 	int nowExp = job->GetNowExp();
 	//次のレベルまで必要な経験値を取得
@@ -106,7 +253,7 @@ void JobManager::AddExpToJob(std::shared_ptr<Job> job, int jobId, int addExp)
 	//レベルに応じた必要経験値を取得 係数は後で決定
 	int fixNeedExp = needExp + 20 * (nowLevel + 1);
 
-	
+
 	//経験値を足す
 	int addedExp = nowExp + addExp;
 	//もし必要経験値を上回っていたらレベルを一つ上げて、オーバーフローした経験値をセットする
@@ -121,21 +268,21 @@ void JobManager::AddExpToJob(std::shared_ptr<Job> job, int jobId, int addExp)
 	}
 }
 
-void JobManager::GetJobToWeapon(std::shared_ptr<Job> job, int WeaponId)
-{
-	int weapon = 0;
-	//std::vector<int> jobId;
-	int jobId = 0;
-
-	//// 特定の条件の職を取得する
-	for (int i = 1; i > JobExpConditionMaster.size(); i++) {
-		weapon = JobExpConditionMaster[i]->GetWeaponId();
-		if (WeaponId == weapon) {
-			jobId = JobExpConditionMaster[i]->GetJobId();
-			//jobId = static_cast <std::vector<int>>(JobExpConditionMaster[i]->GetJobId());
-		};
-	}
-}
+//std::vector<std::shared_ptr<Job>>JobManager::GetJobFromWeapon(int WeaponId)
+//{
+//	int weapon = 0;
+//	//std::vector<int> jobId;
+//	int jobId = 0;
+//
+//	//// 特定の条件の職を取得する
+//	for (int i = 1; i < JobExpConditionMaster.size(); i++) {
+//		weapon = JobExpConditionMaster[i]->GetWeaponId();
+//		if (WeaponId == weapon) {
+//			jobId = JobExpConditionMaster[i]->GetJobId();
+//			//jobId = static_cast <std::vector<int>>(JobExpConditionMaster[i]->GetJobId());
+//		};
+//	}
+//}
 
 //void JobManager::GetExpToJob(std::vector<int> jobId)
 //{

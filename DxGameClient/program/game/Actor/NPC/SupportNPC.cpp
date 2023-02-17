@@ -6,6 +6,7 @@
 #include"../Camera.h"
 #include"../player.h"
 #include<math.h>
+#include"../../ResourceManager.h"
 
 SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y, ghNum)
 {
@@ -14,10 +15,15 @@ SupportNPC::SupportNPC(float x, float y, int ghNum, float distance) :NPC(x, y, g
 	if (loadNPCHint(static_cast<int>(NPCTYPE::SUP))) {
 		maxPageNum = static_cast<int>(std::floor(npcSpeaks.size() / MAXDRAWNUM));
 	}
+	emotions = ResourceManager::GetInstance()->GetEmotionGhs();
+
+	returnKey = GameManager::GetInstance()->LoadGraphEx("graphics/Key/button_Enter.png");
+	escKey = GameManager::GetInstance()->LoadGraphEx("graphics/Key/button_Escape.png");
 }
 
 SupportNPC::~SupportNPC()
 {
+
 }
 
 void SupportNPC::Update()
@@ -30,8 +36,21 @@ void SupportNPC::Update()
 
 void SupportNPC::Draw(Camera* camera)
 {
+
 	DrawRotaGraphF(drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1), drawPos.y - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1),
 		1, 0, ghs[10], true);
+
+	//‹ß‚­‚Éplayer‚ª‚¢‚È‚©‚Á‚½‚ç–³Ž‹‚·‚é
+	if (!isNearPlayer)return;
+
+	if (--emoteActWait <= 0) {
+		emoteActIndex++;
+		emoteActWait = emoteActSpeed;
+		emoteActIndex %= 3;
+		emoteDrawGh = emotions[0][emoteActIndex];
+	}
+	DrawRotaGraphF(drawPos.x - camera->pos.x + (GameManager::SCREEN_WIDTH >> 1), drawPos.y - 20 - camera->pos.y + (GameManager::SCREEN_HEIGHT >> 1), 1, 0, emoteDrawGh, true);
+
 }
 
 void SupportNPC::Init()
@@ -75,7 +94,7 @@ bool SupportNPC::SeqFirstMenu(const float DeltaTime)
 {
 	if (mainSequence.isStart()) {
 		//SUPNPC‚ÌUI‚ð•`‰æó‘Ô‚É‚·‚é
-		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC),true);
+		UIManager::GetInstance()->ChangeCanDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), true);
 		//•`‰æ‚·‚éUI‚ðFirstMenu‚É•ÏX
 		UIManager::GetInstance()->ChangeDrawUI(static_cast<int>(UIManager::UISERIES::SUPNPC), static_cast<int>(UIManager::SUPNPCUI::FIRSTMENU));
 	}
@@ -146,8 +165,12 @@ bool SupportNPC::SeqHint(const float DeltaTime)
 void SupportNPC::DrawWaitSequence()
 {
 	SetFontSize(50);
-//	DrawStringEx(20, 20, -1, "SupNPC:Wait");
+	//	DrawStringEx(20, 20, -1, "SupNPC:Wait");
 	SetFontSize(16);
+	//‹ß‚­‚Éplayer‚ª‚¢‚È‚©‚Á‚½‚ç–³Ž‹‚·‚é
+	if (!isNearPlayer)return;
+
+	DrawRotaGraphF(550, 370, 1, 0, returnKey, true);
 }
 
 void SupportNPC::DrawFirstMenuSequence()
@@ -161,12 +184,21 @@ void SupportNPC::DrawFirstMenuSequence()
 
 		//2”Ô‚ªƒ^ƒCƒgƒ‹‚ð•`‰æ‚·‚éUI˜g‚È‚Ì‚Å‚»‚±‚¾‚¯Žæ“¾‚·‚é
 		auto& leftTopPos = firstMenuGraphics[1]->GetLeftTopPos();
-		drawSpeakTitlePos = tnl::Vector3(leftTopPos.x + 50, leftTopPos.y+20, 0);
+		drawSpeakTitlePos = tnl::Vector3(leftTopPos.x + 50, leftTopPos.y + 20, 0);
+
+		//3”Ô‚ª•¶Žš‚ð•`‰æ‚·‚éUI˜g‚È‚Ì‚Å‚»‚±‚¾‚¯Žæ“¾‚·‚é
+		auto& leftTopPos1 = firstMenuGraphics[2]->GetLeftTopPos();
+		drawSpeakPos = tnl::Vector3(leftTopPos1.x + 20, leftTopPos1.y + 20, 0);
 	}
 
 	DrawNpcTextName(MAXDRAWNUM, nowDrawPage, drawSpeakTitlePos);
 
-	DrawRotaGraph(drawSpeakTitlePos.x - 25, drawSpeakTitlePos.y + 10 + (cursorNum * 20), 0.25, 0, cursorGh, true);
+	DrawRotaGraphF(drawSpeakTitlePos.x - 25, drawSpeakTitlePos.y + 10 + (cursorNum * 20), 0.25, 0, cursorGh, true);
+
+	DrawRotaGraphF(drawSpeakTitlePos.x +25, drawSpeakTitlePos.y + 200, 1, 0, escKey, true);
+	DrawStringEx(drawSpeakTitlePos.x +52, drawSpeakTitlePos.y + 190,-1, "‚Å•Â‚¶‚é");
+
+	DrawStringEx(drawSpeakPos.x, drawSpeakPos.y, -1, "‚â‚ A‰½‚ª•·‚«‚½‚¢‚ñ‚¾‚¢?");
 
 	SetFontSize(50);
 	//DrawStringEx(20, 20, -1, "SupNPC:MENU");
@@ -187,7 +219,7 @@ void SupportNPC::DrawHintSequence()
 
 		//3”Ô‚ª•¶Žš‚ð•`‰æ‚·‚éUI˜g‚È‚Ì‚Å‚»‚±‚¾‚¯Žæ“¾‚·‚é
 		auto& leftTopPos = hintMenuGraphics[2]->GetLeftTopPos();
-		drawSpeakPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y+20, 0);
+		drawSpeakPos = tnl::Vector3(leftTopPos.x + 20, leftTopPos.y + 20, 0);
 
 		selectHint = nowDrawPage * MAXDRAWNUM + cursorNum;
 	}
@@ -195,7 +227,7 @@ void SupportNPC::DrawHintSequence()
 	DrawNpcText(selectHint, drawSpeakPos);
 
 	SetFontSize(50);
-//	DrawStringEx(20, 20, -1, "SupNPC:Hint");
+	//	DrawStringEx(20, 20, -1, "SupNPC:Hint");
 	SetFontSize(16);
 }
 

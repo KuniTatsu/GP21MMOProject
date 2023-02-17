@@ -20,6 +20,11 @@ public:
 
 	std::vector<int>& GetCharaVectorAtGhNum(int graphicNum);
 
+	inline std::vector<std::vector<int>>& GetEmotionGhs() {
+		return emotionGhs;
+	}
+
+
 public:
 	enum class RESOUCETYPE :uint32_t {
 		PLAYER,
@@ -43,8 +48,10 @@ private:
 	void LoadGraphicCsv(std::string pass, std::vector<int>& putInVector);
 	void LoadAnimGraphicCsv(std::string pass, std::vector< std::vector<int>>& putInVector,int type);
 
-	void SetGraphicSize(int type, int width, int height);
+	//単一ロード用
+	void LoadAnimGraphicCsv(std::string pass, std::vector<std::vector<int>>& putInVector);
 
+	void SetGraphicSize(int type, int width, int height);
 
 private:
 	static ResourceManager* instance;
@@ -63,6 +70,10 @@ private:
 	std::vector<int>skillGhs;
 
 	std::vector<int>charaIcons;
+
+	//emotion
+	std::vector<std::vector<int>>emotionGhs;
+
 
 	//画像のx,y方向の大きさ
 	std::vector<std::vector<tnl::Vector3>> graphicSizes;

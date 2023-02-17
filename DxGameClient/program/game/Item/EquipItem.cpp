@@ -5,8 +5,19 @@
 //
 //}
 
-EquipItem::EquipItem(int ID, std::string Name, float HP, int STR, int VIT, int INT, int MID, int SPD, int DEX)
+EquipItem::EquipItem(int ID, std::string Name, float HP, int STR, int VIT, int INT, int MID, int SPD, int DEX, int EquipId )
 {
+	id = ID;
+	name = Name;
+	hp = HP;
+	str = STR;
+	vit = VIT;
+	inteli = INT;
+	mid = MID;
+	spd = SPD;
+	dex = DEX;
+	equipId = EquipId;
+
 }
 
 EquipItem::~EquipItem()

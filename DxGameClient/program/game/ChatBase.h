@@ -6,6 +6,7 @@
 
 class GameManager;
 class Connect;
+class GraphicUI;
 
 class ChatBase
 {
@@ -66,6 +67,9 @@ private:
 	char buffer[100] = {};
 
 	bool init = false;
+
+	//ƒ`ƒƒƒbƒg“ü—Í—“
+	std::shared_ptr<GraphicUI>inputChatArea;
 
 
 	tnl::Sequence<ChatBase> sequence =

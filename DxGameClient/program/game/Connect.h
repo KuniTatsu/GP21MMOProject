@@ -30,10 +30,10 @@ public:
 	void SendClientFieldItemInfo(float x, float y, int itemId);
 
 	//クライアントキャラクターの位置座標と画像ハンドル番号を送る関数
-	void SendClientPlayerInfo(float x, float y, int dir,float HP, int isCreated = 0, int ghNum = 0, int isDebug = 0);
-	
+	void SendClientPlayerInfo(float x, float y, int dir, float HP, int isCreated = 0, int ghNum = 0, int isDebug = 0);
+
 	//クライアントキャラクターの初期ステータスのサーバー登録
-	void SendClientPlayerInitInfo(float x, float y, float HP,int ghNum);
+	void SendClientPlayerInitInfo(float x, float y, float HP, int ghNum);
 
 	//クライアントキャラクターのステータス変動の共有
 	void SendClientPlayerStatus(float moveHP);
@@ -45,7 +45,7 @@ public:
 	void SendClientAttackEffectInfo(float x, float y, int effectNum, int dir = 0);
 
 	//クライアントキャラクター作成時にAttributeが決まったときにサーバーに送る関数 isCreated:0->データベース未登録,1->登録済み
-	void SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX,int isCreated=0);
+	void SendClientPlayerAttribute(int STR, int VIT, int INT, int MID, int SPD, int DEX, int isCreated = 0);
 
 	//再ログイン時にクライアントの情報をサーバーから取得する関数
 	void GetClientCharactorInfo(std::string UUID);
@@ -53,13 +53,13 @@ public:
 	void GetClientCharactorAttribute();
 
 	//エネミーの初期情報のサーバー登録
-	void SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type);
+	void SendClientEnemyInitInfo(float x, float y, int dir, int identificationNum, int type, int isBig);
 
 	//エネミーの位置座標の共有
-	void SendClientEnemyInfo(float x, float y, int dir, int identificationNum,int type);
+	void SendClientEnemyInfo(float x, float y, int dir, int identificationNum, int type);
 
 	//エネミーのステータス変動の共有
-	void SendClientEnemyStatus(int identificationNum,float moveHP);
+	void SendClientEnemyStatus(int identificationNum, float moveHP);
 
 	//エネミーの死亡状況の共有
 	void SendClientEnemyIsDead(int identificationNum, int isDead = 1);
@@ -82,6 +82,7 @@ private:
 	std::string host = "192.168.161.6";
 	//std::string host = "10.76.161.6";
 
+
 	//ポート
 	const std::string  port = "9001"; //80
 
@@ -92,4 +93,3 @@ private:
 	GameManager* gManager = nullptr;
 
 };
-
