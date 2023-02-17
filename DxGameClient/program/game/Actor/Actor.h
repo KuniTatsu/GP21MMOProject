@@ -272,6 +272,8 @@ protected:
 
 	/*マップとキャラクターの当たり判定*/
 	bool HitMaptoCharacter(tnl::Vector3& pos);
+	/*マップとエネミーの当たり判定*/
+	bool HitMaptoEnemy(tnl::Vector3& pos);
 
 };
 

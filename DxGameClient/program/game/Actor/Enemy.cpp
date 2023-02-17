@@ -156,7 +156,7 @@ void Enemy::Update()
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 
-	if (onFollowToPlayer) {
+	if (onFollowToPlayer && HitMaptoEnemy(drawPos)) {
 		/*í«è]*/
 		EnemyMove();
 	}
@@ -176,7 +176,7 @@ void Enemy::Draw(Camera* camera)
 
 
 	/*çıìGä÷êî*/
-	SearchBox(tnl::Vector3(x, y, 0), 50);
+	//SearchBox(tnl::Vector3(x, y, 0), 50);
 
 	if (TYPE == 0) {
 		Anim(myAnimationGh, 6);

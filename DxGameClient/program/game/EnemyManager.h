@@ -33,14 +33,14 @@ private:
 //生成回数
 	int createCount = 0;
 	//生成制限
-	const int SPAWNLIMIT = 1;
+	const int SPAWNLIMIT = 5;
 
 	//インターバルのカウント開始Flag
 	bool spawntiming = false;
 	//生成するまでのインターバルをカウント
 	int intervalCount = 0;
 	//インターバルの制限時間
-	const int intervalLimit = 5;
+	const int intervalLimit = 2;
 
 	std::vector<std::shared_ptr<Enemy>> enemyMaster;
 
