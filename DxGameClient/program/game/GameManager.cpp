@@ -464,11 +464,11 @@ std::shared_ptr<Map> GameManager::GetPlayerOnMap()
 	return Maps.front();
 }
 
-std::shared_ptr<Map> GameManager::GetEnemyOnMap()
+std::shared_ptr<Map> GameManager::GetEnemyOnMap(tnl::Vector3& enemypos)
 {
 	Maps.sort([&](std::shared_ptr<Map>map1, std::shared_ptr<Map>map2) {
-		float distanceMapA = GetMaptoEnemyDistance(map1);
-		float distanceMapB = GetMaptoEnemyDistance(map2);
+		float distanceMapA = GetMaptoEnemyDistance(map1,enemypos);
+		float distanceMapB = GetMaptoEnemyDistance(map2,enemypos);
 
 		if (distanceMapA < distanceMapB) {
 			return true;
@@ -511,16 +511,15 @@ float GameManager::GetMapToPlayerDistance(std::shared_ptr<Map> map)
 	return distance;
 }
 
-float GameManager::GetMaptoEnemyDistance(std::shared_ptr<Map> map)
+float GameManager::GetMaptoEnemyDistance(std::shared_ptr<Map> map,tnl::Vector3& enemyPos)
 {
-	for (auto enm : Enemys) {
-		tnl::Vector3 enemyPos = enm->GetPos();
+		//tnl::Vector3 enmPos = enemyPos;
 		tnl::Vector3 mapPos = map->GetMapCenterPos();
 
 		float distance = std::sqrt((mapPos.x - enemyPos.x) * (mapPos.x - enemyPos.x) +
 			(mapPos.y - enemyPos.y) * (mapPos.y - enemyPos.y));
 		return distance;
-	}
+	
 
 	//return 0.0f;
 }

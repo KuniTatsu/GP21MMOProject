@@ -213,7 +213,7 @@ public:
 	//Player(このクライアントの)がいるマップポインタを取得する関数
 	std::shared_ptr<Map>GetPlayerOnMap();
 	//Enemyがいるマップポインタを取得する関数
-	std::shared_ptr<Map>GetEnemyOnMap();
+	std::shared_ptr<Map>GetEnemyOnMap(tnl::Vector3& enemypos);
 
 	//指定座標からマップを取得する関数
 	std::shared_ptr<Map>GetMapOnPoint(tnl::Vector3& Point);
@@ -224,7 +224,7 @@ public:
 	//Mapポインタの中心座標からPlayerの中心座標への距離を求める関数
 	float GetMapToPlayerDistance(std::shared_ptr<Map> map);
 	//Mapポインタの中心座標からEnemyの中心座標への距離を求める関数
-	float GetMaptoEnemyDistance(std::shared_ptr<Map> map);
+	float GetMaptoEnemyDistance(std::shared_ptr<Map> map,tnl::Vector3& enemyPos);
 
 	//チャンク中心からチャンク中心への距離を求める関数
 	inline float GetChunkDistance() {

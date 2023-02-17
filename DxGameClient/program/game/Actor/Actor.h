@@ -288,6 +288,7 @@ protected:
 	//基本攻撃の近接タイプの範囲を計算する関数 左上,右上,左下,右下の順
 	std::vector<tnl::Vector3>GetMeleeAttackBox();
 
+	//エネミーとプレイヤーの距離
 	float GetDisPlayerfromEnemy(tnl::Vector3& enemypos);
 
 	//アニメーション更新関数
@@ -295,6 +296,8 @@ protected:
 
 	/*マップとキャラクターの当たり判定*/
 	bool HitMaptoCharacter(tnl::Vector3& pos);
+	/*マップとエネミーの当たり判定*/
+	bool HitMaptoEnemy(tnl::Vector3& pos);
 
 };
 

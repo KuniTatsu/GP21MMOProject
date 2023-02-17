@@ -143,7 +143,7 @@ void Enemy::EnemyMove() {
 	//方向ベクトル取得
 	tnl::Vector3 dirVecor = gManager->GetVectorToPlayer(drawPos);
 
-	//エネミー座標がplayer座標のいっていの範囲に入ったら
+	//エネミー座標がplayer座標の一定の範囲に入ったら
 	if (GetDisPlayerfromEnemy(drawPos) < 40)return;
 
 	drawPos += dirVecor * myData->GetMoveSpeed();
@@ -177,7 +177,7 @@ void Enemy::Update()
 	gManager->SendEnemyInfoToServer(drawPos.x, drawPos.y, static_cast<int>(myExDir), identId);
 #endif
 
-	if (onFollowToPlayer) {
+	if (onFollowToPlayer && HitMaptoEnemy(drawPos)) {
 		/*追従*/
 		EnemyMove();
 	}
@@ -204,7 +204,7 @@ void Enemy::Draw(Camera* camera)
 
 
 	/*索敵関数*/
-	SearchBox(tnl::Vector3(x, y, 0), 50);
+	//SearchBox(tnl::Vector3(x, y, 0), 50);
 
 	if (TYPE == 0) {
 		Anim(myAnimationGh, 6);
@@ -212,10 +212,12 @@ void Enemy::Draw(Camera* camera)
 	else {
 		Anim(myAnimationGh, 4);
 	}
+
 	if (isBig == 1) {
 		DrawRotaGraphF(x, y, 2.0, 0, drawGh, true);
 		return;
 	}
 	DrawRotaGraphF(x, y, 1.2, 0, drawGh, true);
+
 }
 

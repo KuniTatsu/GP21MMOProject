@@ -65,16 +65,18 @@ private:
 	//索敵範囲に入ったらTRUE
 	bool onFollowToPlayer = false;
 
+
 	//追尾ターゲット
 	std::shared_ptr<Actor> followTarget = nullptr;
-
+	//グラフハンドルの配列
 	std::vector<int>myAnimationGh;
 
 	/*移動スピード*/
 	float SPEED = 0;
 
 	int identId = -1;
-	//エネミータイプの取得
+	
+	//エネミータイプ
 	int TYPE = 0;
 
 
