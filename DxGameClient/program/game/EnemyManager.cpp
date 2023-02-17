@@ -313,6 +313,6 @@ void EnemyManager::Update(float deltatime)
 void EnemyManager::Draw(Camera* camera)
 {
 	SetFontSize(50);
-	DrawStringEx(50, 50, -1, "%d", createCount);
+	//DrawStringEx(50, 50, -1, "%d", createCount);
 	SetFontSize(16);
 }

@@ -72,47 +72,56 @@ void Actor::Anim(std::vector<int> DrawGhs, int MaxIndex, int Speed)
 bool Actor::HitMaptoCharacter(tnl::Vector3& pos)
 {
 	auto map = GameManager::GetInstance()->GetPlayerOnMap();
-	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
+	//auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap();
 	
-	std::vector<std::vector<int>>& hitMapEnemy = mapenemy->GetHitMap();
+	//std::vector<std::vector<int>>& hitMapEnemy = mapenemy->GetHitMap();
 	std::vector<std::vector<int>>& hitMapPlayer = map->GetHitMap();
 	
+	/*プレイヤーが村マップにいるなら*/
+	if (!hitMapPlayer.empty()) {
+		return HitMapToPos(pos, hitMapPlayer);
+	}
+
+	return true;
+}
+
+bool Actor::HitMaptoEnemy(tnl::Vector3& pos)
+{
+	auto mapenemy = GameManager::GetInstance()->GetEnemyOnMap(pos);
+	std::vector<std::vector<int>>& hitMapEnemy = mapenemy->GetHitMap();
+
+	if (!hitMapEnemy.empty()) {
+		return HitMapToPos(pos, hitMapEnemy);
+	}
+
+	return true;
+}
+
+/*キャラクタとマップの当たり判定*/
+bool Actor::HitMapToPos(tnl::Vector3& pos, std::vector<std::vector<int>>& hitmap) {
 
 	float x = std::floor(pos.x / 32);
 	float y = std::floor(pos.y / 32);
 
 	tnl::Vector3 localPos = tnl::Vector3(x + 1, y + 1, 0);
 
-	//hitMapPlayerが空でかつhitMapEnemyがからならtrue
-	// hitMapPlayerが空でないならHitMapPos
-	// hitMapEnemyが空でないならHitMapPos
-	//---------------------------------------------------------------------
-	if (!hitMapPlayer.empty()) {
-		return HitMapToPos(localPos, hitMapPlayer);
-	}
-
-	return true;
-}
-
-bool Actor::HitMapToPos(tnl::Vector3& pos, std::vector<std::vector<int>>& hitmap) {
-
-	if ((pos.x < 19 && pos.x > 17 && pos.y < 19 && pos.y > -17) ||
-		(pos.x < 19 && pos.x > -17) && pos.y < 19 && pos.y > 17) {
-		int hitArrayX = static_cast<int>(pos.x) + 16;
-		int hitArrayY = static_cast<int>(pos.y) + 16;
+	if ((localPos.x < 19 && localPos.x > 17 && localPos.y < 19 && localPos.y > -17) ||
+		(localPos.x < 19 && localPos.x > -17) && localPos.y < 19 && localPos.y > 17) {
+		int hitArrayX = static_cast<int>(localPos.x) + 16;
+		int hitArrayY = static_cast<int>(localPos.y) + 16;
 		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
 			tnl::DebugTrace("1 Debug用マップの当たり判定がNULLを参照した\n");
-			tnl::DebugTrace("POSy = %f POSx = %f\n", pos.y, pos.x);
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
 			tnl::DebugTrace("ゲーム落ちた\n");
 		}
 		if (hitmap[hitArrayY][hitArrayX] == 65)return false;
 	}
-	else if (pos.x > -18 && pos.x < 18 && pos.y < 18 && pos.y > -18) {
-		int hitArrayX = static_cast<int>(pos.x) + 17;
-		int hitArrayY = static_cast<int>(pos.y) + 17;
+	else if (localPos.x > -18 && localPos.x < 18 && localPos.y < 18 && localPos.y > -18) {
+		int hitArrayX = static_cast<int>(localPos.x) + 17;
+		int hitArrayY = static_cast<int>(localPos.y) + 17;
 		if (hitArrayX < 0 || hitArrayX > 34 || hitArrayY < 0 || hitArrayY > 34) {
 			tnl::DebugTrace("2 Debug用マップの当たり判定がNULLを参照した\n");
-			tnl::DebugTrace("POSy = %f POSx = %f\n", pos.y, pos.x);
+			tnl::DebugTrace("POSy = %f POSx = %f\n", localPos.y, localPos.x);
 			tnl::DebugTrace("ゲーム落ちた\n");
 		}
 		if (hitmap[hitArrayY][hitArrayX] == 65)return false;

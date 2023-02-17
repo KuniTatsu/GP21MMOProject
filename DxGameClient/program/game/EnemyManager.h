@@ -40,7 +40,7 @@ private:
 	//生成するまでのインターバルをカウント
 	int intervalCount = 0;
 	//インターバルの制限時間
-	const int intervalLimit = 5;
+	const int intervalLimit = 2;
 
 	std::vector<std::shared_ptr<Enemy>> enemyMaster;
 
