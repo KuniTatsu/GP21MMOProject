@@ -38,7 +38,8 @@ std::vector<std::shared_ptr<MaterialItem>> Inventory::GetDeadBodies()
 	//auto itr = EnemyList.begin(); itr != EnemyList.end();
 	for (auto itr = inventoryItemList.begin(); itr != inventoryItemList.end(); ++itr) {
 
-		if ((*itr)->GetItemId() != 90000 || (*itr)->GetItemId() != 90001 || (*itr)->GetItemId() != 90002)continue;
+		auto id = (*itr)->GetItemId();
+		if (id != 90000 && id != 90001 && id != 90002)continue;
 
 		auto item = std::dynamic_pointer_cast<MaterialItem>((*itr));
 		ret.emplace_back(item);
