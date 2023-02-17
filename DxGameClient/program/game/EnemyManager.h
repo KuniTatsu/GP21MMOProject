@@ -87,6 +87,8 @@ public:
 	//enemy‚²‚Æ‚Ì€‘ÌId‚Ìæ“¾
 	int GetDeadBodyId(int enemyId);
 
+	//
+
 	//EnemyƒXƒ|[ƒ“”ÍˆÍŒŸõ
 	void SpawnEnemy(tnl::Vector3& PlayerPos);
 

@@ -35,6 +35,9 @@ public:
 	//エネミーIdから死骸のIdを返す関数
 	int GetBaseBodyId(int enemyId);
 
+	//アイテムIdから死骸のIdを返す関数
+	int GetBaseBodyIdFromItemId(int ItemId);
+
 private:
 
 	/*アイテム[装備or消費][ステータス]*/

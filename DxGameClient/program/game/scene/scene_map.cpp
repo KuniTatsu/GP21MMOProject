@@ -10,6 +10,7 @@
 #include"../UI/GraphicUI.h"
 #include"../ResourceManager.h"
 #include"../Actor/NPC/SupportNPC.h"
+#include"../Actor/NPC/DisassemblyNPC.h"
 #include"../Actor/NPC/NPC.h"
 #include"../Actor/NPC/NPCManager.h"
 #include"../InventoryManager.h"
@@ -68,7 +69,8 @@ void Scene_Map::initialzie()
 	gManager->GetServerEnemyInfo();
 #endif
 	//NPC‚Ì¶¬
-	NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 180, 240, 5);
+	auto okNpc=NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::SUPPORT), 180, 240, 5);
+	auto npc = NPCManager::GetInstance()->CreateNPC(static_cast<int>(NPCManager::NPCTYPE::DISASSEMBLY), 10, 10, 3);
 
 
 	//UIŒn‚Ìinit
@@ -168,7 +170,6 @@ void Scene_Map::update(float delta_time)
 		}
 		//Ž€Š[ƒAƒCƒeƒ€‚ð‰ð‘Ì
 		else if (tnl::Input::IsKeyDownTrigger(eKeys::KB_1)) {
-
 			Disassembly::GetInstance()->DisassemblyDeadBody(2001);
 		}
 

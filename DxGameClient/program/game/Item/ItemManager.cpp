@@ -150,6 +150,27 @@ int ItemManager::GetBaseBodyId(int enemyId)
 	}
 	return ret;
 }
+//todo ¡Œã‰üC—\’è
+int ItemManager::GetBaseBodyIdFromItemId(int ItemId)
+{
+	int ret = -1;
+	switch (ItemId)
+	{
+	case 90000:
+		ret = 2000;
+		break;
+	case 90001:
+		ret = 2001;
+		break;
+	case 90002:
+		ret = 2002;
+		break;
+	default:
+		break;
+	}
+
+	return ret;
+}
 
 
 std::shared_ptr<Item> ItemManager::CreateItem(int itemId, int itemType)

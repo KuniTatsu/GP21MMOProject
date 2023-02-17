@@ -1,10 +1,12 @@
 #pragma once
 #include<memory>
 #include<list>
+#include<vector>
 
 class GameManager;
 class ItemManager;
 class Item;
+class MaterialItem;
 
 class Inventory {
 public:
@@ -20,6 +22,9 @@ public:
 	//インベントリにアイテムを追加する関数
 	void AddInventory(std::shared_ptr<Item> item);
 	//void AddSharedInventory(std::shared_ptr<Item>item);
+
+	//インベントリの中の死骸アイテムのみを配列にして返す関数
+	std::vector<std::shared_ptr<MaterialItem>>GetDeadBodies();
 
 	//インベントリのUpdate
 	void Update();

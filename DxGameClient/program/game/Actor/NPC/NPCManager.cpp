@@ -1,5 +1,6 @@
 #include "NPCManager.h"
 #include"SupportNPC.h"
+#include"DisassemblyNPC.h"
 #include"../ActorDrawManager.h"
 
 NPCManager* NPCManager::instance = nullptr;
@@ -42,6 +43,10 @@ std::shared_ptr<NPC> NPCManager::CreateNPC(int npcType, float x, float y, int gh
 	case static_cast<int>(NPCTYPE::SUPPORT):
 		//float x, float y, int ghNum, float distance
 		ret = std::make_shared<SupportNPC>(x, y, ghNum);
+		break;
+	case static_cast<int>(NPCTYPE::DISASSEMBLY):
+		//float x, float y, int ghNum, float distance
+		ret = std::make_shared<DisassemblyNPC>(x, y, ghNum);
 		break;
 
 	default:

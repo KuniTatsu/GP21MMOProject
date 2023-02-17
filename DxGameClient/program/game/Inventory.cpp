@@ -4,6 +4,8 @@
 #include"Item/Item.h"
 #include"Item/EquipItem.h"
 #include"Item/ConsumeItem.h"
+#include"Item/MaterialItem.h"
+
 #include"../library/tnl_input.h"
 #include"ChatBase.h"
 
@@ -28,6 +30,21 @@ void Inventory::AddInventory(std::shared_ptr<Item> item)
 	if (inventoryItemList.size() == 10)return;
 	inventoryItemList.emplace_back(item);
 	itemNum++;
+}
+
+std::vector<std::shared_ptr<MaterialItem>> Inventory::GetDeadBodies()
+{
+	std::vector<std::shared_ptr<MaterialItem>>ret;
+	//auto itr = EnemyList.begin(); itr != EnemyList.end();
+	for (auto itr = inventoryItemList.begin(); itr != inventoryItemList.end(); ++itr) {
+
+		if ((*itr)->GetItemId() != 90000 || (*itr)->GetItemId() != 90001 || (*itr)->GetItemId() != 90002)continue;
+
+		auto item = std::dynamic_pointer_cast<MaterialItem>((*itr));
+		ret.emplace_back(item);
+	}
+
+	return ret;
 }
 
 void Inventory::Update()
@@ -75,7 +92,7 @@ void Inventory::DrawInventory(int x, int y)
 				DrawStringEx(x + 80, y + 10 + 30 * i, -1, "%s", item->GetItemName());
 			}
 		}
-		else if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::CONSUME)|| item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::MATERIAL))
+		else if (item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::CONSUME) || item->GetItemType() == static_cast<int>(ItemManager::ITEMTYPE::MATERIAL))
 		{
 			//ƒAƒCƒeƒ€–¼‚Ì•`‰æ
 			DrawStringEx(x + 80, y + 10 + 30 * i, -1, item->GetItemName().c_str());
